@@ -1,0 +1,38 @@
+name: 'ReSim'
+description: 'Interact with ReSim from GitHub Actions'
+inputs:
+  api_endpoint:
+    required: true
+    default: 'https://api.resim.ai/v1/'
+  auth0_tenant_url:
+    required: true
+    default: 'https//resim.us.auth0.com/'
+  client_id:
+    required: true
+  client_secret:
+    required: true
+  debug_logging:
+    required: false
+    default: false
+  # project:
+  #   required: false
+  resource:
+    required: false
+  operation:
+    required: false
+  build:
+    required: false
+  experiences:
+    required: false
+  comment_on_pr:
+    required: false
+    default: true
+  github_token:
+    required: false
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+
+# auth with auth0 to get token
+# cache token
