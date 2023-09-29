@@ -1,4 +1,5 @@
 # action
+
 Interact with ReSim from GitHub Actions
 
 ## Usage
@@ -37,6 +38,14 @@ Note that the secrets have to be passed in explicitly (see GitHub [documentation
 
 ### Build
 
+Includes formatting, linting and tests
+
+```sh
+npm run all
 ```
-ncc build index.js --license licenses.txt
+
+### Test
+
+```sh
+npm test
 ```
