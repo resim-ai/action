@@ -67604,17 +67604,16 @@ async function run() {
     try {
         const apiEndpoint = core.getInput('api_endpoint');
         const token = await auth.getToken();
+        const buildID = core.getInput('build');
+        const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
         const config = new client_1.Configuration({
             basePath: apiEndpoint,
             accessToken: token
         });
         const batchApi = new client_1.BatchesApi(config);
         const batchRequest = {
-            buildID: '2815ed32-f225-4a92-b8d5-592807a8c475',
-            experienceIDs: [
-                '449d52fc-a328-46b5-800b-1e1f771525fa',
-                '34a7fc66-cfae-4af1-a8ba-f0355f64c8aa'
-            ]
+            buildID,
+            experienceTagNames
         };
         const newBatchResponse = await batchApi.createBatch(batchRequest);
         const newBatch = newBatchResponse.data;
@@ -67627,6 +67626,9 @@ async function run() {
     }
 }
 exports.run = run;
+function arrayInputSplit(input) {
+    return input.split(',').map(item => item.trim());
+}
 
 
 /***/ }),

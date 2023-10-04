@@ -12,6 +12,8 @@ export async function run(): Promise<void> {
   try {
     const apiEndpoint = core.getInput('api_endpoint')
     const token = await auth.getToken()
+    const buildID = core.getInput('build')
+    const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'))
 
     const config = new Configuration({
       basePath: apiEndpoint,
@@ -20,11 +22,8 @@ export async function run(): Promise<void> {
     const batchApi = new BatchesApi(config)
 
     const batchRequest: CreateBatchRequest = {
-      buildID: '2815ed32-f225-4a92-b8d5-592807a8c475',
-      experienceIDs: [
-        '449d52fc-a328-46b5-800b-1e1f771525fa',
-        '34a7fc66-cfae-4af1-a8ba-f0355f64c8aa'
-      ]
+      buildID,
+      experienceTagNames
     }
 
     const newBatchResponse: AxiosResponse<Batch> =
@@ -37,4 +36,8 @@ export async function run(): Promise<void> {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
+}
+
+function arrayInputSplit(input: string): string[] {
+  return input.split(',').map(item => item.trim())
 }
