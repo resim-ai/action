@@ -62,4 +62,5 @@ jobs:
           build: d8906913-a244-472c-94ac-6b586144ebaf
           experience_tags: foo
         env:
-          DEBUG: axios
+          # DEBUG: axios
+          DEBUG: '*'

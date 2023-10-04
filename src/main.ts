@@ -3,6 +3,8 @@ import * as auth from './auth'
 import { Configuration, Batch, BatchesApi, CreateBatchRequest } from './client'
 import type { AxiosResponse } from 'axios'
 import 'axios-debug-log'
+import Debug from 'debug'
+const debug = Debug('action')
 
 /**
  * The main function for the action.
@@ -11,26 +13,28 @@ import 'axios-debug-log'
 export async function run(): Promise<void> {
   try {
     const apiEndpoint = core.getInput('api_endpoint')
-    const token = await auth.getToken()
     const buildID = core.getInput('build')
     const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'))
+    debug('got inputs')
+
+    const token = await auth.getToken()
+    debug('got auth')
 
     const config = new Configuration({
       basePath: apiEndpoint,
       accessToken: token
     })
     const batchApi = new BatchesApi(config)
-
     const batchRequest: CreateBatchRequest = {
       buildID,
       experienceTagNames
     }
-
+    debug('batchRequest exists')
     const newBatchResponse: AxiosResponse<Batch> =
       await batchApi.createBatch(batchRequest)
 
     const newBatch: Batch = newBatchResponse.data
-
+    debug('batch launched')
     core.info(JSON.stringify(newBatch))
   } catch (error) {
     // Fail the workflow run if an error occurs

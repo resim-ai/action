@@ -67590,12 +67590,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const auth = __importStar(__nccwpck_require__(3497));
 const client_1 = __nccwpck_require__(7929);
 __nccwpck_require__(9301);
+const debug_1 = __importDefault(__nccwpck_require__(8237));
+const debug = (0, debug_1.default)('action');
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -67603,9 +67608,11 @@ __nccwpck_require__(9301);
 async function run() {
     try {
         const apiEndpoint = core.getInput('api_endpoint');
-        const token = await auth.getToken();
         const buildID = core.getInput('build');
         const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
+        debug('got inputs');
+        const token = await auth.getToken();
+        debug('got auth');
         const config = new client_1.Configuration({
             basePath: apiEndpoint,
             accessToken: token
@@ -67615,8 +67622,10 @@ async function run() {
             buildID,
             experienceTagNames
         };
+        debug('batchRequest exists');
         const newBatchResponse = await batchApi.createBatch(batchRequest);
         const newBatch = newBatchResponse.data;
+        debug('batch launched');
         core.info(JSON.stringify(newBatch));
     }
     catch (error) {

@@ -11,8 +11,10 @@ inputs:
     required: true
   client_secret:
     required: true
-  # project:
-  #   required: false
+  project:
+    required: false
+  branch:
+    required: false
   resource:
     required: false
   operation:
