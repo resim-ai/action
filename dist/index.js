@@ -67598,6 +67598,7 @@ exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const auth = __importStar(__nccwpck_require__(3497));
 const client_1 = __nccwpck_require__(7929);
+const projects_1 = __nccwpck_require__(5827);
 __nccwpck_require__(9301);
 const debug_1 = __importDefault(__nccwpck_require__(8237));
 const debug = (0, debug_1.default)('action');
@@ -67617,17 +67618,21 @@ async function run() {
             basePath: apiEndpoint,
             accessToken: token
         });
+        const imageUri = core.getInput('image');
+        console.log(`imageUri is ${imageUri}`);
         const projectsApi = new client_1.ProjectsApi(config);
         // if project input isn't set, get the newest project
         let project = '';
         if (core.getInput('project') === '') {
-            // get latest project
+            project = await (0, projects_1.getLatestProject)(projectsApi);
         }
         else {
             project = core.getInput('project');
         }
+        console.log(`project is ${project}`);
         // create or find branch
         const branchName = process.env.GITHUB_REF_NAME;
+        console.log(`branchName is ${branchName}`);
         // register build
         const batchesApi = new client_1.BatchesApi(config);
         const batchRequest = {
@@ -67651,6 +67656,40 @@ exports.run = run;
 function arrayInputSplit(input) {
     return input.split(',').map(item => item.trim());
 }
+
+
+/***/ }),
+
+/***/ 5827:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getLatestProject = void 0;
+const axios_1 = __nccwpck_require__(8757);
+async function getLatestProject(api) {
+    let projectsResponse;
+    try {
+        projectsResponse = await api.listProjects(1, undefined, 'timestamp');
+        if (projectsResponse.status === 200 &&
+            projectsResponse.data.projects?.length &&
+            projectsResponse.data.projects.length > 0) {
+            const latestProjectName = projectsResponse.data.projects[0].name;
+            if (!latestProjectName) {
+                throw new Error('Could not find latest project name');
+            }
+            return Promise.resolve(latestProjectName);
+        }
+    }
+    catch (error) {
+        if ((0, axios_1.isAxiosError)(error)) {
+            throw new Error(error.response?.data.message);
+        }
+    }
+    return Promise.reject(new Error('Could not find latest project name'));
+}
+exports.getLatestProject = getLatestProject;
 
 
 /***/ }),

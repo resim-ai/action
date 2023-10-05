@@ -53,7 +53,7 @@ jobs:
       - name: Image "build"
         id: image
         run:
-          echo "image_id=public.ecr.aws/docker/library/hello-world" >> $GITHUB_OUTPUT
+          echo "image_id=public.ecr.aws/docker/library/hello-world:latest" >> $GITHUB_OUTPUT
 
       - name: Test Local Action
         id: test-action
