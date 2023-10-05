@@ -67671,10 +67671,11 @@ const axios_1 = __nccwpck_require__(8757);
 async function getLatestProject(api) {
     let projectsResponse;
     try {
-        projectsResponse = await api.listProjects(1, undefined, 'timestamp');
+        projectsResponse = await api.listProjects(100, undefined, 'timestamp');
         if (projectsResponse.status === 200 &&
             projectsResponse.data.projects?.length &&
             projectsResponse.data.projects.length > 0) {
+            console.log(projectsResponse.data.projects);
             const latestProjectName = projectsResponse.data.projects[0].name;
             if (!latestProjectName) {
                 throw new Error('Could not find latest project name');
