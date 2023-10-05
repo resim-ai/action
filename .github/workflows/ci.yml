@@ -49,6 +49,12 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
+      # Dummy build step
+      - name: Image "build"
+        id: image
+        run:
+          echo "image_id=public.ecr.aws/docker/library/hello-world" >> $GITHUB_OUTPUT
+
       - name: Test Local Action
         id: test-action
         uses: ./
@@ -61,6 +67,7 @@ jobs:
           branch: resim-ai/action
           build: d8906913-a244-472c-94ac-6b586144ebaf
           experience_tags: foo
+          image: ${{ steps.image.outputs.image_id }}
         env:
           # DEBUG: axios
           DEBUG: '*'

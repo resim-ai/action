@@ -1,7 +1,16 @@
 import * as core from '@actions/core'
 import * as auth from './auth'
-import { Configuration, Batch, BatchesApi, CreateBatchRequest } from './client'
+import {
+  Configuration,
+  Batch,
+  BatchesApi,
+  CreateBatchRequest,
+  ProjectsApi
+} from './client'
 import type { AxiosResponse } from 'axios'
+
+import { getLatestProject } from './projects'
+
 import 'axios-debug-log'
 import Debug from 'debug'
 const debug = Debug('action')
@@ -24,14 +33,39 @@ export async function run(): Promise<void> {
       basePath: apiEndpoint,
       accessToken: token
     })
-    const batchApi = new BatchesApi(config)
+
+    const imageUri = core.getInput('image')
+    console.log(`imageUri is ${imageUri}`)
+
+    const projectsApi = new ProjectsApi(config)
+
+    // if project input isn't set, get the newest project
+    let project = ''
+    if (core.getInput('project') === '') {
+      project = await getLatestProject(projectsApi)
+    } else {
+      project = core.getInput('project')
+    }
+
+    console.log(`project is ${project}`)
+
+    // create or find branch
+    const branchName = process.env.GITHUB_REF_NAME
+
+    console.log(`branchName is ${branchName}`)
+
+    // register build
+
+    const batchesApi = new BatchesApi(config)
     const batchRequest: CreateBatchRequest = {
       buildID,
       experienceTagNames
     }
     debug('batchRequest exists')
     const newBatchResponse: AxiosResponse<Batch> =
-      await batchApi.createBatch(batchRequest)
+      await batchesApi.createBatch(batchRequest)
+
+    // comment on PR
 
     const newBatch: Batch = newBatchResponse.data
     debug('batch launched')

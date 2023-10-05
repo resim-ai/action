@@ -67617,13 +67617,26 @@ async function run() {
             basePath: apiEndpoint,
             accessToken: token
         });
-        const batchApi = new client_1.BatchesApi(config);
+        const projectsApi = new client_1.ProjectsApi(config);
+        // if project input isn't set, get the newest project
+        let project = '';
+        if (core.getInput('project') === '') {
+            // get latest project
+        }
+        else {
+            project = core.getInput('project');
+        }
+        // create or find branch
+        const branchName = process.env.GITHUB_REF_NAME;
+        // register build
+        const batchesApi = new client_1.BatchesApi(config);
         const batchRequest = {
             buildID,
             experienceTagNames
         };
         debug('batchRequest exists');
-        const newBatchResponse = await batchApi.createBatch(batchRequest);
+        const newBatchResponse = await batchesApi.createBatch(batchRequest);
+        // comment on PR
         const newBatch = newBatchResponse.data;
         debug('batch launched');
         core.info(JSON.stringify(newBatch));
