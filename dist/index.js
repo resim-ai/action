@@ -67661,13 +67661,18 @@ function arrayInputSplit(input) {
 /***/ }),
 
 /***/ 5827:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getLatestProject = void 0;
 const axios_1 = __nccwpck_require__(8757);
+const debug_1 = __importDefault(__nccwpck_require__(8237));
+const debug = (0, debug_1.default)('projects');
 async function getLatestProject(api) {
     let projectsResponse;
     try {
@@ -67675,7 +67680,7 @@ async function getLatestProject(api) {
         if (projectsResponse.status === 200 &&
             projectsResponse.data.projects?.length &&
             projectsResponse.data.projects.length > 0) {
-            console.log(projectsResponse.data.projects);
+            debug(projectsResponse.data.projects);
             const latestProjectName = projectsResponse.data.projects[0].name;
             if (!latestProjectName) {
                 throw new Error('Could not find latest project name');
