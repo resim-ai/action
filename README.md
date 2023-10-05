@@ -44,6 +44,12 @@ Includes formatting, linting and tests
 npm run all
 ```
 
+### Regenerate the client
+
+```sh
+npm run generate
+```
+
 ### Test
 
 ```sh

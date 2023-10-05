@@ -63,7 +63,7 @@ jobs:
           auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
           client_id: ${{ secrets.TEST_CLIENT_ID }}
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
-          project: github-action-testing
+          # project: github-action-testing
           branch: resim-ai/action
           build: d8906913-a244-472c-94ac-6b586144ebaf
           experience_tags: foo
