@@ -70586,7 +70586,6 @@ const debug = (0, debug_1.default)('action');
  */
 async function run() {
     try {
-        debug(github.context);
         const apiEndpoint = core.getInput('api_endpoint');
         const buildID = core.getInput('build');
         const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
@@ -70634,9 +70633,11 @@ async function run() {
         }
         let buildDescription = '';
         if (github.context.eventName === 'pull_request') {
-            const payload = github.context.payload;
-            debug(payload);
-            buildDescription = payload.pull_request.head.sha;
+            if (github.context.payload.pull_request !== undefined) {
+                const pullRequestEvent = github.context.payload.pull_request;
+                debug(pullRequestEvent.head);
+                buildDescription = pullRequestEvent.head.sha;
+            }
         }
         // register build
         const buildsApi = new client_1.BuildsApi(config);

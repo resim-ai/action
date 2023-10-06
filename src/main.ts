@@ -1,7 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as auth from './auth'
-import { PullRequestEvent } from '@octokit/webhooks-types'
 import {
   Configuration,
   Batch,
@@ -26,8 +25,6 @@ const debug = Debug('action')
  */
 export async function run(): Promise<void> {
   try {
-    debug(github.context)
-
     const apiEndpoint = core.getInput('api_endpoint')
     const buildID = core.getInput('build')
     const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'))
@@ -85,9 +82,11 @@ export async function run(): Promise<void> {
 
     let buildDescription = ''
     if (github.context.eventName === 'pull_request') {
-      const payload = github.context.payload as PullRequestEvent
-      debug(payload)
-      buildDescription = payload.pull_request.head.sha
+      if (github.context.payload.pull_request !== undefined) {
+        const pullRequestEvent = github.context.payload.pull_request
+        debug(pullRequestEvent.head)
+        buildDescription = pullRequestEvent.head.sha
+      }
     }
 
     // register build
