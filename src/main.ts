@@ -12,7 +12,7 @@ import {
 } from './client'
 import type { AxiosResponse } from 'axios'
 
-import { branchExists, getLatestProject, createBranch } from './projects'
+import { getBranchID, getLatestProject, createBranch } from './projects'
 
 import 'axios-debug-log'
 import Debug from 'debug'
@@ -72,12 +72,12 @@ export async function run(): Promise<void> {
 
     console.log(`branchName is ${branchName}`)
 
-    let branchID = ''
-    if ((await branchExists(projectsApi, projectID, branchName)) === false) {
+    let branchID = await getBranchID(projectsApi, projectID, branchName)
+    if (branchID === '') {
       branchID = await createBranch(projectsApi, projectID, branchName)
       console.log('created branch')
     } else {
-      console.log('branch exists')
+      console.log(`branch exists, ${branchID}`)
     }
 
     let buildDescription = ''

@@ -26,11 +26,11 @@ export async function getLatestProject(api: ProjectsApi): Promise<Project> {
   return Promise.reject(new Error('Could not find latest project'))
 }
 
-export async function branchExists(
+export async function getBranchID(
   api: ProjectsApi,
   projectID: string,
   branchName: string
-): Promise<boolean> {
+): Promise<string> {
   let branches: Branch[] = []
 
   let pageToken: string | undefined = undefined
@@ -49,10 +49,10 @@ export async function branchExists(
 
   const theBranch = branches.find(b => b.name === branchName)
 
-  if (theBranch !== undefined) {
-    return Promise.resolve(true)
+  if (theBranch?.branchID !== undefined) {
+    return Promise.resolve(theBranch.branchID)
   } else {
-    return Promise.resolve(false)
+    return Promise.resolve('')
   }
 }
 

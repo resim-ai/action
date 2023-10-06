@@ -70623,13 +70623,13 @@ async function run() {
             branchName = process.env.GITHUB_HEAD_REF;
         }
         console.log(`branchName is ${branchName}`);
-        let branchID = '';
-        if ((await (0, projects_1.branchExists)(projectsApi, projectID, branchName)) === false) {
+        let branchID = await (0, projects_1.getBranchID)(projectsApi, projectID, branchName);
+        if (branchID === '') {
             branchID = await (0, projects_1.createBranch)(projectsApi, projectID, branchName);
             console.log('created branch');
         }
         else {
-            console.log('branch exists');
+            console.log(`branch exists, ${branchID}`);
         }
         let buildDescription = '';
         if (github.context.eventName === 'pull_request') {
@@ -70677,7 +70677,7 @@ function arrayInputSplit(input) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createBranch = exports.branchExists = exports.getLatestProject = void 0;
+exports.createBranch = exports.getBranchID = exports.getLatestProject = void 0;
 const axios_1 = __nccwpck_require__(8757);
 async function getLatestProject(api) {
     let projectsResponse;
@@ -70701,7 +70701,7 @@ async function getLatestProject(api) {
     return Promise.reject(new Error('Could not find latest project'));
 }
 exports.getLatestProject = getLatestProject;
-async function branchExists(api, projectID, branchName) {
+async function getBranchID(api, projectID, branchName) {
     let branches = [];
     let pageToken = undefined;
     while (pageToken !== '') {
@@ -70712,14 +70712,14 @@ async function branchExists(api, projectID, branchName) {
         pageToken = response.data.nextPageToken;
     }
     const theBranch = branches.find(b => b.name === branchName);
-    if (theBranch !== undefined) {
-        return Promise.resolve(true);
+    if (theBranch?.branchID !== undefined) {
+        return Promise.resolve(theBranch.branchID);
     }
     else {
-        return Promise.resolve(false);
+        return Promise.resolve('');
     }
 }
-exports.branchExists = branchExists;
+exports.getBranchID = getBranchID;
 async function createBranch(api, projectID, branchName) {
     const newBranchBody = {
         branchType: 'CHANGE_REQUEST',
