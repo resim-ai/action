@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import github from '@actions/github'
+import * as github from '@actions/github'
 import * as auth from './auth'
 import { PullRequestEvent } from '@octokit/webhooks-types'
 import {
@@ -26,6 +26,8 @@ const debug = Debug('action')
  */
 export async function run(): Promise<void> {
   try {
+    debug(github.context)
+
     const apiEndpoint = core.getInput('api_endpoint')
     const buildID = core.getInput('build')
     const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'))

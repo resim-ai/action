@@ -70572,7 +70572,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const github_1 = __importDefault(__nccwpck_require__(5438));
+const github = __importStar(__nccwpck_require__(5438));
 const auth = __importStar(__nccwpck_require__(3497));
 const client_1 = __nccwpck_require__(7929);
 const projects_1 = __nccwpck_require__(5827);
@@ -70586,6 +70586,7 @@ const debug = (0, debug_1.default)('action');
  */
 async function run() {
     try {
+        debug(github.context);
         const apiEndpoint = core.getInput('api_endpoint');
         const buildID = core.getInput('build');
         const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
@@ -70632,8 +70633,8 @@ async function run() {
             console.log('branch exists');
         }
         let buildDescription = '';
-        if (github_1.default.context.eventName === 'pull_request') {
-            const payload = github_1.default.context.payload;
+        if (github.context.eventName === 'pull_request') {
+            const payload = github.context.payload;
             debug(payload);
             buildDescription = payload.pull_request.head.sha;
         }
