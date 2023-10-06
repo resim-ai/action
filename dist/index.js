@@ -70632,22 +70632,22 @@ async function run() {
             console.log(`branch exists, ${branchID}`);
         }
         let buildDescription = '';
+        let shortCommitSha = '';
         if (github.context.eventName === 'pull_request') {
             if (github.context.payload.pull_request !== undefined) {
                 const pullRequestEvent = github.context.payload.pull_request;
                 debug(pullRequestEvent.head);
-                buildDescription = pullRequestEvent.head.sha;
+                shortCommitSha = pullRequestEvent.head.sha.slice(0, 8);
+                buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`;
             }
         }
         // register build
         const buildsApi = new client_1.BuildsApi(config);
-        const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, imageUri, buildDescription, 
-        // shortCommitSha
-        '0.0.1');
+        const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, imageUri, buildDescription, shortCommitSha);
         debug(newBuild);
         const batchesApi = new client_1.BatchesApi(config);
         const batchRequest = {
-            buildID,
+            buildID: newBuild.buildID,
             experienceTagNames
         };
         debug('batchRequest exists');
