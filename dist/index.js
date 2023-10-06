@@ -64541,7 +64541,6 @@ exports.createBuild = void 0;
 async function createBuild(api, projectID, branchID, imageUri, description, version) {
     const newBuildBody = {
         projectID,
-        branchID,
         imageUri,
         description,
         version

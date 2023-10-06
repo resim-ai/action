@@ -10,7 +10,6 @@ export async function createBuild(
 ): Promise<Build> {
   const newBuildBody: Build = {
     projectID,
-    branchID,
     imageUri,
     description,
     version
