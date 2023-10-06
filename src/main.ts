@@ -1,18 +1,23 @@
 import * as core from '@actions/core'
+import github from '@actions/github'
 import * as auth from './auth'
+import { PullRequestEvent } from '@octokit/webhooks-types'
 import {
   Configuration,
   Batch,
   BatchesApi,
   CreateBatchRequest,
-  ProjectsApi
+  ProjectsApi,
+  Project,
+  BuildsApi
 } from './client'
 import type { AxiosResponse } from 'axios'
 
-import { getLatestProject } from './projects'
+import { branchExists, getLatestProject, createBranch } from './projects'
 
 import 'axios-debug-log'
 import Debug from 'debug'
+import { createBuild } from './builds'
 const debug = Debug('action')
 
 /**
@@ -40,21 +45,61 @@ export async function run(): Promise<void> {
     const projectsApi = new ProjectsApi(config)
 
     // if project input isn't set, get the newest project
-    let project = ''
-    if (core.getInput('project') === '') {
-      project = await getLatestProject(projectsApi)
+    let projectID: string = ''
+    if (core.getInput('project') !== '') {
+      projectID = core.getInput('project')
     } else {
-      project = core.getInput('project')
+      const project = await getLatestProject(projectsApi)
+      if (project.projectID !== undefined) {
+        projectID = project?.projectID
+      }
+    }
+    if (projectID === '') {
+      core.setFailed('Could not find project ID')
     }
 
-    console.log(`project is ${project}`)
+    console.log(`projectID is ${projectID}`)
 
-    // create or find branch
-    const branchName = process.env.GITHUB_REF_NAME
+    let branchName = ''
+    if (process.env.GITHUB_REF_NAME !== undefined) {
+      branchName = process.env.GITHUB_REF_NAME
+    }
+    if (
+      process.env.GITHUB_EVENT_NAME === 'pull_request' &&
+      process.env.GITHUB_HEAD_REF !== undefined
+    ) {
+      branchName = process.env.GITHUB_HEAD_REF
+    }
 
     console.log(`branchName is ${branchName}`)
 
+    let branchID = ''
+    if ((await branchExists(projectsApi, projectID, branchName)) === false) {
+      branchID = await createBranch(projectsApi, projectID, branchName)
+      console.log('created branch')
+    } else {
+      console.log('branch exists')
+    }
+
+    let buildDescription = ''
+    if (github.context.eventName === 'pull_request') {
+      const payload = github.context.payload as PullRequestEvent
+      debug(payload)
+      buildDescription = payload.pull_request.head.sha
+    }
+
     // register build
+    const buildsApi = new BuildsApi(config)
+    const newBuild = await createBuild(
+      buildsApi,
+      projectID,
+      branchID,
+      imageUri,
+      buildDescription,
+      // shortCommitSha
+      '0.0.1'
+    )
+    debug(newBuild)
 
     const batchesApi = new BatchesApi(config)
     const batchRequest: CreateBatchRequest = {
