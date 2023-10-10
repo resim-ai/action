@@ -3,7 +3,7 @@ description: 'Interact with ReSim from GitHub Actions'
 inputs:
   api_endpoint:
     required: true
-    default: 'https://api.resim.ai/v1/'
+    default: 'https://api.resim.ai/v1'
   auth0_tenant_url:
     required: true
     default: 'https//resim.us.auth0.com/'
@@ -11,11 +11,12 @@ inputs:
     required: true
   client_secret:
     required: true
-  debug_logging:
+  project:
     required: false
-    default: false
-  # project:
-  #   required: false
+  branch:
+    required: false
+  image:
+    required: false
   resource:
     required: false
   operation:
@@ -23,6 +24,8 @@ inputs:
   build:
     required: false
   experiences:
+    required: false
+  experience_tags:
     required: false
   comment_on_pr:
     required: false

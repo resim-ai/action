@@ -1,8 +1,22 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import * as auth from './auth'
-import { Configuration, Batch, BatchesApi, CreateBatchRequest } from './client'
+import {
+  Configuration,
+  Batch,
+  BatchesApi,
+  CreateBatchRequest,
+  ProjectsApi,
+  BuildsApi
+} from './client'
 import type { AxiosResponse } from 'axios'
+
+import { getBranchID, getLatestProject, createBranch } from './projects'
+
 import 'axios-debug-log'
+import Debug from 'debug'
+import { createBuild } from './builds'
+const debug = Debug('action')
 
 /**
  * The main function for the action.
@@ -11,30 +25,103 @@ import 'axios-debug-log'
 export async function run(): Promise<void> {
   try {
     const apiEndpoint = core.getInput('api_endpoint')
+    const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'))
+    debug('got inputs')
+
     const token = await auth.getToken()
+    debug('got auth')
 
     const config = new Configuration({
       basePath: apiEndpoint,
       accessToken: token
     })
-    const batchApi = new BatchesApi(config)
 
-    const batchRequest: CreateBatchRequest = {
-      buildID: '2815ed32-f225-4a92-b8d5-592807a8c475',
-      experienceIDs: [
-        '449d52fc-a328-46b5-800b-1e1f771525fa',
-        '34a7fc66-cfae-4af1-a8ba-f0355f64c8aa'
-      ]
+    const imageUri = core.getInput('image')
+    console.log(`imageUri is ${imageUri}`)
+
+    const projectsApi = new ProjectsApi(config)
+
+    // if project input isn't set, get the newest project
+    let projectID = ''
+    if (core.getInput('project') !== '') {
+      projectID = core.getInput('project')
+    } else {
+      const project = await getLatestProject(projectsApi)
+      if (project.projectID !== undefined) {
+        projectID = project?.projectID
+      }
+    }
+    if (projectID === '') {
+      core.setFailed('Could not find project ID')
     }
 
+    console.log(`projectID is ${projectID}`)
+
+    let branchName = ''
+    if (process.env.GITHUB_REF_NAME !== undefined) {
+      branchName = process.env.GITHUB_REF_NAME
+    }
+    if (
+      process.env.GITHUB_EVENT_NAME === 'pull_request' &&
+      process.env.GITHUB_HEAD_REF !== undefined
+    ) {
+      branchName = process.env.GITHUB_HEAD_REF
+    }
+
+    console.log(`branchName is ${branchName}`)
+
+    let branchID = await getBranchID(projectsApi, projectID, branchName)
+    if (branchID === '') {
+      branchID = await createBranch(projectsApi, projectID, branchName)
+      console.log('created branch')
+    } else {
+      console.log(`branch exists, ${branchID}`)
+    }
+
+    let buildDescription = ''
+    let shortCommitSha = ''
+    if (github.context.eventName === 'pull_request') {
+      if (github.context.payload.pull_request !== undefined) {
+        const pullRequestEvent = github.context.payload.pull_request
+        debug(pullRequestEvent.head)
+        shortCommitSha = pullRequestEvent.head.sha.slice(0, 8)
+        buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`
+      }
+    }
+
+    // register build
+    const buildsApi = new BuildsApi(config)
+    const newBuild = await createBuild(
+      buildsApi,
+      projectID,
+      branchID,
+      imageUri,
+      buildDescription,
+      shortCommitSha
+    )
+    debug(newBuild)
+
+    const batchesApi = new BatchesApi(config)
+
+    const batchRequest: CreateBatchRequest = {
+      buildID: newBuild.buildID,
+      experienceTagNames
+    }
+    debug('batchRequest exists')
     const newBatchResponse: AxiosResponse<Batch> =
-      await batchApi.createBatch(batchRequest)
+      await batchesApi.createBatch(batchRequest)
+
+    // comment on PR
 
     const newBatch: Batch = newBatchResponse.data
-
+    debug('batch launched')
     core.info(JSON.stringify(newBatch))
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
+}
+
+function arrayInputSplit(input: string): string[] {
+  return input.split(',').map(item => item.trim())
 }

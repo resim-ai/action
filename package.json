@@ -1,6 +1,6 @@
 {
   "name": "action",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Interact with ReSim from GitHub Actions",
   "author": "",
   "main": "index.js",
@@ -70,12 +70,14 @@
     ]
   },
   "devDependencies": {
+    "@octokit/webhooks-types": "^7.3.1",
     "@types/jest": "^29.5.5",
     "@types/node": "^20.7.1",
     "@types/uuid": "^9.0.4",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
     "@vercel/ncc": "^0.38.0",
+    "debug": "^4.3.4",
     "eslint": "^8.50.0",
     "eslint-plugin-github": "^4.10.1",
     "eslint-plugin-jest": "^27.4.0",
