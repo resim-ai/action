@@ -7,7 +7,6 @@ import {
   BatchesApi,
   CreateBatchRequest,
   ProjectsApi,
-  Project,
   BuildsApi
 } from './client'
 import type { AxiosResponse } from 'axios'
@@ -26,7 +25,6 @@ const debug = Debug('action')
 export async function run(): Promise<void> {
   try {
     const apiEndpoint = core.getInput('api_endpoint')
-    const buildID = core.getInput('build')
     const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'))
     debug('got inputs')
 
@@ -44,7 +42,7 @@ export async function run(): Promise<void> {
     const projectsApi = new ProjectsApi(config)
 
     // if project input isn't set, get the newest project
-    let projectID: string = ''
+    let projectID = ''
     if (core.getInput('project') !== '') {
       projectID = core.getInput('project')
     } else {

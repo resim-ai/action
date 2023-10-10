@@ -15,7 +15,7 @@ const restoreCacheMock = jest.spyOn(cache, 'restoreCache')
 
 const defaultInput = (name: string): string => {
   switch (name) {
-    case 'api_endpint':
+    case 'api_endpoint':
       return 'https://api.resim.io/v1/'
     case 'auth0_tenant_url':
       return 'https://resim-dev.us.auth0.com/'

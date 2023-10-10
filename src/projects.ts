@@ -31,7 +31,7 @@ export async function getBranchID(
   projectID: string,
   branchName: string
 ): Promise<string> {
-  let branches: Branch[] = []
+  const branches: Branch[] = []
 
   let pageToken: string | undefined = undefined
   while (pageToken !== '') {

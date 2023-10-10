@@ -70586,7 +70586,6 @@ const debug = (0, debug_1.default)('action');
 async function run() {
     try {
         const apiEndpoint = core.getInput('api_endpoint');
-        const buildID = core.getInput('build');
         const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
         debug('got inputs');
         const token = await auth.getToken();
@@ -70701,7 +70700,7 @@ async function getLatestProject(api) {
 }
 exports.getLatestProject = getLatestProject;
 async function getBranchID(api, projectID, branchName) {
-    let branches = [];
+    const branches = [];
     let pageToken = undefined;
     while (pageToken !== '') {
         const response = await api.listBranchesForProject(projectID, 100, pageToken, 'timestamp');
