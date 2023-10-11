@@ -92,6 +92,6 @@ describe('auth', () => {
     expect(fs.readFile).toHaveBeenCalledTimes(1)
     expect(mockedAxios).toHaveBeenCalledTimes(1)
     expect(fs.unlink).toHaveBeenCalledWith('.resimtoken')
-    expect(saveCacheMock).toHaveBeenCalledTimes(1)
+    expect(saveCacheMock).not.toHaveBeenCalled()
   })
 })

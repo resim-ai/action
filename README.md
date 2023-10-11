@@ -7,34 +7,77 @@ Interact with ReSim from GitHub Actions
 ### Prerequisites
 
 - ReSim client ID and secret configured as secrets in the repository
+- ECR registry URL (e.g. `123456789.dkr.ecr.us-east-1.amazonaws.com`) as a variable
+- Experiences configured and tagged in ReSim
 
-### Create Batch
+### Launch Batch with existing image
 
-Given an existing build and experience you want to run, use the following to launch a batch:
+If you want to launch batches in ReSim from a separate workflow, or just want to add a ReSim step to an existing workflow, you need a step like this:
 
 ```yaml
-      - name: Create Batch in ReSim
-        uses: resim-ai/action@main
+      - name: Launch Batch in ReSim
+        uses: resim-ai/action@v1
         with:          
           client_id: ${{ secrets.RESIM_CLIENT_ID }}
           client_secret: ${{ secrets.RESIM_CLIENT_SECRET }}
-          # If you'd like the action to be able to comment on a PR, also provide the automatically generated GitHub token
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          resource: batch
-          operation: create
-          build: 2815ed32-f225-4a92-b8d5-592807a8c475
-          # Comma-separated list of experiences
-          experiences: 449d52fc-a328-46b5-800b-1e1f771525fa,34a7fc66-cfae-4af1-a8ba-f0355f64c8aa
+          experience_tags: experiences-a,experiences-b
+          image: ${{ steps.build_image.outputs.tags }}
 ```
 
-Note that the secrets have to be passed in explicitly (see GitHub [documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow))
+- `experience_tags` should be set to the tag (or comma-separated tags) of the experiences you want to run. This could be a variable based on whether the workflow is running on a trunk branch or in a pull request.
+- `image` should be set to an image URI, where the image tag reflects the version of your software you'd like to test.
+- The secrets used for authentication have to be passed in explicitly (see GitHub [documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow))
+
+### Full example
+
+If you have a repository with your code and a Dockerfile but no GitHub workflows, the below example can be adapted to get GitHub Actions to build your software and image and test it using ReSim. 
+
+```yaml
+name: build-and-test
+on:
+  pull_request:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: bazel build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Prepare Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ vars.ECR_REGISTRY_URL }}/my-image
+          tags: |
+            type=sha
+
+      - name: Build and push image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.docker_meta.outputs.tags }}
+
+      - name: Launch Batch in ReSim
+        uses: resim-ai/action@v1
+        with:          
+          client_id: ${{ secrets.RESIM_CLIENT_ID }}
+          client_secret: ${{ secrets.RESIM_CLIENT_SECRET }}
+          experience_tags: our-blocking-experiences
+          image: ${{ steps.docker_meta.outputs.tags }}
+```
 
 ## Development
-
-### Dependencies
-
-- nodenv
-- @vercel/ncc
 
 ### Build
 

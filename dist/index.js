@@ -70650,10 +70650,30 @@ async function run() {
         };
         debug('batchRequest exists');
         const newBatchResponse = await batchesApi.createBatch(batchRequest);
-        // comment on PR
         const newBatch = newBatchResponse.data;
         debug('batch launched');
-        core.info(JSON.stringify(newBatch));
+        const newBatchID = newBatch.batchID;
+        if (github.context.eventName === 'pull_request' &&
+            core.getBooleanInput('comment_on_pr')) {
+            const contextPayload = github.context.payload;
+            const github_token = core.getInput('github_token');
+            const octokit = github.getOctokit(github_token);
+            const commentOptions = {
+                issue_number: 0,
+                body: `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`,
+                owner: '',
+                repo: ''
+            };
+            if (contextPayload.pull_request !== undefined) {
+                commentOptions.issue_number = contextPayload.pull_request.number;
+            }
+            if (contextPayload.repository !== undefined) {
+                commentOptions.owner = contextPayload.repository.owner.login;
+                commentOptions.repo = contextPayload.repository.name;
+            }
+            debug(commentOptions);
+            await octokit.rest.issues.createComment(commentOptions);
+        }
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -70724,10 +70744,7 @@ async function createBranch(api, projectID, branchName) {
         name: branchName
     };
     const newBranchResponse = await api.createBranchForProject(projectID, newBranchBody);
-    let newBranchID = '';
-    if (newBranchResponse.data.branchID !== undefined) {
-        newBranchID = newBranchResponse.data.branchID;
-    }
+    const newBranchID = newBranchResponse.data.branchID ?? '';
     return Promise.resolve(newBranchID);
 }
 exports.createBranch = createBranch;

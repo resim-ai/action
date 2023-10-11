@@ -70,10 +70,7 @@ export async function createBranch(
     projectID,
     newBranchBody
   )
-  let newBranchID = ''
-  if (newBranchResponse.data.branchID !== undefined) {
-    newBranchID = newBranchResponse.data.branchID
-  }
+  const newBranchID = newBranchResponse.data.branchID ?? ''
 
   return Promise.resolve(newBranchID)
 }

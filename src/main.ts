@@ -111,11 +111,38 @@ export async function run(): Promise<void> {
     const newBatchResponse: AxiosResponse<Batch> =
       await batchesApi.createBatch(batchRequest)
 
-    // comment on PR
-
     const newBatch: Batch = newBatchResponse.data
     debug('batch launched')
-    core.info(JSON.stringify(newBatch))
+
+    const newBatchID = newBatch.batchID
+
+    if (
+      github.context.eventName === 'pull_request' &&
+      core.getBooleanInput('comment_on_pr')
+    ) {
+      const contextPayload = github.context.payload
+      const github_token = core.getInput('github_token')
+      const octokit = github.getOctokit(github_token)
+
+      const commentOptions = {
+        issue_number: 0,
+        body: `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`,
+        owner: '',
+        repo: ''
+      }
+
+      if (contextPayload.pull_request !== undefined) {
+        commentOptions.issue_number = contextPayload.pull_request.number
+      }
+
+      if (contextPayload.repository !== undefined) {
+        commentOptions.owner = contextPayload.repository.owner.login
+        commentOptions.repo = contextPayload.repository.name
+      }
+
+      debug(commentOptions)
+      await octokit.rest.issues.createComment(commentOptions)
+    }
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)

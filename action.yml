@@ -29,13 +29,10 @@ inputs:
     required: false
   comment_on_pr:
     required: false
-    default: true
+    default: false
   github_token:
     required: false
 
 runs:
   using: 'node20'
   main: 'dist/index.js'
-
-# auth with auth0 to get token
-# cache token

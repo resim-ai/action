@@ -11,6 +11,7 @@ import * as projects from '../src/projects'
 import * as builds from '../src/builds'
 
 const getInputMock = jest.spyOn(core, 'getInput')
+const getBooleanInputMock = jest.spyOn(core, 'getBooleanInput')
 
 const getLatestProjectMock = jest.spyOn(projects, 'getLatestProject')
 const getBranchIDMock = jest.spyOn(projects, 'getBranchID')
@@ -52,6 +53,7 @@ describe('action', () => {
 
   it('launches a  batch, branch already exists', async () => {
     getInputMock.mockImplementation(defaultInput)
+    getBooleanInputMock.mockReturnValue(false)
 
     const branchID = uuid.v4()
     const projectID = uuid.v4()
