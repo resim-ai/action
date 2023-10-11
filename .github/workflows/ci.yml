@@ -65,8 +65,10 @@ jobs:
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
           # project: github-action-testing
           project: 4e570ad5-d8b6-4a80-979e-7892caea4367
-          experience_tags: foo
+          experience_tags: actions-a
           image: ${{ steps.image.outputs.image_id }}
+          comment_on_pr: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         env:
           # DEBUG: axios
           DEBUG: '*'
