@@ -64521,8 +64521,8 @@ async function getToken() {
         const response = await (0, axios_1.default)(config);
         token = response.data.access_token;
         await promises_1.default.writeFile(tokenPath, token);
+        await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
     }
-    await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
     await promises_1.default.unlink(tokenPath);
     return Promise.resolve(token);
 }
