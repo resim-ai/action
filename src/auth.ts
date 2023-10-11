@@ -62,9 +62,8 @@ export async function getToken(): Promise<string> {
     token = response.data.access_token
 
     await fs.writeFile(tokenPath, token)
+    await cache.saveCache([tokenPath], `resim-token-${uuidv4()}`)
   }
-
-  await cache.saveCache([tokenPath], `resim-token-${uuidv4()}`)
 
   await fs.unlink(tokenPath)
 
