@@ -22,5 +22,5 @@ export async function createBuild(
   )
   const newBuild = newBuildResponse.data ?? {}
 
-  return Promise.resolve(newBuild)
+  return newBuild
 }

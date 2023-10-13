@@ -1,6 +1,9 @@
+import * as core from '@actions/core'
 import { Project, ProjectsApi, ListProjects200Response, Branch } from './client'
 import type { AxiosResponse } from 'axios'
 import { isAxiosError } from 'axios'
+import Debug from 'debug'
+const debug = Debug('projects')
 
 export async function getLatestProject(api: ProjectsApi): Promise<Project> {
   let projectsResponse: AxiosResponse<ListProjects200Response>
@@ -15,7 +18,7 @@ export async function getLatestProject(api: ProjectsApi): Promise<Project> {
       if (!latestProject) {
         throw new Error('Could not find latest project')
       }
-      return Promise.resolve(latestProject)
+      return latestProject
     }
   } catch (error) {
     if (isAxiosError(error)) {
@@ -23,7 +26,7 @@ export async function getLatestProject(api: ProjectsApi): Promise<Project> {
     }
   }
 
-  return Promise.reject(new Error('Could not find latest project'))
+  return new Error('Could not find latest project')
 }
 
 export async function getBranchID(
@@ -50,9 +53,9 @@ export async function getBranchID(
   const theBranch = branches.find(b => b.name === branchName)
 
   if (theBranch?.branchID !== undefined) {
-    return Promise.resolve(theBranch.branchID)
+    return theBranch.branchID
   } else {
-    return Promise.resolve('')
+    return ''
   }
 }
 
@@ -73,4 +76,37 @@ export async function createBranch(
   const newBranchID = newBranchResponse.data.branchID ?? ''
 
   return Promise.resolve(newBranchID)
+}
+
+export async function getProjectID(projectsApi: ProjectsApi): Promise<string> {
+  let projectID = ''
+  if (core.getInput('project') !== '') {
+    projectID = core.getInput('project')
+  } else {
+    const project = await getLatestProject(projectsApi)
+    if (project?.projectID !== undefined) {
+      projectID = project.projectID
+    }
+  }
+  if (projectID === '') {
+    core.setFailed('Could not find project ID')
+  }
+
+  return projectID
+}
+
+export async function findOrCreateBranch(
+  projectsApi: ProjectsApi,
+  projectID: string,
+  branchName: string
+): Promise<string> {
+  let branchID = await getBranchID(projectsApi, projectID, branchName)
+  if (branchID === '') {
+    branchID = await createBranch(projectsApi, projectID, branchName)
+    debug('created branch')
+  } else {
+    debug(`branch exists, ${branchID}`)
+  }
+
+  return branchID
 }

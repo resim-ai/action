@@ -13,8 +13,8 @@ import * as builds from '../src/builds'
 const getInputMock = jest.spyOn(core, 'getInput')
 const getBooleanInputMock = jest.spyOn(core, 'getBooleanInput')
 
-const getLatestProjectMock = jest.spyOn(projects, 'getLatestProject')
-const getBranchIDMock = jest.spyOn(projects, 'getBranchID')
+const getProjectIDMock = jest.spyOn(projects, 'getProjectID')
+const findOrCreateBranchMock = jest.spyOn(projects, 'findOrCreateBranch')
 const createBranchMock = jest.spyOn(projects, 'createBranch')
 
 const createBuildMock = jest.spyOn(builds, 'createBuild')
@@ -64,13 +64,13 @@ describe('action', () => {
       return Promise.resolve('token')
     })
 
-    getLatestProjectMock.mockResolvedValueOnce({ projectID })
+    getProjectIDMock.mockResolvedValueOnce(projectID)
 
     // pretend we're in a PR to test this code path
     process.env.GITHUB_HEAD_REF = 'pr-branch'
     process.env.GITHUB_EVENT_NAME = 'pull_request'
 
-    getBranchIDMock.mockResolvedValueOnce(branchID)
+    findOrCreateBranchMock.mockResolvedValueOnce(branchID)
 
     Object.defineProperty(github, 'context', {
       value: {
@@ -106,7 +106,7 @@ describe('action', () => {
 
     await main.run()
 
-    expect(getLatestProjectMock).toHaveBeenCalledTimes(1)
+    expect(getProjectIDMock).toHaveBeenCalledTimes(1)
     expect(createBranchMock).not.toHaveBeenCalled()
     expect(createBatchMock).toHaveBeenCalled()
     expect(runMock).toHaveReturned()

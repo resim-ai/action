@@ -64547,7 +64547,7 @@ async function createBuild(api, projectID, branchID, imageUri, description, vers
     };
     const newBuildResponse = await api.createBuildForBranch(projectID, branchID, newBuildBody);
     const newBuild = newBuildResponse.data ?? {};
-    return Promise.resolve(newBuild);
+    return newBuild;
 }
 exports.createBuild = createBuild;
 
@@ -70595,23 +70595,10 @@ async function run() {
             accessToken: token
         });
         const imageUri = core.getInput('image');
-        console.log(`imageUri is ${imageUri}`);
+        debug(`imageUri is ${imageUri}`);
         const projectsApi = new client_1.ProjectsApi(config);
-        // if project input isn't set, get the newest project
-        let projectID = '';
-        if (core.getInput('project') !== '') {
-            projectID = core.getInput('project');
-        }
-        else {
-            const project = await (0, projects_1.getLatestProject)(projectsApi);
-            if (project.projectID !== undefined) {
-                projectID = project?.projectID;
-            }
-        }
-        if (projectID === '') {
-            core.setFailed('Could not find project ID');
-        }
-        console.log(`projectID is ${projectID}`);
+        const projectID = await (0, projects_1.getProjectID)(projectsApi);
+        debug(`project ID is ${projectID}`);
         let branchName = '';
         if (process.env.GITHUB_REF_NAME !== undefined) {
             branchName = process.env.GITHUB_REF_NAME;
@@ -70620,15 +70607,8 @@ async function run() {
             process.env.GITHUB_HEAD_REF !== undefined) {
             branchName = process.env.GITHUB_HEAD_REF;
         }
-        console.log(`branchName is ${branchName}`);
-        let branchID = await (0, projects_1.getBranchID)(projectsApi, projectID, branchName);
-        if (branchID === '') {
-            branchID = await (0, projects_1.createBranch)(projectsApi, projectID, branchName);
-            console.log('created branch');
-        }
-        else {
-            console.log(`branch exists, ${branchID}`);
-        }
+        debug(`branchName is ${branchName}`);
+        const branchID = await (0, projects_1.findOrCreateBranch)(projectsApi, projectID, branchName);
         let buildDescription = '';
         let shortCommitSha = '';
         if (github.context.eventName === 'pull_request') {
@@ -70690,13 +70670,42 @@ function arrayInputSplit(input) {
 /***/ }),
 
 /***/ 5827:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createBranch = exports.getBranchID = exports.getLatestProject = void 0;
+exports.findOrCreateBranch = exports.getProjectID = exports.createBranch = exports.getBranchID = exports.getLatestProject = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __nccwpck_require__(8757);
+const debug_1 = __importDefault(__nccwpck_require__(8237));
+const debug = (0, debug_1.default)('projects');
 async function getLatestProject(api) {
     let projectsResponse;
     try {
@@ -70708,7 +70717,7 @@ async function getLatestProject(api) {
             if (!latestProject) {
                 throw new Error('Could not find latest project');
             }
-            return Promise.resolve(latestProject);
+            return latestProject;
         }
     }
     catch (error) {
@@ -70716,7 +70725,7 @@ async function getLatestProject(api) {
             throw new Error(error.response?.data.message);
         }
     }
-    return Promise.reject(new Error('Could not find latest project'));
+    return new Error('Could not find latest project');
 }
 exports.getLatestProject = getLatestProject;
 async function getBranchID(api, projectID, branchName) {
@@ -70731,10 +70740,10 @@ async function getBranchID(api, projectID, branchName) {
     }
     const theBranch = branches.find(b => b.name === branchName);
     if (theBranch?.branchID !== undefined) {
-        return Promise.resolve(theBranch.branchID);
+        return theBranch.branchID;
     }
     else {
-        return Promise.resolve('');
+        return '';
     }
 }
 exports.getBranchID = getBranchID;
@@ -70748,6 +70757,35 @@ async function createBranch(api, projectID, branchName) {
     return Promise.resolve(newBranchID);
 }
 exports.createBranch = createBranch;
+async function getProjectID(projectsApi) {
+    let projectID = '';
+    if (core.getInput('project') !== '') {
+        projectID = core.getInput('project');
+    }
+    else {
+        const project = await getLatestProject(projectsApi);
+        if (project?.projectID !== undefined) {
+            projectID = project.projectID;
+        }
+    }
+    if (projectID === '') {
+        core.setFailed('Could not find project ID');
+    }
+    return projectID;
+}
+exports.getProjectID = getProjectID;
+async function findOrCreateBranch(projectsApi, projectID, branchName) {
+    let branchID = await getBranchID(projectsApi, projectID, branchName);
+    if (branchID === '') {
+        branchID = await createBranch(projectsApi, projectID, branchName);
+        debug('created branch');
+    }
+    else {
+        debug(`branch exists, ${branchID}`);
+    }
+    return branchID;
+}
+exports.findOrCreateBranch = findOrCreateBranch;
 
 
 /***/ }),

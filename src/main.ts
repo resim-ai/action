@@ -11,7 +11,7 @@ import {
 } from './client'
 import type { AxiosResponse } from 'axios'
 
-import { getBranchID, getLatestProject, createBranch } from './projects'
+import { getProjectID, findOrCreateBranch } from './projects'
 
 import 'axios-debug-log'
 import Debug from 'debug'
@@ -37,25 +37,12 @@ export async function run(): Promise<void> {
     })
 
     const imageUri = core.getInput('image')
-    console.log(`imageUri is ${imageUri}`)
+    debug(`imageUri is ${imageUri}`)
 
     const projectsApi = new ProjectsApi(config)
 
-    // if project input isn't set, get the newest project
-    let projectID = ''
-    if (core.getInput('project') !== '') {
-      projectID = core.getInput('project')
-    } else {
-      const project = await getLatestProject(projectsApi)
-      if (project.projectID !== undefined) {
-        projectID = project?.projectID
-      }
-    }
-    if (projectID === '') {
-      core.setFailed('Could not find project ID')
-    }
-
-    console.log(`projectID is ${projectID}`)
+    const projectID = await getProjectID(projectsApi)
+    debug(`project ID is ${projectID}`)
 
     let branchName = ''
     if (process.env.GITHUB_REF_NAME !== undefined) {
@@ -67,16 +54,13 @@ export async function run(): Promise<void> {
     ) {
       branchName = process.env.GITHUB_HEAD_REF
     }
+    debug(`branchName is ${branchName}`)
 
-    console.log(`branchName is ${branchName}`)
-
-    let branchID = await getBranchID(projectsApi, projectID, branchName)
-    if (branchID === '') {
-      branchID = await createBranch(projectsApi, projectID, branchName)
-      console.log('created branch')
-    } else {
-      console.log(`branch exists, ${branchID}`)
-    }
+    const branchID = await findOrCreateBranch(
+      projectsApi,
+      projectID,
+      branchName
+    )
 
     let buildDescription = ''
     let shortCommitSha = ''
