@@ -16,6 +16,7 @@ import { getProjectID, findOrCreateBranch } from './projects'
 import 'axios-debug-log'
 import Debug from 'debug'
 import { createBuild } from './builds'
+import { WebhookPayload } from '@actions/github/lib/interfaces'
 const debug = Debug('action')
 
 /**
@@ -104,7 +105,7 @@ export async function run(): Promise<void> {
       github.context.eventName === 'pull_request' &&
       core.getBooleanInput('comment_on_pr')
     ) {
-      const contextPayload = github.context.payload
+      const contextPayload: WebhookPayload = github.context.payload
       const github_token = core.getInput('github_token')
       const octokit = github.getOctokit(github_token)
 
