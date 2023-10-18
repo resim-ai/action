@@ -75,7 +75,7 @@ export async function createBranch(
   )
   const newBranchID = newBranchResponse.data.branchID ?? ''
 
-  return Promise.resolve(newBranchID)
+  return newBranchID
 }
 
 export async function getProjectID(projectsApi: ProjectsApi): Promise<string> {

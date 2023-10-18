@@ -12,7 +12,7 @@ Interact with ReSim from GitHub Actions
 
 ### Launch Batch with existing image
 
-If you want to launch batches in ReSim from a separate workflow, or just want to add a ReSim step to an existing workflow, you need a step like this:
+If you want to launch batches in ReSim from a separate workflow, or just want to add a ReSim step to an existing workflow, add a step like this:
 
 ```yaml
       - name: Launch Batch in ReSim
@@ -26,7 +26,7 @@ If you want to launch batches in ReSim from a separate workflow, or just want to
 
 - `experience_tags` should be set to the tag (or comma-separated tags) of the experiences you want to run. This could be a variable based on whether the workflow is running on a trunk branch or in a pull request.
 - `image` should be set to an image URI, where the image tag reflects the version of your software you'd like to test.
-- The secrets used for authentication have to be passed in explicitly (see GitHub [documentation](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow))
+- The secrets used for authentication have to be passed in explicitly (a [GitHub requirement](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow))
 
 ### Full example
 

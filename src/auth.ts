@@ -67,5 +67,5 @@ export async function getToken(): Promise<string> {
 
   await fs.unlink(tokenPath)
 
-  return Promise.resolve(token)
+  return token
 }

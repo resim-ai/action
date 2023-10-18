@@ -64524,7 +64524,7 @@ async function getToken() {
         await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
     }
     await promises_1.default.unlink(tokenPath);
-    return Promise.resolve(token);
+    return token;
 }
 exports.getToken = getToken;
 
@@ -70754,7 +70754,7 @@ async function createBranch(api, projectID, branchName) {
     };
     const newBranchResponse = await api.createBranchForProject(projectID, newBranchBody);
     const newBranchID = newBranchResponse.data.branchID ?? '';
-    return Promise.resolve(newBranchID);
+    return newBranchID;
 }
 exports.createBranch = createBranch;
 async function getProjectID(projectsApi) {
