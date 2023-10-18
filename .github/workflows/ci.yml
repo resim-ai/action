@@ -1,0 +1,74 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  test-typescript:
+    name: TypeScript Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install Dependencies
+        id: npm-ci
+        run: npm ci
+
+      - name: Check Format
+        id: npm-format-check
+        run: npm run format:check
+
+      - name: Lint
+        id: npm-lint
+        run: npm run lint
+
+      - name: Test
+        id: npm-ci-test
+        run: npm run ci-test
+
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      # Dummy build step
+      - name: Image "build"
+        id: image
+        run:
+          echo "image_id=public.ecr.aws/docker/library/hello-world:latest" >> $GITHUB_OUTPUT
+
+      - name: Test Local Action
+        id: test-action
+        uses: ./
+        with:
+          api_endpoint: 'https://api.resim.io/v1'
+          auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
+          client_id: ${{ secrets.TEST_CLIENT_ID }}
+          client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
+          # project: github-action-testing
+          project: 4e570ad5-d8b6-4a80-979e-7892caea4367
+          experience_tags: actions-a
+          image: ${{ steps.image.outputs.image_id }}
+          comment_on_pr: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          # DEBUG: axios
+          DEBUG: '*'
