@@ -1,4 +1,3 @@
-import * as core from '@actions/core'
 import { Project, ProjectsApi, ListProjects200Response, Branch } from './client'
 import type { AxiosResponse } from 'axios'
 import { isAxiosError } from 'axios'
@@ -27,6 +26,21 @@ export async function getLatestProject(api: ProjectsApi): Promise<Project> {
   }
 
   return new Error('Could not find latest project')
+}
+
+export async function listProjects(api: ProjectsApi): Promise<Project[]> {
+  const projects: Project[] = []
+
+  let pageToken: string | undefined = undefined
+  while (pageToken !== '') {
+    const response = await api.listProjects(100, pageToken, 'timestamp')
+    if (response.data.projects) {
+      projects.push(...response.data.projects)
+    }
+    pageToken = response.data.nextPageToken
+  }
+
+  return projects
 }
 
 export async function getBranchID(
@@ -78,21 +92,16 @@ export async function createBranch(
   return newBranchID
 }
 
-export async function getProjectID(projectsApi: ProjectsApi): Promise<string> {
-  let projectID = ''
-  if (core.getInput('project') !== '') {
-    projectID = core.getInput('project')
-  } else {
-    const project = await getLatestProject(projectsApi)
-    if (project?.projectID !== undefined) {
-      projectID = project.projectID
-    }
+export async function getProjectID(
+  projectsApi: ProjectsApi,
+  projectName: string
+): Promise<string> {
+  const projects = await listProjects(projectsApi)
+  const thisProject = projects.find(p => p.name === projectName)
+  if (thisProject?.projectID !== undefined) {
+    return thisProject.projectID
   }
-  if (projectID === '') {
-    core.setFailed('Could not find project ID')
-  }
-
-  return projectID
+  return Promise.reject(Error(`Could not find project ${projectName}`))
 }
 
 export async function findOrCreateBranch(

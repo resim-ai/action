@@ -12,6 +12,7 @@ import * as builds from '../src/builds'
 
 const getInputMock = jest.spyOn(core, 'getInput')
 const getBooleanInputMock = jest.spyOn(core, 'getBooleanInput')
+const setFailedMock = jest.spyOn(core, 'setFailed')
 
 const getProjectIDMock = jest.spyOn(projects, 'getProjectID')
 const findOrCreateBranchMock = jest.spyOn(projects, 'findOrCreateBranch')
@@ -34,7 +35,18 @@ const defaultInput = (name: string): string => {
     case 'image':
       return 'a.docker/image:tag'
     case 'project':
+      return 'a-resim-project'
+    default:
       return ''
+  }
+}
+
+const noExperienceInput = (name: string): string => {
+  switch (name) {
+    case 'api_endpoint':
+      return 'https://api.resim.io/v1/'
+    case 'project':
+      return 'a-project'
     default:
       return ''
   }
@@ -49,6 +61,28 @@ const getTokenMock = jest.spyOn(auth, 'getToken')
 describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  it('fails if neither experiences nor experience_tags is set', async () => {
+    getInputMock.mockImplementation(noExperienceInput)
+    setFailedMock.mockImplementation()
+
+    await main.run()
+
+    expect(setFailedMock).toHaveBeenCalled()
+    expect(getTokenMock).not.toHaveBeenCalled()
+  })
+
+  it('can handle array inputs with or without quotes', async () => {
+    expect(main.arrayInputSplit('"one two",three four')).toEqual([
+      'one two',
+      'three four'
+    ])
+
+    expect(main.arrayInputSplit("'one two', three four")).toEqual([
+      'one two',
+      'three four'
+    ])
   })
 
   it('launches a  batch, branch already exists', async () => {

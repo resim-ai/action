@@ -12,11 +12,13 @@ inputs:
   client_secret:
     required: true
   project:
-    required: false
+    required: true
   image:
     required: true
   experience_tags:
-    required: true
+    required: false
+  experiences:
+    required: false
   comment_on_pr:
     required: false
     default: false

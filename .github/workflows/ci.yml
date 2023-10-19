@@ -55,20 +55,51 @@ jobs:
         run:
           echo "image_id=public.ecr.aws/docker/library/hello-world:latest" >> $GITHUB_OUTPUT
 
-      - name: Test Local Action
-        id: test-action
+      - name: Test Action - experience tags
+        id: test-action-tag
         uses: ./
         with:
           api_endpoint: 'https://api.resim.io/v1'
           auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
           client_id: ${{ secrets.TEST_CLIENT_ID }}
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
-          # project: github-action-testing
-          project: 4e570ad5-d8b6-4a80-979e-7892caea4367
+          project: github-action-testing
           experience_tags: actions-a
           image: ${{ steps.image.outputs.image_id }}
           comment_on_pr: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          # DEBUG: axios
+          DEBUG: '*'
+
+      - name: Test Action - experiences
+        id: test-action-exp
+        uses: ./
+        with:
+          api_endpoint: 'https://api.resim.io/v1'
+          auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
+          client_id: ${{ secrets.TEST_CLIENT_ID }}
+          client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
+          project: github-action-testing
+          experiences: actions experience-a,"actions experience-b"
+          image: ${{ steps.image.outputs.image_id }}
+          comment_on_pr: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          DEBUG: '*'
+
+      - name: Test Action - project doesn't exist
+        id: test-action-no-proj
+        continue-on-error: true
+        uses: ./
+        with:
+          api_endpoint: 'https://api.resim.io/v1'
+          auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
+          client_id: ${{ secrets.TEST_CLIENT_ID }}
+          client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
+          project: this project does not exist
+          experiences: actions experience-a,"actions experience-b"
+          image: ${{ steps.image.outputs.image_id }}
+          comment_on_pr: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        env:
           DEBUG: '*'

@@ -93,11 +93,14 @@ jobs:
 | --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
 | client_id       | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                |
 | client_secret   | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                |
+| project         | Yes      | Name of ReSim project in which to run.                                                                                   |
 | image           | Yes      | URI of image that ReSim will pull and test.                                                                              |
-| experience_tags | Yes      | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,detection`  |
+| experience_tags | *        | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,planning`   |
+| experiences     | *        | Comma-separated list of experience names to run against.                                                                 |
 | comment_on_pr   | No       | If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.   |
 | github_token    | No       | If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app. |
-| project         | No       | UUID of project to run in. If not set, the action will use your latest project.                                          |
+
+ **\* At least one of `experiences` or `experience_tags` must be set.** 
 
 ## Development
 
