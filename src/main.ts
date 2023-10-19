@@ -28,12 +28,10 @@ export async function run(): Promise<void> {
     const apiEndpoint = core.getInput('api_endpoint')
 
     if (
-      (core.getInput('experience_tags') === '' &&
-        core.getInput('experiences') === '') ||
-      (core.getInput('experience_tags') !== '' &&
-        core.getInput('experiences') !== '')
+      core.getInput('experience_tags') === '' &&
+      core.getInput('experiences') === ''
     ) {
-      core.setFailed('Must set one of experiences or experience_tags')
+      core.setFailed('Must set at least one of experiences or experience_tags')
       return
     }
 

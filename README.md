@@ -100,7 +100,7 @@ jobs:
 | comment_on_pr   | No       | If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.   |
 | github_token    | No       | If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app. |
 
- **\* One of `experiences` or `experience_tags` must be set.** 
+ **\* At least one of `experiences` or `experience_tags` must be set.** 
 
 ## Development
 

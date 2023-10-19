@@ -70586,11 +70586,9 @@ const debug = (0, debug_1.default)('action');
 async function run() {
     try {
         const apiEndpoint = core.getInput('api_endpoint');
-        if ((core.getInput('experience_tags') === '' &&
-            core.getInput('experiences') === '') ||
-            (core.getInput('experience_tags') !== '' &&
-                core.getInput('experiences') !== '')) {
-            core.setFailed('Must set one of experiences or experience_tags');
+        if (core.getInput('experience_tags') === '' &&
+            core.getInput('experiences') === '') {
+            core.setFailed('Must set at least one of experiences or experience_tags');
             return;
         }
         if (core.getInput('project') === '') {
