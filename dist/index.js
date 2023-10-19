@@ -70569,7 +70569,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
+exports.arrayInputSplit = exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const auth = __importStar(__nccwpck_require__(3497));
@@ -70593,6 +70593,10 @@ async function run() {
             core.setFailed('Must set one of experiences or experience_tags');
             return;
         }
+        if (core.getInput('project') === '') {
+            core.setFailed('Must set project name');
+            return;
+        }
         const token = await auth.getToken();
         debug('got auth');
         const config = new client_1.Configuration({
@@ -70602,7 +70606,7 @@ async function run() {
         const imageUri = core.getInput('image');
         debug(`imageUri is ${imageUri}`);
         const projectsApi = new client_1.ProjectsApi(config);
-        const projectID = await (0, projects_1.getProjectID)(projectsApi);
+        const projectID = await (0, projects_1.getProjectID)(projectsApi, core.getInput('project'));
         debug(`project ID is ${projectID}`);
         let branchName = '';
         if (process.env.GITHUB_REF_NAME !== undefined) {
@@ -70675,8 +70679,16 @@ async function run() {
 }
 exports.run = run;
 function arrayInputSplit(input) {
-    return input.split(',').map(item => item.trim());
+    return input.split(',').map(item => {
+        let trimmed = item.trim();
+        if ((trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+            (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+            trimmed = trimmed.slice(1, -1);
+        }
+        return trimmed;
+    });
 }
+exports.arrayInputSplit = arrayInputSplit;
 
 
 /***/ }),
@@ -70686,35 +70698,11 @@ function arrayInputSplit(input) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.findOrCreateBranch = exports.getProjectID = exports.createBranch = exports.getBranchID = exports.getLatestProject = void 0;
-const core = __importStar(__nccwpck_require__(2186));
+exports.findOrCreateBranch = exports.getProjectID = exports.createBranch = exports.getBranchID = exports.listProjects = exports.getLatestProject = void 0;
 const axios_1 = __nccwpck_require__(8757);
 const debug_1 = __importDefault(__nccwpck_require__(8237));
 const debug = (0, debug_1.default)('projects');
@@ -70740,6 +70728,19 @@ async function getLatestProject(api) {
     return new Error('Could not find latest project');
 }
 exports.getLatestProject = getLatestProject;
+async function listProjects(api) {
+    const projects = [];
+    let pageToken = undefined;
+    while (pageToken !== '') {
+        const response = await api.listProjects(100, pageToken, 'timestamp');
+        if (response.data.projects) {
+            projects.push(...response.data.projects);
+        }
+        pageToken = response.data.nextPageToken;
+    }
+    return projects;
+}
+exports.listProjects = listProjects;
 async function getBranchID(api, projectID, branchName) {
     const branches = [];
     let pageToken = undefined;
@@ -70769,21 +70770,13 @@ async function createBranch(api, projectID, branchName) {
     return newBranchID;
 }
 exports.createBranch = createBranch;
-async function getProjectID(projectsApi) {
-    let projectID = '';
-    if (core.getInput('project') !== '') {
-        projectID = core.getInput('project');
+async function getProjectID(projectsApi, projectName) {
+    const projects = await listProjects(projectsApi);
+    const thisProject = projects.find(p => p.name === projectName);
+    if (thisProject?.projectID !== undefined) {
+        return thisProject.projectID;
     }
-    else {
-        const project = await getLatestProject(projectsApi);
-        if (project?.projectID !== undefined) {
-            projectID = project.projectID;
-        }
-    }
-    if (projectID === '') {
-        core.setFailed('Could not find project ID');
-    }
-    return projectID;
+    return Promise.reject(Error(`Could not find project ${projectName}`));
 }
 exports.getProjectID = getProjectID;
 async function findOrCreateBranch(projectsApi, projectID, branchName) {

@@ -37,6 +37,11 @@ export async function run(): Promise<void> {
       return
     }
 
+    if (core.getInput('project') === '') {
+      core.setFailed('Must set project name')
+      return
+    }
+
     const token = await auth.getToken()
     debug('got auth')
 
@@ -50,7 +55,7 @@ export async function run(): Promise<void> {
 
     const projectsApi = new ProjectsApi(config)
 
-    const projectID = await getProjectID(projectsApi)
+    const projectID = await getProjectID(projectsApi, core.getInput('project'))
     debug(`project ID is ${projectID}`)
 
     let branchName = ''
@@ -154,6 +159,15 @@ export async function run(): Promise<void> {
   }
 }
 
-function arrayInputSplit(input: string): string[] {
-  return input.split(',').map(item => item.trim())
+export function arrayInputSplit(input: string): string[] {
+  return input.split(',').map(item => {
+    let trimmed = item.trim()
+    if (
+      (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+      (trimmed.startsWith("'") && trimmed.endsWith("'"))
+    ) {
+      trimmed = trimmed.slice(1, -1)
+    }
+    return trimmed
+  })
 }

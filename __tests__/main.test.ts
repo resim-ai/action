@@ -35,7 +35,7 @@ const defaultInput = (name: string): string => {
     case 'image':
       return 'a.docker/image:tag'
     case 'project':
-      return ''
+      return 'a-resim-project'
     default:
       return ''
   }
@@ -92,6 +92,18 @@ describe('action', () => {
 
     expect(setFailedMock).toHaveBeenCalled()
     expect(getTokenMock).not.toHaveBeenCalled()
+  })
+
+  it('can handle array inputs with or without quotes', async () => {
+    expect(main.arrayInputSplit('"one two",three four')).toEqual([
+      'one two',
+      'three four'
+    ])
+
+    expect(main.arrayInputSplit("'one two', three four")).toEqual([
+      'one two',
+      'three four'
+    ])
   })
 
   it('launches a  batch, branch already exists', async () => {
