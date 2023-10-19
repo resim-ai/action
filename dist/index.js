@@ -70586,8 +70586,13 @@ const debug = (0, debug_1.default)('action');
 async function run() {
     try {
         const apiEndpoint = core.getInput('api_endpoint');
-        const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
-        debug('got inputs');
+        if ((core.getInput('experience_tags') === '' &&
+            core.getInput('experiences') === '') ||
+            (core.getInput('experience_tags') !== '' &&
+                core.getInput('experiences') !== '')) {
+            core.setFailed('Must set one of experiences or experience_tags');
+            return;
+        }
         const token = await auth.getToken();
         debug('got auth');
         const config = new client_1.Configuration({
@@ -70625,9 +70630,16 @@ async function run() {
         debug(newBuild);
         const batchesApi = new client_1.BatchesApi(config);
         const batchRequest = {
-            buildID: newBuild.buildID,
-            experienceTagNames
+            buildID: newBuild.buildID
         };
+        if (core.getInput('experience_tags') !== '') {
+            const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
+            batchRequest.experienceTagNames = experienceTagNames;
+        }
+        if (core.getInput('experiences') !== '') {
+            const experienceNames = arrayInputSplit(core.getInput('experiences'));
+            batchRequest.experienceNames = experienceNames;
+        }
         debug('batchRequest exists');
         const newBatchResponse = await batchesApi.createBatch(batchRequest);
         const newBatch = newBatchResponse.data;

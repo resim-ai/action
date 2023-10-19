@@ -12,6 +12,7 @@ import * as builds from '../src/builds'
 
 const getInputMock = jest.spyOn(core, 'getInput')
 const getBooleanInputMock = jest.spyOn(core, 'getBooleanInput')
+const setFailedMock = jest.spyOn(core, 'setFailed')
 
 const getProjectIDMock = jest.spyOn(projects, 'getProjectID')
 const findOrCreateBranchMock = jest.spyOn(projects, 'findOrCreateBranch')
@@ -40,6 +41,28 @@ const defaultInput = (name: string): string => {
   }
 }
 
+const bothExperienceInput = (name: string): string => {
+  switch (name) {
+    case 'api_endpoint':
+      return 'https://api.resim.io/v1/'
+    case 'experience_tags':
+      return 'tag1,tag2'
+    case 'experiences':
+      return 'exp1,exp2'
+    default:
+      return ''
+  }
+}
+
+const noExperienceInput = (name: string): string => {
+  switch (name) {
+    case 'api_endpoint':
+      return 'https://api.resim.io/v1/'
+    default:
+      return ''
+  }
+}
+
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
 
@@ -49,6 +72,26 @@ const getTokenMock = jest.spyOn(auth, 'getToken')
 describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  it('fails if both experiences and experience_tags are set', async () => {
+    getInputMock.mockImplementation(bothExperienceInput)
+    setFailedMock.mockImplementation()
+
+    await main.run()
+
+    expect(setFailedMock).toHaveBeenCalled()
+    expect(getTokenMock).not.toHaveBeenCalled()
+  })
+
+  it('fails if neither experiences nor experience_tags is set', async () => {
+    getInputMock.mockImplementation(noExperienceInput)
+    setFailedMock.mockImplementation()
+
+    await main.run()
+
+    expect(setFailedMock).toHaveBeenCalled()
+    expect(getTokenMock).not.toHaveBeenCalled()
   })
 
   it('launches a  batch, branch already exists', async () => {
