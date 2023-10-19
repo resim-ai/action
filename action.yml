@@ -13,20 +13,10 @@ inputs:
     required: true
   project:
     required: false
-  branch:
-    required: false
   image:
-    required: false
-  resource:
-    required: false
-  operation:
-    required: false
-  build:
-    required: false
-  experiences:
-    required: false
+    required: true
   experience_tags:
-    required: false
+    required: true
   comment_on_pr:
     required: false
     default: false

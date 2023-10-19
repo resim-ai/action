@@ -1,6 +1,16 @@
-# action
+# ReSim.ai GitHub Action
 
 Interact with ReSim from GitHub Actions
+
+- [Usage](#usage)
+  - [Prerequisites](#prerequisites)
+  - [Launch Batch with existing image](#launch-batch-with-existing-image)
+  - [Full example](#full-example)
+  - [Inputs](#inputs)
+- [Development](#development)
+  - [Build](#build)
+  - [Regenerate the client](#regenerate-the-client)
+  - [Test](#test)
 
 ## Usage
 
@@ -45,7 +55,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build
-        run: bazel build
+        run: bazel build # or other build commands as required
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -77,6 +87,18 @@ jobs:
           image: ${{ steps.docker_meta.outputs.tags }}
 ```
 
+### Inputs
+
+| Name            | Required | Description                                                                                                              |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| client_id       | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                |
+| client_secret   | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                |
+| image           | Yes      | URI of image that ReSim will pull and test.                                                                              |
+| experience_tags | Yes      | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,detection`  |
+| comment_on_pr   | No       | If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.   |
+| github_token    | No       | If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app. |
+| project         | No       | UUID of project to run in. If not set, the action will use your latest project.                                          |
+
 ## Development
 
 ### Build
@@ -98,3 +120,5 @@ npm run generate
 ```sh
 npm test
 ```
+
+When testing the action against a development or staging deployment, set `api_endpoint` and `auth0_tenant_url` appropriately.
