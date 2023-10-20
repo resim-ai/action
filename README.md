@@ -83,8 +83,9 @@ jobs:
         with:          
           client_id: ${{ secrets.RESIM_CLIENT_ID }}
           client_secret: ${{ secrets.RESIM_CLIENT_SECRET }}
-          experience_tags: our-blocking-experiences
+          project: your-resim-project
           image: ${{ steps.docker_meta.outputs.tags }}
+          experience_tags: example-experience-tag,another-example
 ```
 
 ### Inputs
