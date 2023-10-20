@@ -125,6 +125,9 @@ export async function run(): Promise<void> {
     const newBatchID = newBatch.batchID
 
     core.info(`Launched batch ${newBatchID}`)
+    core.info(
+      `View results on ReSim: https://app.resim.ai/results/${newBatchID}`
+    )
 
     if (
       github.context.eventName === 'pull_request' &&

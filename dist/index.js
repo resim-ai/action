@@ -70648,6 +70648,7 @@ async function run() {
         debug('batch launched');
         const newBatchID = newBatch.batchID;
         core.info(`Launched batch ${newBatchID}`);
+        core.info(`View results on ReSim: https://app.resim.ai/results/${newBatchID}`);
         if (github.context.eventName === 'pull_request' &&
             core.getBooleanInput('comment_on_pr')) {
             const contextPayload = github.context.payload;
