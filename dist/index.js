@@ -70647,6 +70647,10 @@ async function run() {
         const newBatch = newBatchResponse.data;
         debug('batch launched');
         const newBatchID = newBatch.batchID;
+        core.info(`Launched batch ${newBatchID}`);
+        if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
+            core.info(`View results on ReSim: https://app.resim.ai/results/${newBatchID}`);
+        }
         if (github.context.eventName === 'pull_request' &&
             core.getBooleanInput('comment_on_pr')) {
             const contextPayload = github.context.payload;
@@ -70654,10 +70658,13 @@ async function run() {
             const octokit = github.getOctokit(github_token);
             const commentOptions = {
                 issue_number: 0,
-                body: `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`,
+                body: `Batch ${newBatchID} launched`,
                 owner: '',
                 repo: ''
             };
+            if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
+                commentOptions.body = `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`;
+            }
             if (contextPayload.pull_request !== undefined) {
                 commentOptions.issue_number = contextPayload.pull_request.number;
             }
