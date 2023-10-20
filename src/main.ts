@@ -124,6 +124,8 @@ export async function run(): Promise<void> {
 
     const newBatchID = newBatch.batchID
 
+    core.info(`Launched batch ${newBatchID}`)
+
     if (
       github.context.eventName === 'pull_request' &&
       core.getBooleanInput('comment_on_pr')

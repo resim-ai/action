@@ -70647,6 +70647,7 @@ async function run() {
         const newBatch = newBatchResponse.data;
         debug('batch launched');
         const newBatchID = newBatch.batchID;
+        core.info(`Launched batch ${newBatchID}`);
         if (github.context.eventName === 'pull_request' &&
             core.getBooleanInput('comment_on_pr')) {
             const contextPayload = github.context.payload;
