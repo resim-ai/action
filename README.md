@@ -18,7 +18,10 @@ Interact with ReSim from GitHub Actions
 
 - ReSim client ID and secret configured as secrets in the repository
 - ECR registry URL (e.g. `123456789.dkr.ecr.us-east-1.amazonaws.com`) as a variable
+- AWS access key and secret access key with permission to push to the ECR repository.
 - Experiences configured and tagged in ReSim
+
+See our documentation for setting up an ECR repository for use with ReSim: https://docs.resim.ai/pushing-build-images-from-ci/introduction
 
 ### Launch Batch with existing image
 
@@ -59,6 +62,13 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Log in to ECR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ vars.ECR_REGISTRY_URL }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Prepare Docker metadata
         id: docker_meta
