@@ -125,9 +125,11 @@ export async function run(): Promise<void> {
     const newBatchID = newBatch.batchID
 
     core.info(`Launched batch ${newBatchID}`)
-    core.info(
-      `View results on ReSim: https://app.resim.ai/results/${newBatchID}`
-    )
+    if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
+      core.info(
+        `View results on ReSim: https://app.resim.ai/results/${newBatchID}`
+      )
+    }
 
     if (
       github.context.eventName === 'pull_request' &&
@@ -139,9 +141,13 @@ export async function run(): Promise<void> {
 
       const commentOptions = {
         issue_number: 0,
-        body: `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`,
+        body: `Batch ${newBatchID} launched`,
         owner: '',
         repo: ''
+      }
+
+      if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
+        commentOptions.body = `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`
       }
 
       if (contextPayload.pull_request !== undefined) {
