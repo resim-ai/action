@@ -19,7 +19,7 @@ import type { Configuration } from './configuration';
 import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 
-export const BASE_PATH = "https://api.resim.ai/v1".replace(/\/+$/, "");
+export const BASE_PATH = "/v1".replace(/\/+$/, "");
 
 /**
  *

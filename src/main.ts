@@ -5,7 +5,7 @@ import {
   Configuration,
   Batch,
   BatchesApi,
-  CreateBatchRequest,
+  BatchInput,
   ProjectsApi,
   BuildsApi
 } from './client'
@@ -99,7 +99,7 @@ export async function run(): Promise<void> {
 
     const batchesApi = new BatchesApi(config)
 
-    const batchRequest: CreateBatchRequest = {
+    const batchRequest: BatchInput = {
       buildID: newBuild.buildID
     }
 
@@ -116,8 +116,10 @@ export async function run(): Promise<void> {
     }
 
     debug('batchRequest exists')
-    const newBatchResponse: AxiosResponse<Batch> =
-      await batchesApi.createBatch(batchRequest)
+    const newBatchResponse: AxiosResponse<Batch> = await batchesApi.createBatch(
+      projectID,
+      batchRequest
+    )
 
     const newBatch: Batch = newBatchResponse.data
     debug('batch launched')
@@ -127,7 +129,7 @@ export async function run(): Promise<void> {
     core.info(`Launched batch ${newBatchID}`)
     if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
       core.info(
-        `View results on ReSim: https://app.resim.ai/results/${newBatchID}`
+        `View results on ReSim: https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`
       )
     }
 
@@ -147,7 +149,7 @@ export async function run(): Promise<void> {
       }
 
       if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
-        commentOptions.body = `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`
+        commentOptions.body = `[View results on ReSim](https://app.resim.ai/projects/${projectID}/batches/${newBatchID})`
       }
 
       if (contextPayload.pull_request !== undefined) {

@@ -1,11 +1,17 @@
-import { Project, ProjectsApi, ListProjects200Response, Branch } from './client'
+import {
+  Project,
+  ProjectsApi,
+  ListProjectsOutput,
+  Branch,
+  ListBranchesOutput
+} from './client'
 import type { AxiosResponse } from 'axios'
 import { isAxiosError } from 'axios'
 import Debug from 'debug'
 const debug = Debug('projects')
 
 export async function getLatestProject(api: ProjectsApi): Promise<Project> {
-  let projectsResponse: AxiosResponse<ListProjects200Response>
+  let projectsResponse: AxiosResponse<ListProjectsOutput>
   try {
     projectsResponse = await api.listProjects(100, undefined, 'timestamp')
     if (
@@ -33,7 +39,11 @@ export async function listProjects(api: ProjectsApi): Promise<Project[]> {
 
   let pageToken: string | undefined = undefined
   while (pageToken !== '') {
-    const response = await api.listProjects(100, pageToken, 'timestamp')
+    const response: AxiosResponse<ListProjectsOutput> = await api.listProjects(
+      100,
+      pageToken,
+      'timestamp'
+    )
     if (response.data.projects) {
       projects.push(...response.data.projects)
     }
@@ -52,12 +62,8 @@ export async function getBranchID(
 
   let pageToken: string | undefined = undefined
   while (pageToken !== '') {
-    const response = await api.listBranchesForProject(
-      projectID,
-      100,
-      pageToken,
-      'timestamp'
-    )
+    const response: AxiosResponse<ListBranchesOutput> =
+      await api.listBranchesForProject(projectID, 100, pageToken, 'timestamp')
     if (response.data.branches) {
       branches.push(...response.data.branches)
     }
