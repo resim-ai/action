@@ -36,6 +36,8 @@ const defaultInput = (name: string): string => {
       return 'a.docker/image:tag'
     case 'project':
       return 'a-resim-project'
+    case 'metrics_build_id':
+      return 'metrics-build-id'
     default:
       return ''
   }
