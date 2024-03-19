@@ -115,7 +115,7 @@ export async function run(): Promise<void> {
       batchRequest.experienceNames = experienceNames
     }
 
-    if (core.getInput('metrics_build_id') != '') {
+    if (core.getInput('metrics_build_id') !== '') {
       const metricsBuildID = core.getInput('metrics_build_id')
       batchRequest.metricsBuildID = metricsBuildID
     }

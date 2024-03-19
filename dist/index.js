@@ -73758,6 +73758,10 @@ async function run() {
             const experienceNames = arrayInputSplit(core.getInput('experiences'));
             batchRequest.experienceNames = experienceNames;
         }
+        if (core.getInput('metrics_build_id') !== '') {
+            const metricsBuildID = core.getInput('metrics_build_id');
+            batchRequest.metricsBuildID = metricsBuildID;
+        }
         debug('batchRequest exists');
         const newBatchResponse = await batchesApi.createBatch(projectID, batchRequest);
         const newBatch = newBatchResponse.data;
