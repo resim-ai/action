@@ -129,7 +129,7 @@ export async function run(): Promise<void> {
     core.info(`Launched batch ${newBatchID}`)
     if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
       core.info(
-        `View results on ReSim: https://app.resim.ai/results/${newBatchID}`
+        `View results on ReSim: https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`
       )
     }
 
@@ -149,7 +149,7 @@ export async function run(): Promise<void> {
       }
 
       if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
-        commentOptions.body = `[View results on ReSim](https://app.resim.ai/results/${newBatchID})`
+        commentOptions.body = `[View results on ReSim](https://app.resim.ai/projects/${projectID}/batches/${newBatchID})`
       }
 
       if (contextPayload.pull_request !== undefined) {
