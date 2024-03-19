@@ -24,6 +24,8 @@ inputs:
     default: false
   github_token:
     required: false
+  metrics_build_id:
+    required: false
 
 runs:
   using: 'node20'
