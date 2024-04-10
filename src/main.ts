@@ -7,11 +7,13 @@ import {
   BatchesApi,
   BatchInput,
   ProjectsApi,
+  SystemsApi,
   BuildsApi
 } from './client'
 import type { AxiosResponse } from 'axios'
 
 import { getProjectID, findOrCreateBranch } from './projects'
+import { getSystemID } from './systems'
 
 import 'axios-debug-log'
 import Debug from 'debug'
@@ -56,6 +58,12 @@ export async function run(): Promise<void> {
     const projectID = await getProjectID(projectsApi, core.getInput('project'))
     debug(`project ID is ${projectID}`)
 
+    const systemName = core.getInput('system')
+    debug(`systemName is ${systemName}`)
+    const systemsApi = new SystemsApi(config)
+    const systemID = await getSystemID(systemsApi, projectID, systemName)
+    debug(`system ID is ${systemID}`)
+
     let branchName = ''
     if (process.env.GITHUB_REF_NAME !== undefined) {
       branchName = process.env.GITHUB_REF_NAME
@@ -91,6 +99,7 @@ export async function run(): Promise<void> {
       buildsApi,
       projectID,
       branchID,
+      systemID,
       imageUri,
       buildDescription,
       shortCommitSha

@@ -64,6 +64,7 @@ jobs:
           client_id: ${{ secrets.TEST_CLIENT_ID }}
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
           project: github-action-testing
+          system: github-action-test-system
           experience_tags: actions-a
           image: ${{ steps.image.outputs.image_id }}
           comment_on_pr: true
@@ -80,6 +81,7 @@ jobs:
           client_id: ${{ secrets.TEST_CLIENT_ID }}
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
           project: github-action-testing
+          system: github-action-test-system
           experiences: actions experience-a,"actions experience-b"
           image: ${{ steps.image.outputs.image_id }}
           comment_on_pr: true
@@ -98,6 +100,7 @@ jobs:
           client_id: ${{ secrets.TEST_CLIENT_ID }}
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
           project: this project does not exist
+          system: github-action-test-system
           experiences: actions experience-a,"actions experience-b"
           image: ${{ steps.image.outputs.image_id }}
           comment_on_pr: true
