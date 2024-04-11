@@ -23,6 +23,21 @@ export async function listSystems(
   return systems
 }
 
+// export async function getSystemID(
+//   systemsApi: SystemsApi,
+//   projectID: string,
+//   systemName: string
+// ): Promise<string> {
+//   return listSystems(projectID, systemsApi).then(systems => {
+//     const thisSystem = systems.find(s => s.name === systemName)
+//     if (thisSystem?.systemID !== undefined) {
+//       return thisSystem.systemID
+//     } else {
+//       throw new Error(`Could not find system ${systemName}`)
+//     }
+//   })
+// }
+
 export async function getSystemID(
   systemsApi: SystemsApi,
   projectID: string,
@@ -33,5 +48,5 @@ export async function getSystemID(
   if (thisSystem?.systemID !== undefined) {
     return thisSystem.systemID
   }
-  return Promise.reject(Error(`Could not find system ${systemName}`))
+  throw new Error(`Could not find system ${systemName}`)
 }

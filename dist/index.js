@@ -74868,13 +74868,27 @@ async function listSystems(projectID, api) {
     return systems;
 }
 exports.listSystems = listSystems;
+// export async function getSystemID(
+//   systemsApi: SystemsApi,
+//   projectID: string,
+//   systemName: string
+// ): Promise<string> {
+//   return listSystems(projectID, systemsApi).then(systems => {
+//     const thisSystem = systems.find(s => s.name === systemName)
+//     if (thisSystem?.systemID !== undefined) {
+//       return thisSystem.systemID
+//     } else {
+//       throw new Error(`Could not find system ${systemName}`)
+//     }
+//   })
+// }
 async function getSystemID(systemsApi, projectID, systemName) {
     const systems = await listSystems(projectID, systemsApi);
     const thisSystem = systems.find(s => s.name === systemName);
     if (thisSystem?.systemID !== undefined) {
         return thisSystem.systemID;
     }
-    return Promise.reject(Error(`Could not find system ${systemName}`));
+    throw new Error(`Could not find system ${systemName}`);
 }
 exports.getSystemID = getSystemID;
 
