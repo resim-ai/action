@@ -16,6 +16,7 @@ describe('builds', () => {
     const api = new BuildsApi(config)
 
     const projectID = uuid.v4()
+    const systemID = uuid.v4()
     const branchID = uuid.v4()
     const imageUri = 'a.docker/image:tag'
     const description = 'some code'
@@ -25,6 +26,7 @@ describe('builds', () => {
       buildID: uuid.v4(),
       projectID,
       branchID,
+      systemID,
       imageUri,
       description,
       version
@@ -39,6 +41,7 @@ describe('builds', () => {
         api,
         projectID,
         branchID,
+        systemID,
         imageUri,
         description,
         version

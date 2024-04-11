@@ -4,12 +4,14 @@ export async function createBuild(
   api: BuildsApi,
   projectID: string,
   branchID: string,
+  systemID: string,
   imageUri: string,
   description: string,
   version: string
 ): Promise<Build> {
   const newBuildBody: Build = {
     projectID,
+    systemID,
     imageUri,
     description,
     version

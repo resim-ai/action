@@ -64538,9 +64538,10 @@ exports.getToken = getToken;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createBuild = void 0;
-async function createBuild(api, projectID, branchID, imageUri, description, version) {
+async function createBuild(api, projectID, branchID, systemID, imageUri, description, version) {
     const newBuildBody = {
         projectID,
+        systemID,
         imageUri,
         description,
         version
@@ -64576,8 +64577,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.SandboxApiAxiosParamCreator = exports.ProjectsApi = exports.ProjectsApiFactory = exports.ProjectsApiFp = exports.ProjectsApiAxiosParamCreator = exports.ParameterSweepsApi = exports.ParameterSweepsApiFactory = exports.ParameterSweepsApiFp = exports.ParameterSweepsApiAxiosParamCreator = exports.MetricsBuildsApi = exports.MetricsBuildsApiFactory = exports.MetricsBuildsApiFp = exports.MetricsBuildsApiAxiosParamCreator = exports.MetricsApi = exports.MetricsApiFactory = exports.MetricsApiFp = exports.MetricsApiAxiosParamCreator = exports.LaunchProfilesApi = exports.LaunchProfilesApiFactory = exports.LaunchProfilesApiFp = exports.LaunchProfilesApiAxiosParamCreator = exports.HealthApi = exports.HealthApiFactory = exports.HealthApiFp = exports.HealthApiAxiosParamCreator = exports.ExperiencesApi = exports.ExperiencesApiFactory = exports.ExperiencesApiFp = exports.ExperiencesApiAxiosParamCreator = exports.ExperienceTagsApi = exports.ExperienceTagsApiFactory = exports.ExperienceTagsApiFp = exports.ExperienceTagsApiAxiosParamCreator = exports.BuildsApi = exports.BuildsApiFactory = exports.BuildsApiFp = exports.BuildsApiAxiosParamCreator = exports.BatchesApi = exports.BatchesApiFactory = exports.BatchesApiFp = exports.BatchesApiAxiosParamCreator = exports.ParameterSweepStatus = exports.ObjectType = exports.MetricType = exports.MetricStatus = exports.LogType = exports.JobStatus = exports.ExecutionStep = exports.BranchType = exports.BatchStatus = void 0;
-exports.ViewApi = exports.ViewApiFactory = exports.ViewApiFp = exports.ViewApiAxiosParamCreator = exports.SandboxApi = exports.SandboxApiFactory = exports.SandboxApiFp = void 0;
+exports.SystemsApiAxiosParamCreator = exports.SandboxApi = exports.SandboxApiFactory = exports.SandboxApiFp = exports.SandboxApiAxiosParamCreator = exports.ProjectsApi = exports.ProjectsApiFactory = exports.ProjectsApiFp = exports.ProjectsApiAxiosParamCreator = exports.ParameterSweepsApi = exports.ParameterSweepsApiFactory = exports.ParameterSweepsApiFp = exports.ParameterSweepsApiAxiosParamCreator = exports.MetricsBuildsApi = exports.MetricsBuildsApiFactory = exports.MetricsBuildsApiFp = exports.MetricsBuildsApiAxiosParamCreator = exports.MetricsApi = exports.MetricsApiFactory = exports.MetricsApiFp = exports.MetricsApiAxiosParamCreator = exports.HealthApi = exports.HealthApiFactory = exports.HealthApiFp = exports.HealthApiAxiosParamCreator = exports.ExperiencesApi = exports.ExperiencesApiFactory = exports.ExperiencesApiFp = exports.ExperiencesApiAxiosParamCreator = exports.ExperienceTagsApi = exports.ExperienceTagsApiFactory = exports.ExperienceTagsApiFp = exports.ExperienceTagsApiAxiosParamCreator = exports.BuildsApi = exports.BuildsApiFactory = exports.BuildsApiFp = exports.BuildsApiAxiosParamCreator = exports.BatchesApi = exports.BatchesApiFactory = exports.BatchesApiFp = exports.BatchesApiAxiosParamCreator = exports.ParameterSweepStatus = exports.ObjectType = exports.MetricType = exports.MetricStatus = exports.LogType = exports.JobStatus = exports.ExecutionStep = exports.BranchType = exports.BatchStatus = void 0;
+exports.ViewApi = exports.ViewApiFactory = exports.ViewApiFp = exports.ViewApiAxiosParamCreator = exports.SystemsApi = exports.SystemsApiFactory = exports.SystemsApiFp = void 0;
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 // Some imports not used depending on template conditions
 // @ts-ignore
@@ -67670,6 +67671,50 @@ const BuildsApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
+         * Adds a build.  ID should be omitted and will be returned in the response.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {Build} [build]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBuildForSystem: async (projectID, systemID, build, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('createBuildForSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('createBuildForSystem', 'systemID', systemID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/builds`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:write"], configuration);
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(build, localVarRequestOptions, configuration);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Delete a build.
          * @param {string} projectID
          * @param {string} branchID
@@ -67801,6 +67846,51 @@ const BuildsApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
+         * Returns a specific build for a system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} buildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBuildForSystem: async (projectID, systemID, buildID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('getBuildForSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('getBuildForSystem', 'systemID', systemID);
+            // verify required parameter 'buildID' is not null or undefined
+            (0, common_1.assertParamExists)('getBuildForSystem', 'buildID', buildID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/builds/{buildID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)))
+                .replace(`{${"buildID"}}`, encodeURIComponent(String(buildID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Returns the list of builds.
          * @param {string} projectID
          * @param {number} [pageSize]
@@ -67902,6 +67992,59 @@ const BuildsApiAxiosParamCreator = function (configuration) {
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Returns the list of builds for a system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {string} [orderBy]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBuildsForSystem: async (projectID, systemID, pageSize, pageToken, orderBy, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listBuildsForSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('listBuildsForSystem', 'systemID', systemID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/builds`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     };
 };
 exports.BuildsApiAxiosParamCreator = BuildsApiAxiosParamCreator;
@@ -67922,6 +68065,18 @@ const BuildsApiFp = function (configuration) {
          */
         async createBuildForBranch(projectID, branchID, build, options) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createBuildForBranch(projectID, branchID, build, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Adds a build.  ID should be omitted and will be returned in the response.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {Build} [build]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createBuildForSystem(projectID, systemID, build, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBuildForSystem(projectID, systemID, build, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -67960,6 +68115,18 @@ const BuildsApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
+         * Returns a specific build for a system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} buildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBuildForSystem(projectID, systemID, buildID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBuildForSystem(projectID, systemID, buildID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Returns the list of builds.
          * @param {string} projectID
          * @param {number} [pageSize]
@@ -67986,6 +68153,20 @@ const BuildsApiFp = function (configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listBuildsForBranches(projectID, branchID, pageSize, pageToken, orderBy, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
+        /**
+         * Returns the list of builds for a system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {string} [orderBy]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listBuildsForSystem(projectID, systemID, pageSize, pageToken, orderBy, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listBuildsForSystem(projectID, systemID, pageSize, pageToken, orderBy, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
     };
 };
 exports.BuildsApiFp = BuildsApiFp;
@@ -68006,6 +68187,17 @@ const BuildsApiFactory = function (configuration, basePath, axios) {
          */
         createBuildForBranch(projectID, branchID, build, options) {
             return localVarFp.createBuildForBranch(projectID, branchID, build, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Adds a build.  ID should be omitted and will be returned in the response.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {Build} [build]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBuildForSystem(projectID, systemID, build, options) {
+            return localVarFp.createBuildForSystem(projectID, systemID, build, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete a build.
@@ -68040,6 +68232,17 @@ const BuildsApiFactory = function (configuration, basePath, axios) {
             return localVarFp.getBuildForBranch(projectID, branchID, buildID, options).then((request) => request(axios, basePath));
         },
         /**
+         * Returns a specific build for a system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} buildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBuildForSystem(projectID, systemID, buildID, options) {
+            return localVarFp.getBuildForSystem(projectID, systemID, buildID, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Returns the list of builds.
          * @param {string} projectID
          * @param {number} [pageSize]
@@ -68064,6 +68267,19 @@ const BuildsApiFactory = function (configuration, basePath, axios) {
         listBuildsForBranches(projectID, branchID, pageSize, pageToken, orderBy, options) {
             return localVarFp.listBuildsForBranches(projectID, branchID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
+        /**
+         * Returns the list of builds for a system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {string} [orderBy]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBuildsForSystem(projectID, systemID, pageSize, pageToken, orderBy, options) {
+            return localVarFp.listBuildsForSystem(projectID, systemID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        },
     };
 };
 exports.BuildsApiFactory = BuildsApiFactory;
@@ -68085,6 +68301,18 @@ class BuildsApi extends base_1.BaseAPI {
      */
     createBuildForBranch(projectID, branchID, build, options) {
         return (0, exports.BuildsApiFp)(this.configuration).createBuildForBranch(projectID, branchID, build, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Adds a build.  ID should be omitted and will be returned in the response.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {Build} [build]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BuildsApi
+     */
+    createBuildForSystem(projectID, systemID, build, options) {
+        return (0, exports.BuildsApiFp)(this.configuration).createBuildForSystem(projectID, systemID, build, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Delete a build.
@@ -68122,6 +68350,18 @@ class BuildsApi extends base_1.BaseAPI {
         return (0, exports.BuildsApiFp)(this.configuration).getBuildForBranch(projectID, branchID, buildID, options).then((request) => request(this.axios, this.basePath));
     }
     /**
+     * Returns a specific build for a system.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {string} buildID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BuildsApi
+     */
+    getBuildForSystem(projectID, systemID, buildID, options) {
+        return (0, exports.BuildsApiFp)(this.configuration).getBuildForSystem(projectID, systemID, buildID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
      * Returns the list of builds.
      * @param {string} projectID
      * @param {number} [pageSize]
@@ -68147,6 +68387,20 @@ class BuildsApi extends base_1.BaseAPI {
      */
     listBuildsForBranches(projectID, branchID, pageSize, pageToken, orderBy, options) {
         return (0, exports.BuildsApiFp)(this.configuration).listBuildsForBranches(projectID, branchID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns the list of builds for a system.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {string} [orderBy]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BuildsApi
+     */
+    listBuildsForSystem(projectID, systemID, pageSize, pageToken, orderBy, options) {
+        return (0, exports.BuildsApiFp)(this.configuration).listBuildsForSystem(projectID, systemID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
     }
 }
 exports.BuildsApi = BuildsApi;
@@ -68948,6 +69202,55 @@ const ExperiencesApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
+         * Returns the systems for a given experience
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSystemsForExperience: async (projectID, experienceID, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('getSystemsForExperience', 'projectID', projectID);
+            // verify required parameter 'experienceID' is not null or undefined
+            (0, common_1.assertParamExists)('getSystemsForExperience', 'experienceID', experienceID);
+            const localVarPath = `/projects/{projectID}/experiences/{experienceID}/systems`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"experienceID"}}`, encodeURIComponent(String(experienceID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["experiences:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["experiences:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["experiences:read"], configuration);
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Returns a list of experience tags associated with a given experience.
          * @param {string} projectID
          * @param {string} experienceID
@@ -69169,6 +69472,19 @@ const ExperiencesApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
+         * Returns the systems for a given experience
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSystemsForExperience(projectID, experienceID, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSystemsForExperience(projectID, experienceID, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Returns a list of experience tags associated with a given experience.
          * @param {string} projectID
          * @param {string} experienceID
@@ -69257,6 +69573,18 @@ const ExperiencesApiFactory = function (configuration, basePath, axios) {
             return localVarFp.getExperience(projectID, experienceID, options).then((request) => request(axios, basePath));
         },
         /**
+         * Returns the systems for a given experience
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSystemsForExperience(projectID, experienceID, pageSize, pageToken, options) {
+            return localVarFp.getSystemsForExperience(projectID, experienceID, pageSize, pageToken, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Returns a list of experience tags associated with a given experience.
          * @param {string} projectID
          * @param {string} experienceID
@@ -69342,6 +69670,19 @@ class ExperiencesApi extends base_1.BaseAPI {
      */
     getExperience(projectID, experienceID, options) {
         return (0, exports.ExperiencesApiFp)(this.configuration).getExperience(projectID, experienceID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns the systems for a given experience
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExperiencesApi
+     */
+    getSystemsForExperience(projectID, experienceID, pageSize, pageToken, options) {
+        return (0, exports.ExperiencesApiFp)(this.configuration).getSystemsForExperience(projectID, experienceID, pageSize, pageToken, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Returns a list of experience tags associated with a given experience.
@@ -69481,421 +69822,6 @@ class HealthApi extends base_1.BaseAPI {
     }
 }
 exports.HealthApi = HealthApi;
-/**
- * LaunchProfilesApi - axios parameter creator
- * @export
- */
-const LaunchProfilesApiAxiosParamCreator = function (configuration) {
-    return {
-        /**
-         * Adds a launch profile.  ID should be omitted and will be returned in the response.
-         * @param {string} projectID
-         * @param {LaunchProfile} [launchProfile]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createLaunchProfile: async (projectID, launchProfile, options = {}) => {
-            // verify required parameter 'projectID' is not null or undefined
-            (0, common_1.assertParamExists)('createLaunchProfile', 'projectID', projectID);
-            const localVarPath = `/projects/{projectID}/launchProfiles`
-                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
-            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(launchProfile, localVarRequestOptions, configuration);
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Deletes a launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteLaunchProfile: async (projectID, launchProfileID, options = {}) => {
-            // verify required parameter 'projectID' is not null or undefined
-            (0, common_1.assertParamExists)('deleteLaunchProfile', 'projectID', projectID);
-            // verify required parameter 'launchProfileID' is not null or undefined
-            (0, common_1.assertParamExists)('deleteLaunchProfile', 'launchProfileID', launchProfileID);
-            const localVarPath = `/projects/{projectID}/launchProfiles/{launchProfileID}`
-                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
-                .replace(`{${"launchProfileID"}}`, encodeURIComponent(String(launchProfileID)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Returns a specific launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLaunchProfile: async (projectID, launchProfileID, options = {}) => {
-            // verify required parameter 'projectID' is not null or undefined
-            (0, common_1.assertParamExists)('getLaunchProfile', 'projectID', projectID);
-            // verify required parameter 'launchProfileID' is not null or undefined
-            (0, common_1.assertParamExists)('getLaunchProfile', 'launchProfileID', launchProfileID);
-            const localVarPath = `/projects/{projectID}/launchProfiles/{launchProfileID}`
-                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
-                .replace(`{${"launchProfileID"}}`, encodeURIComponent(String(launchProfileID)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:read"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:read"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:read"], configuration);
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Returns the list of launch profiles.
-         * @param {string} projectID
-         * @param {number} [pageSize]
-         * @param {string} [pageToken]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listLaunchProfiles: async (projectID, pageSize, pageToken, options = {}) => {
-            // verify required parameter 'projectID' is not null or undefined
-            (0, common_1.assertParamExists)('listLaunchProfiles', 'projectID', projectID);
-            const localVarPath = `/projects/{projectID}/launchProfiles`
-                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:read"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:read"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:read"], configuration);
-            if (pageSize !== undefined) {
-                localVarQueryParameter['pageSize'] = pageSize;
-            }
-            if (pageToken !== undefined) {
-                localVarQueryParameter['pageToken'] = pageToken;
-            }
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Updates the launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {LaunchProfileInput} [launchProfileInput]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateLaunchProfile: async (projectID, launchProfileID, launchProfileInput, options = {}) => {
-            // verify required parameter 'projectID' is not null or undefined
-            (0, common_1.assertParamExists)('updateLaunchProfile', 'projectID', projectID);
-            // verify required parameter 'launchProfileID' is not null or undefined
-            (0, common_1.assertParamExists)('updateLaunchProfile', 'launchProfileID', launchProfileID);
-            const localVarPath = `/projects/{projectID}/launchProfiles/{launchProfileID}`
-                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
-                .replace(`{${"launchProfileID"}}`, encodeURIComponent(String(launchProfileID)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options };
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["launchProfiles:write"], configuration);
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
-            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(launchProfileInput, localVarRequestOptions, configuration);
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    };
-};
-exports.LaunchProfilesApiAxiosParamCreator = LaunchProfilesApiAxiosParamCreator;
-/**
- * LaunchProfilesApi - functional programming interface
- * @export
- */
-const LaunchProfilesApiFp = function (configuration) {
-    const localVarAxiosParamCreator = (0, exports.LaunchProfilesApiAxiosParamCreator)(configuration);
-    return {
-        /**
-         * Adds a launch profile.  ID should be omitted and will be returned in the response.
-         * @param {string} projectID
-         * @param {LaunchProfile} [launchProfile]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createLaunchProfile(projectID, launchProfile, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createLaunchProfile(projectID, launchProfile, options);
-            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-        },
-        /**
-         * Deletes a launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteLaunchProfile(projectID, launchProfileID, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteLaunchProfile(projectID, launchProfileID, options);
-            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-        },
-        /**
-         * Returns a specific launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getLaunchProfile(projectID, launchProfileID, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getLaunchProfile(projectID, launchProfileID, options);
-            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-        },
-        /**
-         * Returns the list of launch profiles.
-         * @param {string} projectID
-         * @param {number} [pageSize]
-         * @param {string} [pageToken]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async listLaunchProfiles(projectID, pageSize, pageToken, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listLaunchProfiles(projectID, pageSize, pageToken, options);
-            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-        },
-        /**
-         * Updates the launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {LaunchProfileInput} [launchProfileInput]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async updateLaunchProfile(projectID, launchProfileID, launchProfileInput, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateLaunchProfile(projectID, launchProfileID, launchProfileInput, options);
-            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-        },
-    };
-};
-exports.LaunchProfilesApiFp = LaunchProfilesApiFp;
-/**
- * LaunchProfilesApi - factory interface
- * @export
- */
-const LaunchProfilesApiFactory = function (configuration, basePath, axios) {
-    const localVarFp = (0, exports.LaunchProfilesApiFp)(configuration);
-    return {
-        /**
-         * Adds a launch profile.  ID should be omitted and will be returned in the response.
-         * @param {string} projectID
-         * @param {LaunchProfile} [launchProfile]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createLaunchProfile(projectID, launchProfile, options) {
-            return localVarFp.createLaunchProfile(projectID, launchProfile, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Deletes a launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteLaunchProfile(projectID, launchProfileID, options) {
-            return localVarFp.deleteLaunchProfile(projectID, launchProfileID, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Returns a specific launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getLaunchProfile(projectID, launchProfileID, options) {
-            return localVarFp.getLaunchProfile(projectID, launchProfileID, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Returns the list of launch profiles.
-         * @param {string} projectID
-         * @param {number} [pageSize]
-         * @param {string} [pageToken]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        listLaunchProfiles(projectID, pageSize, pageToken, options) {
-            return localVarFp.listLaunchProfiles(projectID, pageSize, pageToken, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Updates the launch profile.
-         * @param {string} projectID
-         * @param {string} launchProfileID
-         * @param {LaunchProfileInput} [launchProfileInput]
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        updateLaunchProfile(projectID, launchProfileID, launchProfileInput, options) {
-            return localVarFp.updateLaunchProfile(projectID, launchProfileID, launchProfileInput, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-exports.LaunchProfilesApiFactory = LaunchProfilesApiFactory;
-/**
- * LaunchProfilesApi - object-oriented interface
- * @export
- * @class LaunchProfilesApi
- * @extends {BaseAPI}
- */
-class LaunchProfilesApi extends base_1.BaseAPI {
-    /**
-     * Adds a launch profile.  ID should be omitted and will be returned in the response.
-     * @param {string} projectID
-     * @param {LaunchProfile} [launchProfile]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LaunchProfilesApi
-     */
-    createLaunchProfile(projectID, launchProfile, options) {
-        return (0, exports.LaunchProfilesApiFp)(this.configuration).createLaunchProfile(projectID, launchProfile, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Deletes a launch profile.
-     * @param {string} projectID
-     * @param {string} launchProfileID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LaunchProfilesApi
-     */
-    deleteLaunchProfile(projectID, launchProfileID, options) {
-        return (0, exports.LaunchProfilesApiFp)(this.configuration).deleteLaunchProfile(projectID, launchProfileID, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Returns a specific launch profile.
-     * @param {string} projectID
-     * @param {string} launchProfileID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LaunchProfilesApi
-     */
-    getLaunchProfile(projectID, launchProfileID, options) {
-        return (0, exports.LaunchProfilesApiFp)(this.configuration).getLaunchProfile(projectID, launchProfileID, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Returns the list of launch profiles.
-     * @param {string} projectID
-     * @param {number} [pageSize]
-     * @param {string} [pageToken]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LaunchProfilesApi
-     */
-    listLaunchProfiles(projectID, pageSize, pageToken, options) {
-        return (0, exports.LaunchProfilesApiFp)(this.configuration).listLaunchProfiles(projectID, pageSize, pageToken, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Updates the launch profile.
-     * @param {string} projectID
-     * @param {string} launchProfileID
-     * @param {LaunchProfileInput} [launchProfileInput]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof LaunchProfilesApi
-     */
-    updateLaunchProfile(projectID, launchProfileID, launchProfileInput, options) {
-        return (0, exports.LaunchProfilesApiFp)(this.configuration).updateLaunchProfile(projectID, launchProfileID, launchProfileInput, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-exports.LaunchProfilesApi = LaunchProfilesApi;
 /**
  * MetricsApi - axios parameter creator
  * @export
@@ -71650,6 +71576,55 @@ const MetricsBuildsApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
+         * Returns the systems for a given metrics build
+         * @param {string} projectID
+         * @param {string} metricsBuildID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSystemsForMetricsBuild: async (projectID, metricsBuildID, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('getSystemsForMetricsBuild', 'projectID', projectID);
+            // verify required parameter 'metricsBuildID' is not null or undefined
+            (0, common_1.assertParamExists)('getSystemsForMetricsBuild', 'metricsBuildID', metricsBuildID);
+            const localVarPath = `/projects/{projectID}/metricsBuilds/{metricsBuildID}/systems`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"metricsBuildID"}}`, encodeURIComponent(String(metricsBuildID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["builds:read"], configuration);
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Returns the list of metrics builds.
          * @param {string} projectID
          * @param {number} [pageSize]
@@ -71731,6 +71706,19 @@ const MetricsBuildsApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
+         * Returns the systems for a given metrics build
+         * @param {string} projectID
+         * @param {string} metricsBuildID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSystemsForMetricsBuild(projectID, metricsBuildID, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSystemsForMetricsBuild(projectID, metricsBuildID, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Returns the list of metrics builds.
          * @param {string} projectID
          * @param {number} [pageSize]
@@ -71772,6 +71760,18 @@ const MetricsBuildsApiFactory = function (configuration, basePath, axios) {
          */
         getMetricsBuild(projectID, metricsBuildID, options) {
             return localVarFp.getMetricsBuild(projectID, metricsBuildID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns the systems for a given metrics build
+         * @param {string} projectID
+         * @param {string} metricsBuildID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSystemsForMetricsBuild(projectID, metricsBuildID, pageSize, pageToken, options) {
+            return localVarFp.getSystemsForMetricsBuild(projectID, metricsBuildID, pageSize, pageToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns the list of metrics builds.
@@ -71818,6 +71818,19 @@ class MetricsBuildsApi extends base_1.BaseAPI {
         return (0, exports.MetricsBuildsApiFp)(this.configuration).getMetricsBuild(projectID, metricsBuildID, options).then((request) => request(this.axios, this.basePath));
     }
     /**
+     * Returns the systems for a given metrics build
+     * @param {string} projectID
+     * @param {string} metricsBuildID
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsBuildsApi
+     */
+    getSystemsForMetricsBuild(projectID, metricsBuildID, pageSize, pageToken, options) {
+        return (0, exports.MetricsBuildsApiFp)(this.configuration).getSystemsForMetricsBuild(projectID, metricsBuildID, pageSize, pageToken, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
      * Returns the list of metrics builds.
      * @param {string} projectID
      * @param {number} [pageSize]
@@ -71838,6 +71851,47 @@ exports.MetricsBuildsApi = MetricsBuildsApi;
  */
 const ParameterSweepsApiAxiosParamCreator = function (configuration) {
     return {
+        /**
+         * Cancels a parameter sweep.
+         * @param {string} projectID
+         * @param {string} sweepID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cancelParameterSweep: async (projectID, sweepID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('cancelParameterSweep', 'projectID', projectID);
+            // verify required parameter 'sweepID' is not null or undefined
+            (0, common_1.assertParamExists)('cancelParameterSweep', 'sweepID', sweepID);
+            const localVarPath = `/projects/{projectID}/sweeps/{sweepID}/:cancel`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"sweepID"}}`, encodeURIComponent(String(sweepID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["sweeps:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["sweeps:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["sweeps:write"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Adds a parameter sweep.  ID should be omitted and will be returned in the response.
          * @param {string} projectID
@@ -71979,6 +72033,17 @@ const ParameterSweepsApiFp = function (configuration) {
     const localVarAxiosParamCreator = (0, exports.ParameterSweepsApiAxiosParamCreator)(configuration);
     return {
         /**
+         * Cancels a parameter sweep.
+         * @param {string} projectID
+         * @param {string} sweepID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async cancelParameterSweep(projectID, sweepID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.cancelParameterSweep(projectID, sweepID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Adds a parameter sweep.  ID should be omitted and will be returned in the response.
          * @param {string} projectID
          * @param {ParameterSweepInput} [parameterSweepInput]
@@ -72024,6 +72089,16 @@ const ParameterSweepsApiFactory = function (configuration, basePath, axios) {
     const localVarFp = (0, exports.ParameterSweepsApiFp)(configuration);
     return {
         /**
+         * Cancels a parameter sweep.
+         * @param {string} projectID
+         * @param {string} sweepID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        cancelParameterSweep(projectID, sweepID, options) {
+            return localVarFp.cancelParameterSweep(projectID, sweepID, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Adds a parameter sweep.  ID should be omitted and will be returned in the response.
          * @param {string} projectID
          * @param {ParameterSweepInput} [parameterSweepInput]
@@ -72065,6 +72140,17 @@ exports.ParameterSweepsApiFactory = ParameterSweepsApiFactory;
  * @extends {BaseAPI}
  */
 class ParameterSweepsApi extends base_1.BaseAPI {
+    /**
+     * Cancels a parameter sweep.
+     * @param {string} projectID
+     * @param {string} sweepID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ParameterSweepsApi
+     */
+    cancelParameterSweep(projectID, sweepID, options) {
+        return (0, exports.ParameterSweepsApiFp)(this.configuration).cancelParameterSweep(projectID, sweepID, options).then((request) => request(this.axios, this.basePath));
+    }
     /**
      * Adds a parameter sweep.  ID should be omitted and will be returned in the response.
      * @param {string} projectID
@@ -72963,6 +73049,842 @@ class SandboxApi extends base_1.BaseAPI {
 }
 exports.SandboxApi = SandboxApi;
 /**
+ * SystemsApi - axios parameter creator
+ * @export
+ */
+const SystemsApiAxiosParamCreator = function (configuration) {
+    return {
+        /**
+         * Registers the given experience as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addSystemToExperience: async (projectID, systemID, experienceID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('addSystemToExperience', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('addSystemToExperience', 'systemID', systemID);
+            // verify required parameter 'experienceID' is not null or undefined
+            (0, common_1.assertParamExists)('addSystemToExperience', 'experienceID', experienceID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/experiences/{experienceID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)))
+                .replace(`{${"experienceID"}}`, encodeURIComponent(String(experienceID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Registers the given metrics build as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} metricsBuildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addSystemToMetricsBuild: async (projectID, systemID, metricsBuildID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('addSystemToMetricsBuild', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('addSystemToMetricsBuild', 'systemID', systemID);
+            // verify required parameter 'metricsBuildID' is not null or undefined
+            (0, common_1.assertParamExists)('addSystemToMetricsBuild', 'metricsBuildID', metricsBuildID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/metricsBuilds/{metricsBuildID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)))
+                .replace(`{${"metricsBuildID"}}`, encodeURIComponent(String(metricsBuildID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Adds a system.  ID should be omitted and will be returned in the response.
+         * @param {string} projectID
+         * @param {System} [system]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSystem: async (projectID, system, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('createSystem', 'projectID', projectID);
+            const localVarPath = `/projects/{projectID}/systems`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(system, localVarRequestOptions, configuration);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns a specific system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSystem: async (projectID, systemID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('getSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('getSystem', 'systemID', systemID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns a list of all experiences applicable to the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExperiencesForSystem: async (projectID, systemID, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listExperiencesForSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('listExperiencesForSystem', 'systemID', systemID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/experiences`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns a list of all metrics builds applicable to the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMetricsBuildsForSystem: async (projectID, systemID, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listMetricsBuildsForSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('listMetricsBuildsForSystem', 'systemID', systemID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/metricsBuilds`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns the list of systems.
+         * @param {string} projectID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listSystems: async (projectID, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listSystems', 'projectID', projectID);
+            const localVarPath = `/projects/{projectID}/systems`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:read"], configuration);
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deregisters the given experience as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeSystemFromExperience: async (projectID, systemID, experienceID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('removeSystemFromExperience', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('removeSystemFromExperience', 'systemID', systemID);
+            // verify required parameter 'experienceID' is not null or undefined
+            (0, common_1.assertParamExists)('removeSystemFromExperience', 'experienceID', experienceID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/experiences/{experienceID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)))
+                .replace(`{${"experienceID"}}`, encodeURIComponent(String(experienceID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Deregisters the given metrics build as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} metricsBuildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeSystemFromMetricsBuild: async (projectID, systemID, metricsBuildID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('removeSystemFromMetricsBuild', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('removeSystemFromMetricsBuild', 'systemID', systemID);
+            // verify required parameter 'metricsBuildID' is not null or undefined
+            (0, common_1.assertParamExists)('removeSystemFromMetricsBuild', 'metricsBuildID', metricsBuildID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}/metricsBuilds/{metricsBuildID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)))
+                .replace(`{${"metricsBuildID"}}`, encodeURIComponent(String(metricsBuildID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Updates the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {SystemInput} [systemInput]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSystem: async (projectID, systemID, systemInput, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('updateSystem', 'projectID', projectID);
+            // verify required parameter 'systemID' is not null or undefined
+            (0, common_1.assertParamExists)('updateSystem', 'systemID', systemID);
+            const localVarPath = `/projects/{projectID}/systems/{systemID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"systemID"}}`, encodeURIComponent(String(systemID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, "OAuth", ["systems:write"], configuration);
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers };
+            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(systemInput, localVarRequestOptions, configuration);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    };
+};
+exports.SystemsApiAxiosParamCreator = SystemsApiAxiosParamCreator;
+/**
+ * SystemsApi - functional programming interface
+ * @export
+ */
+const SystemsApiFp = function (configuration) {
+    const localVarAxiosParamCreator = (0, exports.SystemsApiAxiosParamCreator)(configuration);
+    return {
+        /**
+         * Registers the given experience as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addSystemToExperience(projectID, systemID, experienceID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addSystemToExperience(projectID, systemID, experienceID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Registers the given metrics build as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} metricsBuildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Adds a system.  ID should be omitted and will be returned in the response.
+         * @param {string} projectID
+         * @param {System} [system]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createSystem(projectID, system, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSystem(projectID, system, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Returns a specific system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSystem(projectID, systemID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSystem(projectID, systemID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Returns a list of all experiences applicable to the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Returns a list of all metrics builds applicable to the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listMetricsBuildsForSystem(projectID, systemID, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listMetricsBuildsForSystem(projectID, systemID, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Returns the list of systems.
+         * @param {string} projectID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listSystems(projectID, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listSystems(projectID, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Deregisters the given experience as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async removeSystemFromExperience(projectID, systemID, experienceID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeSystemFromExperience(projectID, systemID, experienceID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Deregisters the given metrics build as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} metricsBuildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async removeSystemFromMetricsBuild(projectID, systemID, metricsBuildID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeSystemFromMetricsBuild(projectID, systemID, metricsBuildID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Updates the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {SystemInput} [systemInput]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateSystem(projectID, systemID, systemInput, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSystem(projectID, systemID, systemInput, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+    };
+};
+exports.SystemsApiFp = SystemsApiFp;
+/**
+ * SystemsApi - factory interface
+ * @export
+ */
+const SystemsApiFactory = function (configuration, basePath, axios) {
+    const localVarFp = (0, exports.SystemsApiFp)(configuration);
+    return {
+        /**
+         * Registers the given experience as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addSystemToExperience(projectID, systemID, experienceID, options) {
+            return localVarFp.addSystemToExperience(projectID, systemID, experienceID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Registers the given metrics build as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} metricsBuildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options) {
+            return localVarFp.addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Adds a system.  ID should be omitted and will be returned in the response.
+         * @param {string} projectID
+         * @param {System} [system]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createSystem(projectID, system, options) {
+            return localVarFp.createSystem(projectID, system, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a specific system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSystem(projectID, systemID, options) {
+            return localVarFp.getSystem(projectID, systemID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a list of all experiences applicable to the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options) {
+            return localVarFp.listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a list of all metrics builds applicable to the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listMetricsBuildsForSystem(projectID, systemID, pageSize, pageToken, options) {
+            return localVarFp.listMetricsBuildsForSystem(projectID, systemID, pageSize, pageToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns the list of systems.
+         * @param {string} projectID
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listSystems(projectID, pageSize, pageToken, options) {
+            return localVarFp.listSystems(projectID, pageSize, pageToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deregisters the given experience as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeSystemFromExperience(projectID, systemID, experienceID, options) {
+            return localVarFp.removeSystemFromExperience(projectID, systemID, experienceID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Deregisters the given metrics build as applicable for the system
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {string} metricsBuildID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeSystemFromMetricsBuild(projectID, systemID, metricsBuildID, options) {
+            return localVarFp.removeSystemFromMetricsBuild(projectID, systemID, metricsBuildID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Updates the system.
+         * @param {string} projectID
+         * @param {string} systemID
+         * @param {SystemInput} [systemInput]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateSystem(projectID, systemID, systemInput, options) {
+            return localVarFp.updateSystem(projectID, systemID, systemInput, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+exports.SystemsApiFactory = SystemsApiFactory;
+/**
+ * SystemsApi - object-oriented interface
+ * @export
+ * @class SystemsApi
+ * @extends {BaseAPI}
+ */
+class SystemsApi extends base_1.BaseAPI {
+    /**
+     * Registers the given experience as applicable for the system
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    addSystemToExperience(projectID, systemID, experienceID, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).addSystemToExperience(projectID, systemID, experienceID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Registers the given metrics build as applicable for the system
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {string} metricsBuildID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Adds a system.  ID should be omitted and will be returned in the response.
+     * @param {string} projectID
+     * @param {System} [system]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    createSystem(projectID, system, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).createSystem(projectID, system, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns a specific system.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    getSystem(projectID, systemID, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).getSystem(projectID, systemID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns a list of all experiences applicable to the system.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns a list of all metrics builds applicable to the system.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    listMetricsBuildsForSystem(projectID, systemID, pageSize, pageToken, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).listMetricsBuildsForSystem(projectID, systemID, pageSize, pageToken, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns the list of systems.
+     * @param {string} projectID
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    listSystems(projectID, pageSize, pageToken, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).listSystems(projectID, pageSize, pageToken, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Deregisters the given experience as applicable for the system
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    removeSystemFromExperience(projectID, systemID, experienceID, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).removeSystemFromExperience(projectID, systemID, experienceID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Deregisters the given metrics build as applicable for the system
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {string} metricsBuildID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    removeSystemFromMetricsBuild(projectID, systemID, metricsBuildID, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).removeSystemFromMetricsBuild(projectID, systemID, metricsBuildID, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Updates the system.
+     * @param {string} projectID
+     * @param {string} systemID
+     * @param {SystemInput} [systemInput]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SystemsApi
+     */
+    updateSystem(projectID, systemID, systemInput, options) {
+        return (0, exports.SystemsApiFp)(this.configuration).updateSystem(projectID, systemID, systemInput, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+exports.SystemsApi = SystemsApi;
+/**
  * ViewApi - axios parameter creator
  * @export
  */
@@ -73691,6 +74613,7 @@ const github = __importStar(__nccwpck_require__(5438));
 const auth = __importStar(__nccwpck_require__(3497));
 const client_1 = __nccwpck_require__(7929);
 const projects_1 = __nccwpck_require__(5827);
+const systems_1 = __nccwpck_require__(3941);
 __nccwpck_require__(9301);
 const debug_1 = __importDefault(__nccwpck_require__(8237));
 const builds_1 = __nccwpck_require__(8631);
@@ -73722,6 +74645,11 @@ async function run() {
         const projectsApi = new client_1.ProjectsApi(config);
         const projectID = await (0, projects_1.getProjectID)(projectsApi, core.getInput('project'));
         debug(`project ID is ${projectID}`);
+        const systemName = core.getInput('system');
+        debug(`systemName is ${systemName}`);
+        const systemsApi = new client_1.SystemsApi(config);
+        const systemID = await (0, systems_1.getSystemID)(systemsApi, projectID, systemName);
+        debug(`system ID is ${systemID}`);
         let branchName = '';
         if (process.env.GITHUB_REF_NAME !== undefined) {
             branchName = process.env.GITHUB_REF_NAME;
@@ -73744,7 +74672,7 @@ async function run() {
         }
         // register build
         const buildsApi = new client_1.BuildsApi(config);
-        const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, imageUri, buildDescription, shortCommitSha);
+        const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildDescription, shortCommitSha);
         debug(newBuild);
         const batchesApi = new client_1.BatchesApi(config);
         const batchRequest = {
@@ -73916,6 +74844,53 @@ async function findOrCreateBranch(projectsApi, projectID, branchName) {
     return branchID;
 }
 exports.findOrCreateBranch = findOrCreateBranch;
+
+
+/***/ }),
+
+/***/ 3941:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getSystemID = exports.listSystems = void 0;
+async function listSystems(projectID, api) {
+    const systems = [];
+    let pageToken = undefined;
+    while (pageToken !== '') {
+        const response = await api.listSystems(projectID, 100, pageToken);
+        if (response.data.systems) {
+            systems.push(...response.data.systems);
+        }
+        pageToken = response.data.nextPageToken;
+    }
+    return systems;
+}
+exports.listSystems = listSystems;
+// export async function getSystemID(
+//   systemsApi: SystemsApi,
+//   projectID: string,
+//   systemName: string
+// ): Promise<string> {
+//   return listSystems(projectID, systemsApi).then(systems => {
+//     const thisSystem = systems.find(s => s.name === systemName)
+//     if (thisSystem?.systemID !== undefined) {
+//       return thisSystem.systemID
+//     } else {
+//       throw new Error(`Could not find system ${systemName}`)
+//     }
+//   })
+// }
+async function getSystemID(systemsApi, projectID, systemName) {
+    const systems = await listSystems(projectID, systemsApi);
+    const thisSystem = systems.find(s => s.name === systemName);
+    if (thisSystem?.systemID !== undefined) {
+        return thisSystem.systemID;
+    }
+    throw new Error(`Could not find system ${systemName}`);
+}
+exports.getSystemID = getSystemID;
 
 
 /***/ }),

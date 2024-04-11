@@ -8,6 +8,8 @@ import * as uuid from 'uuid'
 import type { AxiosResponse } from 'axios'
 import { Batch, BatchesApi, Build } from '../src/client'
 import * as projects from '../src/projects'
+import * as systems from '../src/systems'
+
 import * as builds from '../src/builds'
 
 const getInputMock = jest.spyOn(core, 'getInput')
@@ -18,6 +20,7 @@ const getProjectIDMock = jest.spyOn(projects, 'getProjectID')
 const findOrCreateBranchMock = jest.spyOn(projects, 'findOrCreateBranch')
 const createBranchMock = jest.spyOn(projects, 'createBranch')
 
+const getSystemIDMock = jest.spyOn(systems, 'getSystemID')
 const createBuildMock = jest.spyOn(builds, 'createBuild')
 
 const defaultInput = (name: string): string => {
@@ -36,6 +39,8 @@ const defaultInput = (name: string): string => {
       return 'a.docker/image:tag'
     case 'project':
       return 'a-resim-project'
+    case 'system':
+      return 'a-resim-system'
     case 'metrics_build_id':
       return 'metrics-build-id'
     default:
@@ -93,6 +98,7 @@ describe('action', () => {
 
     const branchID = uuid.v4()
     const projectID = uuid.v4()
+    const systemID = uuid.v4()
     const buildID = uuid.v4()
     const batchID = uuid.v4()
 
@@ -101,6 +107,7 @@ describe('action', () => {
     })
 
     getProjectIDMock.mockResolvedValueOnce(projectID)
+    getSystemIDMock.mockResolvedValueOnce(systemID)
 
     // pretend we're in a PR to test this code path
     process.env.GITHUB_HEAD_REF = 'pr-branch'
@@ -125,6 +132,7 @@ describe('action', () => {
 
     const newBuild: Build = {
       branchID,
+      systemID,
       description: `#123 - Test PR`,
       imageUri: 'a.docker/image:tag',
       buildID,
@@ -143,6 +151,7 @@ describe('action', () => {
     await main.run()
 
     expect(getProjectIDMock).toHaveBeenCalledTimes(1)
+    expect(getSystemIDMock).toHaveBeenCalledTimes(1)
     expect(createBranchMock).not.toHaveBeenCalled()
     expect(createBatchMock).toHaveBeenCalled()
     expect(runMock).toHaveReturned()
