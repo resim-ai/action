@@ -6,7 +6,7 @@ inputs:
     default: 'https://api.resim.ai/v1'
   auth0_tenant_url:
     required: true
-    default: 'https//resim.us.auth0.com/'
+    default: 'https://resim.us.auth0.com/'
   client_id:
     required: true
   client_secret:
