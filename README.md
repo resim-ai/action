@@ -95,6 +95,7 @@ jobs:
           client_id: ${{ secrets.RESIM_CLIENT_ID }}
           client_secret: ${{ secrets.RESIM_CLIENT_SECRET }}
           project: your-resim-project
+          system: your-resim-system
           image: ${{ steps.docker_meta.outputs.tags }}
           experience_tags: example-experience-tag,another-example
           metrics_build_id: your-metrics-build-id
@@ -107,6 +108,7 @@ jobs:
 | client_id        | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                |
 | client_secret    | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                |
 | project          | Yes      | Name of ReSim project in which to run.                                                                                   |
+| system           | Yes      | Name of ReSim system with which to run.                                                                                  |
 | image            | Yes      | URI of image that ReSim will pull and test.                                                                              |
 | experience_tags  | *        | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,planning`   |
 | experiences      | *        | Comma-separated list of experience names to run against.                                                                 |
