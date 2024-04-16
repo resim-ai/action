@@ -13,6 +13,8 @@ inputs:
     required: true
   project:
     required: true
+  system:
+    required: true
   image:
     required: true
   experience_tags:
