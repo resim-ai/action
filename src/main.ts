@@ -145,7 +145,7 @@ export async function run(): Promise<void> {
       const runSuiteRequest: TestSuiteBatchInput = {
         buildID: newBuild.buildID
       }
-      
+
       // Obtain the test suite ID
       const testSuiteID = await getTestSuiteID(
         batchesApi,

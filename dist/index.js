@@ -75588,7 +75588,7 @@ async function run() {
         if (core.getInput('test_suite') === '' &&
             core.getInput('experience_tags') === '' &&
             core.getInput('experiences') === '') {
-            core.setFailed('Must set at least one of experiences or experience_tags, when not using a test_suite');
+            core.setFailed('Must set at least one of experiences or experience_tags when not setting test_suite');
             return;
         }
         if (core.getInput('project') === '') {
@@ -75655,10 +75655,6 @@ async function run() {
             const runSuiteRequest = {
                 buildID: newBuild.buildID
             };
-            // Check that newBuild.buildID is defined and then use its string:
-            if (newBuild.buildID !== undefined) {
-                runSuiteRequest.buildID = newBuild.buildID;
-            }
             // Obtain the test suite ID
             const testSuiteID = await (0, test_suites_1.getTestSuiteID)(batchesApi, projectID, testSuiteName);
             debug(`test suite ID is ${testSuiteID}`);
@@ -75902,8 +75898,8 @@ exports.listTestSuites = listTestSuites;
 async function getTestSuiteID(batchesApi, projectID, testSuiteName) {
     const suites = await listTestSuites(projectID, batchesApi);
     const thisTestSuite = suites.find(ts => ts.name === testSuiteName);
-    if (thisTestSuite?.systemID !== undefined) {
-        return thisTestSuite.systemID;
+    if (thisTestSuite?.testSuiteID !== undefined) {
+        return thisTestSuite.testSuiteID;
     }
     throw new Error(`Could not find test suite ${testSuiteName}`);
 }
