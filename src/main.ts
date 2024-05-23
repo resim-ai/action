@@ -145,10 +145,7 @@ export async function run(): Promise<void> {
       const runSuiteRequest: TestSuiteBatchInput = {
         buildID: newBuild.buildID
       }
-      // Check that newBuild.buildID is defined and then use its string:
-      if (newBuild.buildID !== undefined) {
-        runSuiteRequest.buildID = newBuild.buildID
-      }
+      
       // Obtain the test suite ID
       const testSuiteID = await getTestSuiteID(
         batchesApi,
