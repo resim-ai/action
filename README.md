@@ -60,7 +60,8 @@ If you do not want to use a test suite, but simply use a fixed set of experience
 
 - `experiences` should be set to the experience (or comma-separated experiences) that you want to run. This could be a variable based on whether the workflow is running on a trunk branch or in a pull request.
 - `image` should be set to an image URI, where the image tag reflects the version of your software you'd like to test.
-The two methods are mutually exclusive.
+
+Using a Test Suite and running an Ad Hoc Test Batch are mutually exclusive ways to use this action.
 
 ### Full example
 
