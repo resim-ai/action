@@ -49,7 +49,7 @@ export async function run(): Promise<void> {
       core.getInput('experiences') === ''
     ) {
       core.setFailed(
-        'Must set at least one of experiences or experience_tags, when not using a test_suite'
+        'Must set at least one of experiences or experience_tags when not setting test_suite'
       )
       return
     }
