@@ -23,9 +23,9 @@ Interact with ReSim from GitHub Actions
 
 See our documentation for setting up an ECR repository for use with ReSim: https://docs.resim.ai/pushing-build-images-from-ci/introduction
 
-### Launch Batch with existing image
+### Run Test Suite with existing image
 
-If you want to launch batches in ReSim from a separate workflow, or just want to add a ReSim step to an existing workflow, add a step like this:
+If you want to run a test suite in ReSim from a separate workflow, or just want to add a ReSim step to an existing workflow, add a step like this:
 
 ```yaml
       - name: Launch Batch in ReSim
@@ -33,14 +33,30 @@ If you want to launch batches in ReSim from a separate workflow, or just want to
         with:          
           client_id: ${{ secrets.RESIM_CLIENT_ID }}
           client_secret: ${{ secrets.RESIM_CLIENT_SECRET }}
-          experience_tags: experiences-a,experiences-b
+          test_suite: my-test-suite
+          system: my-system
           image: ${{ steps.build_image.outputs.tags }}
-          metrics_build_id: your-metrics-build-id
 ```
 
-- `experience_tags` should be set to the tag (or comma-separated tags) of the experiences you want to run. This could be a variable based on whether the workflow is running on a trunk branch or in a pull request.
-- `image` should be set to an image URI, where the image tag reflects the version of your software you'd like to test.
+- `test_suite` should be set to the test suite that you want to run. This could be a variable based on whether the workflow is running on a trunk branch or in a pull request.
+- `image` should be set to an image URI, where the image tag reflects the version of your software you'd like to test. The `system` flag will be what is used to register the build
 - The secrets used for authentication have to be passed in explicitly (a [GitHub requirement](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow))
+
+If you do not want to use a test suite, but simply use a fixed set of experiences and metrics build, you can add a step like this:
+
+```yaml
+      - name: Launch Batch in ReSim
+        uses: resim-ai/action@v1
+        with:          
+          client_id: ${{ secrets.RESIM_CLIENT_ID }}
+          client_secret: ${{ secrets.RESIM_CLIENT_SECRET }}
+          system: my-system
+          image: ${{ steps.build_image.outputs.tags }}
+          experiences: my-experience, my-second-experience
+          metrics_build_id: uuid
+```
+
+The two methods are mutually exclusive.
 
 ### Full example
 
@@ -97,8 +113,7 @@ jobs:
           project: your-resim-project
           system: your-resim-system
           image: ${{ steps.docker_meta.outputs.tags }}
-          experience_tags: example-experience-tag,another-example
-          metrics_build_id: your-metrics-build-id
+          test_suite: my_test_suite
 ```
 
 ### Inputs
@@ -110,13 +125,14 @@ jobs:
 | project          | Yes      | Name of ReSim project in which to run.                                                                                   |
 | system           | Yes      | Name of ReSim system with which to run.                                                                                  |
 | image            | Yes      | URI of image that ReSim will pull and test.                                                                              |
+| test_suite       | *        | The name of a test suite to run (must not be used in conjunction with experiences, experience_tags, or metrics_build_id) |
 | experience_tags  | *        | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,planning`   |
 | experiences      | *        | Comma-separated list of experience names to run against.                                                                 |
 | comment_on_pr    | No       | If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.   |
 | github_token     | No       | If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app. |
 | metrics_build_id | No       | If set, this metrics build will be run against the batch.                                                                |
 
- **\* At least one of `experiences` or `experience_tags` must be set.** 
+ **\* If not using a test suite, at least one of `experiences` or `experience_tags` must be set.** 
 
 ## Development
 
