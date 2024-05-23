@@ -34,19 +34,13 @@ export interface Batch {
      * @type {string}
      * @memberof Batch
      */
-    'batchID'?: string;
+    'associatedAccount': string;
     /**
      * 
      * @type {string}
      * @memberof Batch
      */
-    'projectID'?: string;
-    /**
-     * 
-     * @type {BatchStatus}
-     * @memberof Batch
-     */
-    'status'?: BatchStatus;
+    'batchID'?: string;
     /**
      * 
      * @type {MetricStatus}
@@ -55,46 +49,10 @@ export interface Batch {
     'batchMetricsStatus'?: MetricStatus;
     /**
      * 
-     * @type {MetricStatus}
-     * @memberof Batch
-     */
-    'jobsMetricsStatus'?: MetricStatus;
-    /**
-     * 
-     * @type {MetricStatus}
-     * @memberof Batch
-     */
-    'overallMetricsStatus'?: MetricStatus;
-    /**
-     * 
-     * @type {Array<BatchStatusHistoryType>}
-     * @memberof Batch
-     */
-    'statusHistory'?: Array<BatchStatusHistoryType>;
-    /**
-     * 
      * @type {string}
      * @memberof Batch
      */
-    'lastUpdatedTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Batch
-     */
-    'friendlyName'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Batch
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Batch
-     */
-    'systemID'?: string;
+    'branchID'?: string;
     /**
      * 
      * @type {string}
@@ -106,7 +64,13 @@ export interface Batch {
      * @type {string}
      * @memberof Batch
      */
-    'metricsBuildID'?: string;
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'friendlyName'?: string;
     /**
      * 
      * @type {Array<string>}
@@ -121,28 +85,10 @@ export interface Batch {
     'instantiatedExperienceTagIDs'?: Array<string>;
     /**
      * 
-     * @type {{ [key: string]: string; }}
+     * @type {JobMetricsStatusCounts}
      * @memberof Batch
      */
-    'parameters'?: { [key: string]: string; };
-    /**
-     * 
-     * @type {string}
-     * @memberof Batch
-     */
-    'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Batch
-     */
-    'orgID'?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Batch
-     */
-    'totalJobs'?: number;
+    'jobMetricsStatusCounts'?: JobMetricsStatusCounts;
     /**
      * 
      * @type {BatchJobStatusCounts}
@@ -151,10 +97,88 @@ export interface Batch {
     'jobStatusCounts'?: BatchJobStatusCounts;
     /**
      * 
-     * @type {JobMetricsStatusCounts}
+     * @type {MetricStatus}
      * @memberof Batch
      */
-    'jobMetricsStatusCounts'?: JobMetricsStatusCounts;
+    'jobsMetricsStatus'?: MetricStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'lastUpdatedTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'metricsBuildID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'orgID'?: string;
+    /**
+     * 
+     * @type {MetricStatus}
+     * @memberof Batch
+     */
+    'overallMetricsStatus'?: MetricStatus;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof Batch
+     */
+    'parameters'?: { [key: string]: any; };
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'projectID'?: string;
+    /**
+     * 
+     * @type {BatchStatus}
+     * @memberof Batch
+     */
+    'status'?: BatchStatus;
+    /**
+     * 
+     * @type {Array<BatchStatusHistoryType>}
+     * @memberof Batch
+     */
+    'statusHistory'?: Array<BatchStatusHistoryType>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'systemID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'testSuiteID'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Batch
+     */
+    'testSuiteRevision'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Batch
+     */
+    'totalJobs'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Batch
+     */
+    'userID'?: string;
 }
 
 
@@ -166,16 +190,22 @@ export interface Batch {
 export interface BatchInput {
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof BatchInput
      */
-    'experienceIDs'?: Array<string> | null;
+    'associatedAccount'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchInput
+     */
+    'buildID'?: string;
     /**
      * 
      * @type {Array<string>}
      * @memberof BatchInput
      */
-    'experienceTagIDs'?: Array<string> | null;
+    'experienceIDs'?: Array<string> | null;
     /**
      * 
      * @type {Array<string>}
@@ -187,13 +217,13 @@ export interface BatchInput {
      * @type {Array<string>}
      * @memberof BatchInput
      */
-    'experienceTagNames'?: Array<string> | null;
+    'experienceTagIDs'?: Array<string> | null;
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof BatchInput
      */
-    'buildID'?: string;
+    'experienceTagNames'?: Array<string> | null;
     /**
      * 
      * @type {string}
@@ -202,10 +232,10 @@ export interface BatchInput {
     'metricsBuildID'?: string;
     /**
      * 
-     * @type {{ [key: string]: string; }}
+     * @type {{ [key: string]: any; }}
      * @memberof BatchInput
      */
-    'parameters'?: { [key: string]: string; };
+    'parameters'?: { [key: string]: any; };
 }
 /**
  * 
@@ -218,31 +248,13 @@ export interface BatchJobStatusCounts {
      * @type {number}
      * @memberof BatchJobStatusCounts
      */
-    'submitted': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof BatchJobStatusCounts
-     */
-    'running': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof BatchJobStatusCounts
-     */
-    'succeeded': number;
+    'cancelled': number;
     /**
      * 
      * @type {number}
      * @memberof BatchJobStatusCounts
      */
     'error': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof BatchJobStatusCounts
-     */
-    'cancelled': number;
     /**
      * 
      * @type {number}
@@ -255,6 +267,24 @@ export interface BatchJobStatusCounts {
      * @memberof BatchJobStatusCounts
      */
     'metricsRunning': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof BatchJobStatusCounts
+     */
+    'running': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof BatchJobStatusCounts
+     */
+    'submitted': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof BatchJobStatusCounts
+     */
+    'succeeded': number;
 }
 /**
  * 
@@ -267,7 +297,19 @@ export interface BatchLog {
      * @type {string}
      * @memberof BatchLog
      */
-    'logID'?: string;
+    'checksum'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchLog
+     */
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {ExecutionStep}
+     * @memberof BatchLog
+     */
+    'executionStep'?: ExecutionStep;
     /**
      * 
      * @type {string}
@@ -285,31 +327,19 @@ export interface BatchLog {
      * @type {string}
      * @memberof BatchLog
      */
-    'checksum'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchLog
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchLog
-     */
     'location'?: string;
     /**
      * 
      * @type {string}
      * @memberof BatchLog
      */
-    'logOutputLocation'?: string;
+    'logID'?: string;
     /**
      * 
-     * @type {ExecutionStep}
+     * @type {string}
      * @memberof BatchLog
      */
-    'executionStep'?: ExecutionStep;
+    'logOutputLocation'?: string;
     /**
      * 
      * @type {LogType}
@@ -321,13 +351,13 @@ export interface BatchLog {
      * @type {string}
      * @memberof BatchLog
      */
-    'userID'?: string;
+    'orgID'?: string;
     /**
      * 
      * @type {string}
      * @memberof BatchLog
      */
-    'orgID'?: string;
+    'userID'?: string;
     /**
      * 
      * @type {string}
@@ -348,19 +378,13 @@ export interface BatchMetric {
      * @type {string}
      * @memberof BatchMetric
      */
-    'metricID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchMetric
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchMetric
-     */
     'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof BatchMetric
+     */
+    'dataIDs'?: Array<string>;
     /**
      * 
      * @type {string}
@@ -372,7 +396,19 @@ export interface BatchMetric {
      * @type {string}
      * @memberof BatchMetric
      */
-    'userID'?: string;
+    'metricID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchMetric
+     */
+    'metricURL'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchMetric
+     */
+    'name'?: string;
     /**
      * 
      * @type {string}
@@ -393,22 +429,16 @@ export interface BatchMetric {
     'type'?: MetricType;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof BatchMetric
      */
-    'dataIDs'?: Array<string>;
+    'userID'?: string;
     /**
      * 
      * @type {number}
      * @memberof BatchMetric
      */
     'value'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchMetric
-     */
-    'metricURL'?: string;
     /**
      * 
      * @type {string}
@@ -429,6 +459,12 @@ export interface BatchMetricsData {
      * @type {string}
      * @memberof BatchMetricsData
      */
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchMetricsData
+     */
     'dataID'?: string;
     /**
      * 
@@ -436,6 +472,12 @@ export interface BatchMetricsData {
      * @memberof BatchMetricsData
      */
     'fileLocation'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchMetricsData
+     */
+    'metricsDataURL'?: string;
     /**
      * 
      * @type {string}
@@ -454,18 +496,6 @@ export interface BatchMetricsData {
      * @memberof BatchMetricsData
      */
     'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchMetricsData
-     */
-    'metricsDataURL'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BatchMetricsData
-     */
-    'creationTimestamp'?: string;
     /**
      * 
      * @type {string}
@@ -510,6 +540,61 @@ export interface BatchMetricsDataToBatchMetric {
      * @memberof BatchMetricsDataToBatchMetric
      */
     'batchMetricsDataIDs'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface BatchObjectDescription
+ */
+export interface BatchObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchObjectDescription
+     */
+    'associatedAccount'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchObjectDescription
+     */
+    'buildBranchName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchObjectDescription
+     */
+    'buildVersion'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof BatchObjectDescription
+     */
+    'experienceNames'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof BatchObjectDescription
+     */
+    'experienceTagNames'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchObjectDescription
+     */
+    'metricsBuildName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchObjectDescription
+     */
+    'metricsBuildVersion'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BatchObjectDescription
+     */
+    'projectName'?: string;
 }
 /**
  * 
@@ -562,43 +647,70 @@ export interface Branch {
      * @type {string}
      * @memberof Branch
      */
-    'branchID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Branch
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Branch
-     */
-    'projectID'?: string;
+    'branchID': string;
     /**
      * 
      * @type {BranchType}
      * @memberof Branch
      */
-    'branchType'?: BranchType;
+    'branchType': BranchType;
     /**
      * 
      * @type {string}
      * @memberof Branch
      */
-    'creationTimestamp'?: string;
+    'creationTimestamp': string;
     /**
      * 
      * @type {string}
      * @memberof Branch
      */
-    'userID'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof Branch
      */
-    'orgID'?: string;
+    'orgID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Branch
+     */
+    'projectID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Branch
+     */
+    'userID': string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface BranchObjectDescription
+ */
+export interface BranchObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof BranchObjectDescription
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BranchObjectDescription
+     */
+    'projectName'?: string;
+    /**
+     * 
+     * @type {BranchType}
+     * @memberof BranchObjectDescription
+     */
+    'type'?: BranchType;
 }
 
 
@@ -628,13 +740,37 @@ export interface Build {
      * @type {string}
      * @memberof Build
      */
+    'branchID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Build
+     */
     'buildID'?: string;
     /**
      * 
      * @type {string}
      * @memberof Build
      */
-    'branchID'?: string;
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Build
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Build
+     */
+    'imageUri'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Build
+     */
+    'orgID'?: string;
     /**
      * 
      * @type {string}
@@ -652,37 +788,331 @@ export interface Build {
      * @type {string}
      * @memberof Build
      */
-    'description'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Build
-     */
-    'version'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Build
-     */
-    'imageUri'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Build
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Build
-     */
     'userID'?: string;
     /**
      * 
      * @type {string}
      * @memberof Build
      */
-    'orgID'?: string;
+    'version'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface BuildObjectDescription
+ */
+export interface BuildObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof BuildObjectDescription
+     */
+    'branchName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BuildObjectDescription
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BuildObjectDescription
+     */
+    'image'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BuildObjectDescription
+     */
+    'projectName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BuildObjectDescription
+     */
+    'systemName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof BuildObjectDescription
+     */
+    'version'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateBranchInput
+ */
+export interface CreateBranchInput {
+    /**
+     * 
+     * @type {BranchType}
+     * @memberof CreateBranchInput
+     */
+    'branchType': BranchType;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBranchInput
+     */
+    'name': string;
+}
+
+
+/**
+ * 
+ * @export
+ * @interface CreateBuildForBranchInput
+ */
+export interface CreateBuildForBranchInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForBranchInput
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForBranchInput
+     */
+    'imageUri': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForBranchInput
+     */
+    'systemID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForBranchInput
+     */
+    'version': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateBuildForSystemInput
+ */
+export interface CreateBuildForSystemInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForSystemInput
+     */
+    'branchID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForSystemInput
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForSystemInput
+     */
+    'imageUri': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateBuildForSystemInput
+     */
+    'version': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateExperienceInput
+ */
+export interface CreateExperienceInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateExperienceInput
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateExperienceInput
+     */
+    'location': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateExperienceInput
+     */
+    'name': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateExperienceTagInput
+ */
+export interface CreateExperienceTagInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateExperienceTagInput
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateExperienceTagInput
+     */
+    'name': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateMetricsBuildInput
+ */
+export interface CreateMetricsBuildInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMetricsBuildInput
+     */
+    'imageUri': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMetricsBuildInput
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateMetricsBuildInput
+     */
+    'version': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateProjectInput
+ */
+export interface CreateProjectInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectInput
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectInput
+     */
+    'name': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateSystemInput
+ */
+export interface CreateSystemInput {
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'build_gpus': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'build_memory_mib': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'build_shared_memory_mb': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'build_vcpus': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateSystemInput
+     */
+    'description': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'metrics_build_gpus': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'metrics_build_memory_mib': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'metrics_build_shared_memory_mb': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateSystemInput
+     */
+    'metrics_build_vcpus': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateSystemInput
+     */
+    'name': string;
+}
+/**
+ * 
+ * @export
+ * @interface CreateTestSuiteInput
+ */
+export interface CreateTestSuiteInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateTestSuiteInput
+     */
+    'description': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof CreateTestSuiteInput
+     */
+    'experiences': Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateTestSuiteInput
+     */
+    'metricsBuildID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateTestSuiteInput
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateTestSuiteInput
+     */
+    'systemID': string;
 }
 /**
  * 
@@ -710,68 +1140,49 @@ export interface Experience {
      * @type {string}
      * @memberof Experience
      */
-    'experienceID'?: string;
+    'creationTimestamp': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'projectID'?: string;
+    'description': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'name'?: string;
+    'experienceID': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'description'?: string;
+    'location': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'location'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'creationTimestamp'?: string;
+    'orgID': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'userID'?: string;
+    'projectID': string;
     /**
      * 
      * @type {string}
      * @memberof Experience
      */
-    'orgID'?: string;
-}
-/**
- * 
- * @export
- * @interface ExperienceInput
- */
-export interface ExperienceInput {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ExperienceInput
-     */
-    'updateMask'?: Array<string>;
-    /**
-     * 
-     * @type {Experience}
-     * @memberof ExperienceInput
-     */
-    'experience'?: Experience;
+    'userID': string;
 }
 /**
  * 
@@ -794,16 +1205,53 @@ export interface ExperienceLocation {
 export interface ExperienceLocationContents {
     /**
      * 
-     * @type {Array<string>}
-     * @memberof ExperienceLocationContents
-     */
-    'objects'?: Array<string>;
-    /**
-     * 
      * @type {number}
      * @memberof ExperienceLocationContents
      */
     'objectCount'?: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ExperienceLocationContents
+     */
+    'objects'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface ExperienceObjectDescription
+ */
+export interface ExperienceObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceObjectDescription
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceObjectDescription
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceObjectDescription
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceObjectDescription
+     */
+    'projectName'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ExperienceObjectDescription
+     */
+    'tags'?: Array<string>;
 }
 /**
  * 
@@ -816,62 +1264,68 @@ export interface ExperienceTag {
      * @type {string}
      * @memberof ExperienceTag
      */
-    'experienceTagID'?: string;
+    'creationTimestamp': string;
     /**
      * 
      * @type {string}
      * @memberof ExperienceTag
      */
-    'projectID'?: string;
+    'description': string;
     /**
      * 
      * @type {string}
      * @memberof ExperienceTag
      */
-    'name'?: string;
+    'experienceTagID': string;
     /**
      * 
      * @type {string}
      * @memberof ExperienceTag
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceTag
+     */
+    'orgID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceTag
+     */
+    'projectID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceTag
+     */
+    'userID': string;
+}
+/**
+ * 
+ * @export
+ * @interface ExperienceTagObjectDescription
+ */
+export interface ExperienceTagObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof ExperienceTagObjectDescription
      */
     'description'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ExperienceTag
+     * @memberof ExperienceTagObjectDescription
      */
-    'creationTimestamp'?: string;
+    'name'?: string;
     /**
      * 
      * @type {string}
-     * @memberof ExperienceTag
+     * @memberof ExperienceTagObjectDescription
      */
-    'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ExperienceTag
-     */
-    'orgID'?: string;
-}
-/**
- * 
- * @export
- * @interface ExperienceTagInput
- */
-export interface ExperienceTagInput {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ExperienceTagInput
-     */
-    'updateMask'?: Array<string>;
-    /**
-     * 
-     * @type {ExperienceTag}
-     * @memberof ExperienceTagInput
-     */
-    'experienceTag'?: ExperienceTag;
+    'projectName'?: string;
 }
 /**
  * 
@@ -884,49 +1338,25 @@ export interface Job {
      * @type {string}
      * @memberof Job
      */
-    'jobID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Job
-     */
-    'projectID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Job
-     */
     'batchID'?: string;
     /**
      * 
-     * @type {JobStatus}
+     * @type {string}
      * @memberof Job
      */
-    'jobStatus'?: JobStatus;
-    /**
-     * 
-     * @type {MetricStatus}
-     * @memberof Job
-     */
-    'jobMetricsStatus'?: MetricStatus;
-    /**
-     * 
-     * @type {Array<JobStatusHistoryType>}
-     * @memberof Job
-     */
-    'statusHistory'?: Array<JobStatusHistoryType>;
+    'branchID'?: string;
     /**
      * 
      * @type {string}
      * @memberof Job
      */
-    'lastUpdatedTimestamp'?: string;
+    'buildID'?: string;
     /**
      * 
      * @type {string}
      * @memberof Job
      */
-    'outputLocation'?: string;
+    'creationTimestamp'?: string;
     /**
      * 
      * @type {string}
@@ -944,31 +1374,67 @@ export interface Job {
      * @type {string}
      * @memberof Job
      */
-    'buildID'?: string;
+    'jobID'?: string;
+    /**
+     * 
+     * @type {MetricStatus}
+     * @memberof Job
+     */
+    'jobMetricsStatus'?: MetricStatus;
+    /**
+     * 
+     * @type {JobStatus}
+     * @memberof Job
+     */
+    'jobStatus'?: JobStatus;
     /**
      * 
      * @type {string}
      * @memberof Job
      */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {{ [key: string]: string; }}
-     * @memberof Job
-     */
-    'parameters'?: { [key: string]: string; };
-    /**
-     * 
-     * @type {string}
-     * @memberof Job
-     */
-    'userID'?: string;
+    'lastUpdatedTimestamp'?: string;
     /**
      * 
      * @type {string}
      * @memberof Job
      */
     'orgID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Job
+     */
+    'outputLocation'?: string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof Job
+     */
+    'parameters'?: { [key: string]: any; };
+    /**
+     * 
+     * @type {string}
+     * @memberof Job
+     */
+    'projectID'?: string;
+    /**
+     * 
+     * @type {Array<JobStatusHistoryType>}
+     * @memberof Job
+     */
+    'statusHistory'?: Array<JobStatusHistoryType>;
+    /**
+     * 
+     * @type {string}
+     * @memberof Job
+     */
+    'systemID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Job
+     */
+    'userID'?: string;
 }
 
 
@@ -983,7 +1449,19 @@ export interface JobLog {
      * @type {string}
      * @memberof JobLog
      */
-    'logID'?: string;
+    'checksum'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobLog
+     */
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {ExecutionStep}
+     * @memberof JobLog
+     */
+    'executionStep'?: ExecutionStep;
     /**
      * 
      * @type {string}
@@ -1001,31 +1479,19 @@ export interface JobLog {
      * @type {string}
      * @memberof JobLog
      */
-    'checksum'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobLog
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobLog
-     */
     'location'?: string;
     /**
      * 
      * @type {string}
      * @memberof JobLog
      */
-    'logOutputLocation'?: string;
+    'logID'?: string;
     /**
      * 
-     * @type {ExecutionStep}
+     * @type {string}
      * @memberof JobLog
      */
-    'executionStep'?: ExecutionStep;
+    'logOutputLocation'?: string;
     /**
      * 
      * @type {LogType}
@@ -1037,13 +1503,13 @@ export interface JobLog {
      * @type {string}
      * @memberof JobLog
      */
-    'userID'?: string;
+    'orgID'?: string;
     /**
      * 
      * @type {string}
      * @memberof JobLog
      */
-    'orgID'?: string;
+    'userID'?: string;
     /**
      * 
      * @type {string}
@@ -1064,19 +1530,13 @@ export interface JobMetric {
      * @type {string}
      * @memberof JobMetric
      */
-    'metricID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobMetric
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobMetric
-     */
     'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof JobMetric
+     */
+    'dataIDs'?: Array<string>;
     /**
      * 
      * @type {string}
@@ -1088,7 +1548,19 @@ export interface JobMetric {
      * @type {string}
      * @memberof JobMetric
      */
-    'userID'?: string;
+    'metricID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobMetric
+     */
+    'metricURL'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobMetric
+     */
+    'name'?: string;
     /**
      * 
      * @type {string}
@@ -1109,22 +1581,16 @@ export interface JobMetric {
     'type'?: MetricType;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof JobMetric
      */
-    'dataIDs'?: Array<string>;
+    'userID'?: string;
     /**
      * 
      * @type {number}
      * @memberof JobMetric
      */
     'value'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobMetric
-     */
-    'metricURL'?: string;
     /**
      * 
      * @type {string}
@@ -1145,6 +1611,12 @@ export interface JobMetricsData {
      * @type {string}
      * @memberof JobMetricsData
      */
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobMetricsData
+     */
     'dataID'?: string;
     /**
      * 
@@ -1152,6 +1624,12 @@ export interface JobMetricsData {
      * @memberof JobMetricsData
      */
     'fileLocation'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof JobMetricsData
+     */
+    'metricsDataURL'?: string;
     /**
      * 
      * @type {string}
@@ -1175,18 +1653,6 @@ export interface JobMetricsData {
      * @type {string}
      * @memberof JobMetricsData
      */
-    'metricsDataURL'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobMetricsData
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof JobMetricsData
-     */
     'jobID'?: string;
 }
 /**
@@ -1200,13 +1666,13 @@ export interface JobMetricsStatusCounts {
      * @type {number}
      * @memberof JobMetricsStatusCounts
      */
-    'passed': number;
+    'failBlock': number;
     /**
      * 
      * @type {number}
      * @memberof JobMetricsStatusCounts
      */
-    'raw': number;
+    'failWarn': number;
     /**
      * 
      * @type {number}
@@ -1224,13 +1690,13 @@ export interface JobMetricsStatusCounts {
      * @type {number}
      * @memberof JobMetricsStatusCounts
      */
-    'failWarn': number;
+    'passed': number;
     /**
      * 
      * @type {number}
      * @memberof JobMetricsStatusCounts
      */
-    'failBlock': number;
+    'raw': number;
 }
 /**
  * 
@@ -1272,6 +1738,25 @@ export interface JobStatusHistoryType {
 }
 
 
+/**
+ * 
+ * @export
+ * @interface ListAllJobsOutput
+ */
+export interface ListAllJobsOutput {
+    /**
+     * 
+     * @type {Array<Job>}
+     * @memberof ListAllJobsOutput
+     */
+    'jobs'?: Array<Job>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ListAllJobsOutput
+     */
+    'nextPageToken'?: string;
+}
 /**
  * 
  * @export
@@ -1565,16 +2050,16 @@ export interface ListMetricsDataAndMetricIDOutput {
 export interface ListParameterSweepsOutput {
     /**
      * 
-     * @type {Array<ParameterSweep>}
-     * @memberof ListParameterSweepsOutput
-     */
-    'sweeps'?: Array<ParameterSweep>;
-    /**
-     * 
      * @type {string}
      * @memberof ListParameterSweepsOutput
      */
     'nextPageToken'?: string;
+    /**
+     * 
+     * @type {Array<ParameterSweep>}
+     * @memberof ListParameterSweepsOutput
+     */
+    'sweeps'?: Array<ParameterSweep>;
 }
 /**
  * 
@@ -1584,16 +2069,16 @@ export interface ListParameterSweepsOutput {
 export interface ListProjectsOutput {
     /**
      * 
-     * @type {Array<Project>}
-     * @memberof ListProjectsOutput
-     */
-    'projects'?: Array<Project>;
-    /**
-     * 
      * @type {string}
      * @memberof ListProjectsOutput
      */
     'nextPageToken'?: string;
+    /**
+     * 
+     * @type {Array<Project>}
+     * @memberof ListProjectsOutput
+     */
+    'projects'?: Array<Project>;
 }
 /**
  * 
@@ -1603,16 +2088,48 @@ export interface ListProjectsOutput {
 export interface ListSystemsOutput {
     /**
      * 
-     * @type {Array<System>}
-     * @memberof ListSystemsOutput
-     */
-    'systems'?: Array<System>;
-    /**
-     * 
      * @type {string}
      * @memberof ListSystemsOutput
      */
     'nextPageToken'?: string;
+    /**
+     * 
+     * @type {Array<System>}
+     * @memberof ListSystemsOutput
+     */
+    'systems'?: Array<System>;
+}
+/**
+ * 
+ * @export
+ * @interface ListTestSuiteOutput
+ */
+export interface ListTestSuiteOutput {
+    /**
+     * 
+     * @type {string}
+     * @memberof ListTestSuiteOutput
+     */
+    'nextPageToken'?: string;
+    /**
+     * 
+     * @type {Array<TestSuite>}
+     * @memberof ListTestSuiteOutput
+     */
+    'testSuites'?: Array<TestSuite>;
+}
+/**
+ * 
+ * @export
+ * @interface ListTestSuiteRevisions200Response
+ */
+export interface ListTestSuiteRevisions200Response {
+    /**
+     * 
+     * @type {Array<TestSuite>}
+     * @memberof ListTestSuiteRevisions200Response
+     */
+    'testSuites'?: Array<TestSuite>;
 }
 /**
  * 
@@ -1622,16 +2139,16 @@ export interface ListSystemsOutput {
 export interface ListViewObjectsOutput {
     /**
      * 
-     * @type {Array<ViewObject>}
-     * @memberof ListViewObjectsOutput
-     */
-    'viewSessions'?: Array<ViewObject>;
-    /**
-     * 
      * @type {string}
      * @memberof ListViewObjectsOutput
      */
     'nextPageToken'?: string;
+    /**
+     * 
+     * @type {Array<ViewObject>}
+     * @memberof ListViewObjectsOutput
+     */
+    'viewSessions'?: Array<ViewObject>;
 }
 /**
  * 
@@ -1644,7 +2161,19 @@ export interface Log {
      * @type {string}
      * @memberof Log
      */
-    'logID'?: string;
+    'checksum'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Log
+     */
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {ExecutionStep}
+     * @memberof Log
+     */
+    'executionStep'?: ExecutionStep;
     /**
      * 
      * @type {string}
@@ -1662,31 +2191,19 @@ export interface Log {
      * @type {string}
      * @memberof Log
      */
-    'checksum'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Log
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Log
-     */
     'location'?: string;
     /**
      * 
      * @type {string}
      * @memberof Log
      */
-    'logOutputLocation'?: string;
+    'logID'?: string;
     /**
      * 
-     * @type {ExecutionStep}
+     * @type {string}
      * @memberof Log
      */
-    'executionStep'?: ExecutionStep;
+    'logOutputLocation'?: string;
     /**
      * 
      * @type {LogType}
@@ -1698,13 +2215,13 @@ export interface Log {
      * @type {string}
      * @memberof Log
      */
-    'userID'?: string;
+    'orgID'?: string;
     /**
      * 
      * @type {string}
      * @memberof Log
      */
-    'orgID'?: string;
+    'userID'?: string;
 }
 
 
@@ -1738,19 +2255,13 @@ export interface Metric {
      * @type {string}
      * @memberof Metric
      */
-    'metricID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metric
-     */
-    'name'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metric
-     */
     'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Metric
+     */
+    'dataIDs'?: Array<string>;
     /**
      * 
      * @type {string}
@@ -1762,7 +2273,19 @@ export interface Metric {
      * @type {string}
      * @memberof Metric
      */
-    'userID'?: string;
+    'metricID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Metric
+     */
+    'metricURL'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Metric
+     */
+    'name'?: string;
     /**
      * 
      * @type {string}
@@ -1783,22 +2306,16 @@ export interface Metric {
     'type'?: MetricType;
     /**
      * 
-     * @type {Array<string>}
+     * @type {string}
      * @memberof Metric
      */
-    'dataIDs'?: Array<string>;
+    'userID'?: string;
     /**
      * 
      * @type {number}
      * @memberof Metric
      */
     'value'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof Metric
-     */
-    'metricURL'?: string;
 }
 
 
@@ -1864,49 +2381,80 @@ export interface MetricsBuild {
      * @type {string}
      * @memberof MetricsBuild
      */
-    'metricsBuildID'?: string;
+    'creationTimestamp': string;
     /**
      * 
      * @type {string}
      * @memberof MetricsBuild
      */
-    'projectID'?: string;
+    'imageUri': string;
     /**
      * 
      * @type {string}
      * @memberof MetricsBuild
+     */
+    'metricsBuildID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuild
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuild
+     */
+    'orgID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuild
+     */
+    'projectID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuild
+     */
+    'userID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuild
+     */
+    'version': string;
+}
+/**
+ * 
+ * @export
+ * @interface MetricsBuildObjectDescription
+ */
+export interface MetricsBuildObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuildObjectDescription
+     */
+    'image'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuildObjectDescription
      */
     'name'?: string;
     /**
      * 
      * @type {string}
-     * @memberof MetricsBuild
+     * @memberof MetricsBuildObjectDescription
+     */
+    'projectName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsBuildObjectDescription
      */
     'version'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetricsBuild
-     */
-    'imageUri'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetricsBuild
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetricsBuild
-     */
-    'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetricsBuild
-     */
-    'orgID'?: string;
 }
 /**
  * 
@@ -1914,6 +2462,12 @@ export interface MetricsBuild {
  * @interface MetricsData
  */
 export interface MetricsData {
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsData
+     */
+    'creationTimestamp'?: string;
     /**
      * 
      * @type {string}
@@ -1931,6 +2485,12 @@ export interface MetricsData {
      * @type {string}
      * @memberof MetricsData
      */
+    'metricsDataURL'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof MetricsData
+     */
     'name'?: string;
     /**
      * 
@@ -1944,18 +2504,6 @@ export interface MetricsData {
      * @memberof MetricsData
      */
     'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetricsData
-     */
-    'metricsDataURL'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof MetricsData
-     */
-    'creationTimestamp'?: string;
 }
 /**
  * 
@@ -2006,19 +2554,55 @@ export interface ParameterSweep {
      * @type {string}
      * @memberof ParameterSweep
      */
-    'parameterSweepID'?: string;
+    'associatedAccount': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ParameterSweep
+     */
+    'batches'?: Array<string>;
     /**
      * 
      * @type {string}
      * @memberof ParameterSweep
      */
-    'projectID'?: string;
+    'creationTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParameterSweep
+     */
+    'lastUpdatedTimestamp'?: string;
     /**
      * 
      * @type {string}
      * @memberof ParameterSweep
      */
     'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParameterSweep
+     */
+    'orgID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParameterSweep
+     */
+    'parameterSweepID'?: string;
+    /**
+     * 
+     * @type {Array<SweepParameter>}
+     * @memberof ParameterSweep
+     */
+    'parameters'?: Array<SweepParameter>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParameterSweep
+     */
+    'projectID'?: string;
     /**
      * 
      * @type {ParameterSweepStatus}
@@ -2036,37 +2620,7 @@ export interface ParameterSweep {
      * @type {string}
      * @memberof ParameterSweep
      */
-    'lastUpdatedTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ParameterSweep
-     */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {Array<SweepParameter>}
-     * @memberof ParameterSweep
-     */
-    'parameters'?: Array<SweepParameter>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ParameterSweep
-     */
-    'batches'?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ParameterSweep
-     */
     'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ParameterSweep
-     */
-    'orgID'?: string;
 }
 
 
@@ -2078,10 +2632,16 @@ export interface ParameterSweep {
 export interface ParameterSweepInput {
     /**
      * 
-     * @type {Array<SweepParameter>}
+     * @type {string}
      * @memberof ParameterSweepInput
      */
-    'parameters'?: Array<SweepParameter>;
+    'associatedAccount'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ParameterSweepInput
+     */
+    'buildID'?: string;
     /**
      * 
      * @type {Array<string>}
@@ -2093,13 +2653,13 @@ export interface ParameterSweepInput {
      * @type {Array<string>}
      * @memberof ParameterSweepInput
      */
-    'experienceTagIDs'?: Array<string> | null;
+    'experienceNames'?: Array<string> | null;
     /**
      * 
      * @type {Array<string>}
      * @memberof ParameterSweepInput
      */
-    'experienceNames'?: Array<string> | null;
+    'experienceTagIDs'?: Array<string> | null;
     /**
      * 
      * @type {Array<string>}
@@ -2111,13 +2671,13 @@ export interface ParameterSweepInput {
      * @type {string}
      * @memberof ParameterSweepInput
      */
-    'buildID'?: string;
+    'metricsBuildID'?: string;
     /**
      * 
-     * @type {string}
+     * @type {Array<SweepParameter>}
      * @memberof ParameterSweepInput
      */
-    'metricsBuildID'?: string;
+    'parameters'?: Array<SweepParameter>;
 }
 /**
  * 
@@ -2167,56 +2727,105 @@ export interface Project {
      * @type {string}
      * @memberof Project
      */
-    'projectID'?: string;
+    'creationTimestamp': string;
     /**
      * 
      * @type {string}
      * @memberof Project
      */
-    'name'?: string;
+    'description': string;
     /**
      * 
      * @type {string}
      * @memberof Project
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Project
+     */
+    'orgID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Project
+     */
+    'projectID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Project
+     */
+    'userID': string;
+}
+/**
+ * 
+ * @export
+ * @interface ProjectObjectDescription
+ */
+export interface ProjectObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjectObjectDescription
      */
     'description'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Project
+     * @memberof ProjectObjectDescription
      */
-    'creationTimestamp'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Project
-     */
-    'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Project
-     */
-    'orgID'?: string;
+    'name'?: string;
 }
 /**
  * 
  * @export
- * @interface ProjectUpdateInput
+ * @interface ReviseTestSuiteInput
  */
-export interface ProjectUpdateInput {
+export interface ReviseTestSuiteInput {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ReviseTestSuiteInput
+     */
+    'adhoc'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviseTestSuiteInput
+     */
+    'description'?: string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof ProjectUpdateInput
+     * @memberof ReviseTestSuiteInput
      */
-    'updateMask'?: Array<string>;
+    'experiences'?: Array<string>;
     /**
      * 
-     * @type {Project}
-     * @memberof ProjectUpdateInput
+     * @type {string}
+     * @memberof ReviseTestSuiteInput
      */
-    'project'?: Project;
+    'metricsBuildID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviseTestSuiteInput
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviseTestSuiteInput
+     */
+    'systemID'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ReviseTestSuiteInput
+     */
+    'updateMetricsBuild': boolean;
 }
 /**
  * 
@@ -2229,13 +2838,141 @@ export interface SandboxInput {
      * @type {string}
      * @memberof SandboxInput
      */
-    'userID'?: string;
+    'orgID'?: string;
+    /**
+     * 
+     * @type {SandboxSpecification}
+     * @memberof SandboxInput
+     */
+    'sandboxSpecification'?: SandboxSpecification;
     /**
      * 
      * @type {string}
      * @memberof SandboxInput
      */
-    'orgID'?: string;
+    'userID'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SandboxSpecification
+ */
+export interface SandboxSpecification {
+    /**
+     * 
+     * @type {Array<BatchObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'batches'?: Array<BatchObjectDescription>;
+    /**
+     * 
+     * @type {Array<BranchObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'branches'?: Array<BranchObjectDescription>;
+    /**
+     * 
+     * @type {Array<BuildObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'builds'?: Array<BuildObjectDescription>;
+    /**
+     * 
+     * @type {Array<ExperienceTagObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'experienceTags'?: Array<ExperienceTagObjectDescription>;
+    /**
+     * 
+     * @type {Array<ExperienceObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'experiences'?: Array<ExperienceObjectDescription>;
+    /**
+     * 
+     * @type {Array<MetricsBuildObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'metricsBuilds'?: Array<MetricsBuildObjectDescription>;
+    /**
+     * 
+     * @type {Array<ProjectObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'projects'?: Array<ProjectObjectDescription>;
+    /**
+     * 
+     * @type {Array<SweepObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'sweeps'?: Array<SweepObjectDescription>;
+    /**
+     * 
+     * @type {Array<SystemObjectDescription>}
+     * @memberof SandboxSpecification
+     */
+    'systems'?: Array<SystemObjectDescription>;
+}
+/**
+ * 
+ * @export
+ * @interface SweepObjectDescription
+ */
+export interface SweepObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof SweepObjectDescription
+     */
+    'associatedAccount'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SweepObjectDescription
+     */
+    'buildBranchName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SweepObjectDescription
+     */
+    'buildVersion'?: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof SweepObjectDescription
+     */
+    'experienceNames'?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof SweepObjectDescription
+     */
+    'experienceTagNames'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SweepObjectDescription
+     */
+    'metricsBuildName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SweepObjectDescription
+     */
+    'metricsBuildVersion'?: string;
+    /**
+     * 
+     * @type {Array<SweepParameter>}
+     * @memberof SweepObjectDescription
+     */
+    'parameters'?: Array<SweepParameter>;
+    /**
+     * 
+     * @type {string}
+     * @memberof SweepObjectDescription
+     */
+    'projectName'?: string;
 }
 /**
  * 
@@ -2264,113 +3001,423 @@ export interface SweepParameter {
 export interface System {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof System
      */
-    'systemID'?: string;
+    'build_gpus': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'build_memory_mib': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'build_shared_memory_mb': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'build_vcpus': number;
     /**
      * 
      * @type {string}
      * @memberof System
      */
-    'projectID'?: string;
+    'creationTimestamp': string;
     /**
      * 
      * @type {string}
      * @memberof System
+     */
+    'description': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'metrics_build_gpus': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'metrics_build_memory_mib': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'metrics_build_shared_memory_mb': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof System
+     */
+    'metrics_build_vcpus': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof System
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof System
+     */
+    'orgID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof System
+     */
+    'projectID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof System
+     */
+    'systemID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof System
+     */
+    'userID': string;
+}
+/**
+ * 
+ * @export
+ * @interface SystemObjectDescription
+ */
+export interface SystemObjectDescription {
+    /**
+     * 
+     * @type {string}
+     * @memberof SystemObjectDescription
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SystemObjectDescription
      */
     'name'?: string;
     /**
      * 
      * @type {string}
-     * @memberof System
+     * @memberof SystemObjectDescription
+     */
+    'projectName'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface TestSuite
+ */
+export interface TestSuite {
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'creationTimestamp': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'description': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof TestSuite
+     */
+    'experiences': Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'metricsBuildID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'name': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'orgID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'projectID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'systemID': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'testSuiteID': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TestSuite
+     */
+    'testSuiteRevision': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuite
+     */
+    'userID': string;
+}
+/**
+ * 
+ * @export
+ * @interface TestSuiteBatchInput
+ */
+export interface TestSuiteBatchInput {
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuiteBatchInput
+     */
+    'associatedAccount'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TestSuiteBatchInput
+     */
+    'buildID': string;
+    /**
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof TestSuiteBatchInput
+     */
+    'parameters'?: { [key: string]: any; };
+}
+/**
+ * 
+ * @export
+ * @interface UpdateExperienceFields
+ */
+export interface UpdateExperienceFields {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateExperienceFields
      */
     'description'?: string;
     /**
      * 
-     * @type {number}
-     * @memberof System
+     * @type {string}
+     * @memberof UpdateExperienceFields
      */
-    'build_vcpus'?: number;
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateExperienceFields
+     */
+    'name'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateExperienceInput
+ */
+export interface UpdateExperienceInput {
+    /**
+     * 
+     * @type {UpdateExperienceFields}
+     * @memberof UpdateExperienceInput
+     */
+    'experience'?: UpdateExperienceFields;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UpdateExperienceInput
+     */
+    'updateMask'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateExperienceTagFields
+ */
+export interface UpdateExperienceTagFields {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateExperienceTagFields
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateExperienceTagFields
+     */
+    'name'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateExperienceTagInput
+ */
+export interface UpdateExperienceTagInput {
+    /**
+     * 
+     * @type {UpdateExperienceTagFields}
+     * @memberof UpdateExperienceTagInput
+     */
+    'experienceTag'?: UpdateExperienceTagFields;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UpdateExperienceTagInput
+     */
+    'updateMask'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateProjectFields
+ */
+export interface UpdateProjectFields {
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateProjectFields
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateProjectFields
+     */
+    'name'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateProjectInput
+ */
+export interface UpdateProjectInput {
+    /**
+     * 
+     * @type {UpdateProjectFields}
+     * @memberof UpdateProjectInput
+     */
+    'project'?: UpdateProjectFields;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof UpdateProjectInput
+     */
+    'updateMask'?: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateSystemFields
+ */
+export interface UpdateSystemFields {
     /**
      * 
      * @type {number}
-     * @memberof System
-     */
-    'build_memory_mib'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof System
+     * @memberof UpdateSystemFields
      */
     'build_gpus'?: number;
     /**
      * 
      * @type {number}
-     * @memberof System
+     * @memberof UpdateSystemFields
+     */
+    'build_memory_mib'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateSystemFields
      */
     'build_shared_memory_mb'?: number;
     /**
      * 
      * @type {number}
-     * @memberof System
+     * @memberof UpdateSystemFields
      */
-    'metrics_build_vcpus'?: number;
+    'build_vcpus'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateSystemFields
+     */
+    'description'?: string;
     /**
      * 
      * @type {number}
-     * @memberof System
-     */
-    'metrics_build_memory_mib'?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof System
+     * @memberof UpdateSystemFields
      */
     'metrics_build_gpus'?: number;
     /**
      * 
      * @type {number}
-     * @memberof System
+     * @memberof UpdateSystemFields
+     */
+    'metrics_build_memory_mib'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateSystemFields
      */
     'metrics_build_shared_memory_mb'?: number;
     /**
      * 
-     * @type {string}
-     * @memberof System
+     * @type {number}
+     * @memberof UpdateSystemFields
      */
-    'creationTimestamp'?: string;
+    'metrics_build_vcpus'?: number;
     /**
      * 
      * @type {string}
-     * @memberof System
+     * @memberof UpdateSystemFields
      */
-    'userID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof System
-     */
-    'orgID'?: string;
+    'name'?: string;
 }
 /**
  * 
  * @export
- * @interface SystemInput
+ * @interface UpdateSystemInput
  */
-export interface SystemInput {
+export interface UpdateSystemInput {
+    /**
+     * 
+     * @type {UpdateSystemFields}
+     * @memberof UpdateSystemInput
+     */
+    'system'?: UpdateSystemFields;
     /**
      * 
      * @type {Array<string>}
-     * @memberof SystemInput
+     * @memberof UpdateSystemInput
      */
     'updateMask'?: Array<string>;
-    /**
-     * 
-     * @type {System}
-     * @memberof SystemInput
-     */
-    'system'?: System;
 }
 /**
  * 
@@ -2383,18 +3430,6 @@ export interface ViewMetadata {
      * @type {string}
      * @memberof ViewMetadata
      */
-    'objectName'?: string;
-    /**
-     * 
-     * @type {ObjectType}
-     * @memberof ViewMetadata
-     */
-    'objectType'?: ObjectType;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewMetadata
-     */
     'fileName'?: string;
     /**
      * 
@@ -2402,6 +3437,18 @@ export interface ViewMetadata {
      * @memberof ViewMetadata
      */
     'lineNumber'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ViewMetadata
+     */
+    'objectName'?: string;
+    /**
+     * 
+     * @type {ObjectType}
+     * @memberof ViewMetadata
+     */
+    'objectType'?: ObjectType;
 }
 
 
@@ -2416,19 +3463,13 @@ export interface ViewObject {
      * @type {string}
      * @memberof ViewObject
      */
-    'viewSessionID'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewObject
-     */
     'friendlyName'?: string;
     /**
      * 
      * @type {string}
      * @memberof ViewObject
      */
-    'viewTimestamp'?: string;
+    'mcapURL'?: string;
     /**
      * 
      * @type {number}
@@ -2440,13 +3481,7 @@ export interface ViewObject {
      * @type {string}
      * @memberof ViewObject
      */
-    'mcapURL'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViewObject
-     */
-    'viewURL'?: string;
+    'orgID'?: string;
     /**
      * 
      * @type {string}
@@ -2458,7 +3493,19 @@ export interface ViewObject {
      * @type {string}
      * @memberof ViewObject
      */
-    'orgID'?: string;
+    'viewSessionID'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ViewObject
+     */
+    'viewTimestamp'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ViewObject
+     */
+    'viewURL'?: string;
 }
 /**
  * 
@@ -2468,16 +3515,16 @@ export interface ViewObject {
 export interface ViewObjectAndMetadata {
     /**
      * 
-     * @type {ViewObject}
-     * @memberof ViewObjectAndMetadata
-     */
-    'viewObject'?: ViewObject;
-    /**
-     * 
      * @type {Array<ViewMetadata>}
      * @memberof ViewObjectAndMetadata
      */
     'viewMetadata'?: Array<ViewMetadata>;
+    /**
+     * 
+     * @type {ViewObject}
+     * @memberof ViewObjectAndMetadata
+     */
+    'viewObject'?: ViewObject;
 }
 /**
  * 
@@ -2721,6 +3768,116 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(batchInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Creates a batch for that test suite
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBatchForTestSuite: async (projectID: string, testSuiteID: string, testSuiteBatchInput?: TestSuiteBatchInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('createBatchForTestSuite', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('createBatchForTestSuite', 'testSuiteID', testSuiteID)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/batches`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(testSuiteBatchInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Creates a batch for that test suite revision
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBatchForTestSuiteRevision: async (projectID: string, testSuiteID: string, revision: number, testSuiteBatchInput?: TestSuiteBatchInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('createBatchForTestSuiteRevision', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('createBatchForTestSuiteRevision', 'testSuiteID', testSuiteID)
+            // verify required parameter 'revision' is not null or undefined
+            assertParamExists('createBatchForTestSuiteRevision', 'revision', revision)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/revisions/{revision}/batches`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)))
+                .replace(`{${"revision"}}`, encodeURIComponent(String(revision)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(testSuiteBatchInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -3058,6 +4215,55 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Adds a test suite for a project.
+         * @param {string} projectID 
+         * @param {CreateTestSuiteInput} [createTestSuiteInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTestSuite: async (projectID: string, createTestSuiteInput?: CreateTestSuiteInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('createTestSuite', 'projectID', projectID)
+            const localVarPath = `/projects/{projectID}/suites`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createTestSuiteInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Deletes a log.
          * @param {string} projectID 
          * @param {string} batchID 
@@ -3367,6 +4573,173 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             // authentication OAuth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns a specific test suite\'s latest revision.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTestSuite: async (projectID: string, testSuiteID: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('getTestSuite', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('getTestSuite', 'testSuiteID', testSuiteID)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns a specified revision of a test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTestSuiteRevision: async (projectID: string, testSuiteID: string, revision: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('getTestSuiteRevision', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('getTestSuiteRevision', 'testSuiteID', testSuiteID)
+            // verify required parameter 'revision' is not null or undefined
+            assertParamExists('getTestSuiteRevision', 'revision', revision)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/revisions/{revision}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)))
+                .replace(`{${"revision"}}`, encodeURIComponent(String(revision)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List jobs across all batches in a project
+         * @param {string} projectID 
+         * @param {string} [search] Filter based on attributes metrics_build_name and metrics_build_version
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllJobs: async (projectID: string, search?: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('listAllJobs', 'projectID', projectID)
+            const localVarPath = `/projects/{projectID}/batches/-/jobs`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
 
 
     
@@ -3874,6 +5247,138 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * List the batches for a test suite (all revisions).
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBatchesForTestSuite: async (projectID: string, testSuiteID: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('listBatchesForTestSuite', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('listBatchesForTestSuite', 'testSuiteID', testSuiteID)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/batches`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * List the batches for a test suite revision
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBatchesForTestSuiteRevision: async (projectID: string, testSuiteID: string, revision: number, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('listBatchesForTestSuiteRevision', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('listBatchesForTestSuiteRevision', 'testSuiteID', testSuiteID)
+            // verify required parameter 'revision' is not null or undefined
+            assertParamExists('listBatchesForTestSuiteRevision', 'revision', revision)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/revisions/{revision}/batches`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)))
+                .replace(`{${"revision"}}`, encodeURIComponent(String(revision)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * List the logs associated with a given job
          * @param {string} projectID 
          * @param {string} batchID 
@@ -3940,13 +5445,14 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
          * List the jobs in the given batch.
          * @param {string} projectID 
          * @param {string} batchID 
+         * @param {JobStatus} [status] Filter jobs by status
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listJobs: async (projectID: string, batchID: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listJobs: async (projectID: string, batchID: string, status?: JobStatus, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('listJobs', 'projectID', projectID)
             // verify required parameter 'batchID' is not null or undefined
@@ -3976,6 +5482,10 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             // authentication OAuth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            if (status !== undefined) {
+                localVarQueryParameter['status'] = status;
+            }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
@@ -4333,6 +5843,168 @@ export const BatchesApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Returns all the revisions of a specific test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTestSuiteRevisions: async (projectID: string, testSuiteID: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('listTestSuiteRevisions', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('listTestSuiteRevisions', 'testSuiteID', testSuiteID)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/revisions`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Returns the list of test suites at their latest revision
+         * @param {string} projectID 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTestSuites: async (projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('listTestSuites', 'projectID', projectID)
+            const localVarPath = `/projects/{projectID}/suites`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:read"], configuration)
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+
+            if (orderBy !== undefined) {
+                localVarQueryParameter['orderBy'] = orderBy;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Revise a test suite, generating a new revision. Supply a false value for ad-hoc to convert an existing ad hoc test suite to a full test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {ReviseTestSuiteInput} [reviseTestSuiteInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviseTestSuite: async (projectID: string, testSuiteID: string, reviseTestSuiteInput?: ReviseTestSuiteInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectID' is not null or undefined
+            assertParamExists('reviseTestSuite', 'projectID', projectID)
+            // verify required parameter 'testSuiteID' is not null or undefined
+            assertParamExists('reviseTestSuite', 'testSuiteID', testSuiteID)
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}`
+                .replace(`{${"projectID"}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${"testSuiteID"}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+            // authentication OAuth required
+            // oauth required
+            await setOAuthToObject(localVarHeaderParameter, "OAuth", ["batches:write"], configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(reviseTestSuiteInput, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Updates a batch\'s metrics status.
          * @param {string} projectID 
          * @param {string} batchID 
@@ -4502,6 +6174,31 @@ export const BatchesApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Creates a batch for that test suite
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createBatchForTestSuite(projectID: string, testSuiteID: string, testSuiteBatchInput?: TestSuiteBatchInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Batch>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBatchForTestSuite(projectID, testSuiteID, testSuiteBatchInput, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Creates a batch for that test suite revision
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createBatchForTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, testSuiteBatchInput?: TestSuiteBatchInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Batch>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBatchForTestSuiteRevision(projectID, testSuiteID, revision, testSuiteBatchInput, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Adds a log.  ID should be omitted and will be returned in the response.
          * @param {string} projectID 
          * @param {string} batchID 
@@ -4577,6 +6274,17 @@ export const BatchesApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * Adds a test suite for a project.
+         * @param {string} projectID 
+         * @param {CreateTestSuiteInput} [createTestSuiteInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createTestSuite(projectID: string, createTestSuiteInput?: CreateTestSuiteInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TestSuite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createTestSuite(projectID, createTestSuiteInput, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Deletes a log.
          * @param {string} projectID 
          * @param {string} batchID 
@@ -4647,6 +6355,43 @@ export const BatchesApiFp = function(configuration?: Configuration) {
          */
         async getJobLog(projectID: string, batchID: string, jobID: string, logID: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JobLog>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getJobLog(projectID, batchID, jobID, logID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Returns a specific test suite\'s latest revision.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTestSuite(projectID: string, testSuiteID: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TestSuite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTestSuite(projectID, testSuiteID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Returns a specified revision of a test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TestSuite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTestSuiteRevision(projectID, testSuiteID, revision, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * List jobs across all batches in a project
+         * @param {string} projectID 
+         * @param {string} [search] Filter based on attributes metrics_build_name and metrics_build_version
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listAllJobs(projectID: string, search?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListAllJobsOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listAllJobs(projectID, search, pageSize, pageToken, orderBy, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4759,6 +6504,35 @@ export const BatchesApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * List the batches for a test suite (all revisions).
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listBatchesForTestSuite(projectID: string, testSuiteID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListBatchesOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listBatchesForTestSuite(projectID, testSuiteID, pageSize, pageToken, orderBy, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * List the batches for a test suite revision
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listBatchesForTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListBatchesOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listBatchesForTestSuiteRevision(projectID, testSuiteID, revision, pageSize, pageToken, orderBy, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * List the logs associated with a given job
          * @param {string} projectID 
          * @param {string} batchID 
@@ -4776,14 +6550,15 @@ export const BatchesApiFp = function(configuration?: Configuration) {
          * List the jobs in the given batch.
          * @param {string} projectID 
          * @param {string} batchID 
+         * @param {JobStatus} [status] Filter jobs by status
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listJobs(projectID: string, batchID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListJobsOutput>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listJobs(projectID, batchID, pageSize, pageToken, orderBy, options);
+        async listJobs(projectID: string, batchID: string, status?: JobStatus, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListJobsOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listJobs(projectID, batchID, status, pageSize, pageToken, orderBy, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4858,6 +6633,42 @@ export const BatchesApiFp = function(configuration?: Configuration) {
          */
         async listMetricsForMetricIDs(projectID: string, batchID: string, jobID: string, metricID: Array<string>, pageSize?: number, pageToken?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListJobMetricsOutput>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Returns all the revisions of a specific test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listTestSuiteRevisions(projectID: string, testSuiteID: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListTestSuiteRevisions200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listTestSuiteRevisions(projectID, testSuiteID, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Returns the list of test suites at their latest revision
+         * @param {string} projectID 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listTestSuites(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListTestSuiteOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listTestSuites(projectID, pageSize, pageToken, orderBy, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Revise a test suite, generating a new revision. Supply a false value for ad-hoc to convert an existing ad hoc test suite to a full test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {ReviseTestSuiteInput} [reviseTestSuiteInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async reviseTestSuite(projectID: string, testSuiteID: string, reviseTestSuiteInput?: ReviseTestSuiteInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TestSuite>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.reviseTestSuite(projectID, testSuiteID, reviseTestSuiteInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4941,6 +6752,29 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.createBatch(projectID, batchInput, options).then((request) => request(axios, basePath));
         },
         /**
+         * Creates a batch for that test suite
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBatchForTestSuite(projectID: string, testSuiteID: string, testSuiteBatchInput?: TestSuiteBatchInput, options?: any): AxiosPromise<Batch> {
+            return localVarFp.createBatchForTestSuite(projectID, testSuiteID, testSuiteBatchInput, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Creates a batch for that test suite revision
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createBatchForTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, testSuiteBatchInput?: TestSuiteBatchInput, options?: any): AxiosPromise<Batch> {
+            return localVarFp.createBatchForTestSuiteRevision(projectID, testSuiteID, revision, testSuiteBatchInput, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Adds a log.  ID should be omitted and will be returned in the response.
          * @param {string} projectID 
          * @param {string} batchID 
@@ -5010,6 +6844,16 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.createMetricsData(projectID, batchID, jobID, jobMetricsData, options).then((request) => request(axios, basePath));
         },
         /**
+         * Adds a test suite for a project.
+         * @param {string} projectID 
+         * @param {CreateTestSuiteInput} [createTestSuiteInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createTestSuite(projectID: string, createTestSuiteInput?: CreateTestSuiteInput, options?: any): AxiosPromise<TestSuite> {
+            return localVarFp.createTestSuite(projectID, createTestSuiteInput, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Deletes a log.
          * @param {string} projectID 
          * @param {string} batchID 
@@ -5075,6 +6919,40 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
          */
         getJobLog(projectID: string, batchID: string, jobID: string, logID: string, options?: any): AxiosPromise<JobLog> {
             return localVarFp.getJobLog(projectID, batchID, jobID, logID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a specific test suite\'s latest revision.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTestSuite(projectID: string, testSuiteID: string, options?: any): AxiosPromise<TestSuite> {
+            return localVarFp.getTestSuite(projectID, testSuiteID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns a specified revision of a test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, options?: any): AxiosPromise<TestSuite> {
+            return localVarFp.getTestSuiteRevision(projectID, testSuiteID, revision, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List jobs across all batches in a project
+         * @param {string} projectID 
+         * @param {string} [search] Filter based on attributes metrics_build_name and metrics_build_version
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listAllJobs(projectID: string, search?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListAllJobsOutput> {
+            return localVarFp.listAllJobs(projectID, search, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
         /**
          * List the logs associated with a given batch
@@ -5178,6 +7056,33 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.listBatchesForBuilds(projectID, branchID, buildID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
         /**
+         * List the batches for a test suite (all revisions).
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBatchesForTestSuite(projectID: string, testSuiteID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListBatchesOutput> {
+            return localVarFp.listBatchesForTestSuite(projectID, testSuiteID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List the batches for a test suite revision
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {number} revision 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listBatchesForTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListBatchesOutput> {
+            return localVarFp.listBatchesForTestSuiteRevision(projectID, testSuiteID, revision, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        },
+        /**
          * List the logs associated with a given job
          * @param {string} projectID 
          * @param {string} batchID 
@@ -5194,14 +7099,15 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
          * List the jobs in the given batch.
          * @param {string} projectID 
          * @param {string} batchID 
+         * @param {JobStatus} [status] Filter jobs by status
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listJobs(projectID: string, batchID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListJobsOutput> {
-            return localVarFp.listJobs(projectID, batchID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        listJobs(projectID: string, batchID: string, status?: JobStatus, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListJobsOutput> {
+            return localVarFp.listJobs(projectID, batchID, status, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns the metrics data associated with a given job ID
@@ -5271,6 +7177,39 @@ export const BatchesApiFactory = function (configuration?: Configuration, basePa
          */
         listMetricsForMetricIDs(projectID: string, batchID: string, jobID: string, metricID: Array<string>, pageSize?: number, pageToken?: string, options?: any): AxiosPromise<ListJobMetricsOutput> {
             return localVarFp.listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns all the revisions of a specific test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTestSuiteRevisions(projectID: string, testSuiteID: string, options?: any): AxiosPromise<ListTestSuiteRevisions200Response> {
+            return localVarFp.listTestSuiteRevisions(projectID, testSuiteID, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Returns the list of test suites at their latest revision
+         * @param {string} projectID 
+         * @param {number} [pageSize] 
+         * @param {string} [pageToken] 
+         * @param {string} [orderBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTestSuites(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListTestSuiteOutput> {
+            return localVarFp.listTestSuites(projectID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Revise a test suite, generating a new revision. Supply a false value for ad-hoc to convert an existing ad hoc test suite to a full test suite.
+         * @param {string} projectID 
+         * @param {string} testSuiteID 
+         * @param {ReviseTestSuiteInput} [reviseTestSuiteInput] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reviseTestSuite(projectID: string, testSuiteID: string, reviseTestSuiteInput?: ReviseTestSuiteInput, options?: any): AxiosPromise<TestSuite> {
+            return localVarFp.reviseTestSuite(projectID, testSuiteID, reviseTestSuiteInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Updates a batch\'s metrics status.
@@ -5359,6 +7298,33 @@ export class BatchesApi extends BaseAPI {
     }
 
     /**
+     * Creates a batch for that test suite
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public createBatchForTestSuite(projectID: string, testSuiteID: string, testSuiteBatchInput?: TestSuiteBatchInput, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).createBatchForTestSuite(projectID, testSuiteID, testSuiteBatchInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Creates a batch for that test suite revision
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {number} revision 
+     * @param {TestSuiteBatchInput} [testSuiteBatchInput] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public createBatchForTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, testSuiteBatchInput?: TestSuiteBatchInput, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).createBatchForTestSuiteRevision(projectID, testSuiteID, revision, testSuiteBatchInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Adds a log.  ID should be omitted and will be returned in the response.
      * @param {string} projectID 
      * @param {string} batchID 
@@ -5440,6 +7406,18 @@ export class BatchesApi extends BaseAPI {
     }
 
     /**
+     * Adds a test suite for a project.
+     * @param {string} projectID 
+     * @param {CreateTestSuiteInput} [createTestSuiteInput] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public createTestSuite(projectID: string, createTestSuiteInput?: CreateTestSuiteInput, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).createTestSuite(projectID, createTestSuiteInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Deletes a log.
      * @param {string} projectID 
      * @param {string} batchID 
@@ -5516,6 +7494,46 @@ export class BatchesApi extends BaseAPI {
      */
     public getJobLog(projectID: string, batchID: string, jobID: string, logID: string, options?: AxiosRequestConfig) {
         return BatchesApiFp(this.configuration).getJobLog(projectID, batchID, jobID, logID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Returns a specific test suite\'s latest revision.
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public getTestSuite(projectID: string, testSuiteID: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).getTestSuite(projectID, testSuiteID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Returns a specified revision of a test suite.
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {number} revision 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public getTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).getTestSuiteRevision(projectID, testSuiteID, revision, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List jobs across all batches in a project
+     * @param {string} projectID 
+     * @param {string} [search] Filter based on attributes metrics_build_name and metrics_build_version
+     * @param {number} [pageSize] 
+     * @param {string} [pageToken] 
+     * @param {string} [orderBy] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public listAllJobs(projectID: string, search?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).listAllJobs(projectID, search, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5636,6 +7654,37 @@ export class BatchesApi extends BaseAPI {
     }
 
     /**
+     * List the batches for a test suite (all revisions).
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {number} [pageSize] 
+     * @param {string} [pageToken] 
+     * @param {string} [orderBy] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public listBatchesForTestSuite(projectID: string, testSuiteID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).listBatchesForTestSuite(projectID, testSuiteID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List the batches for a test suite revision
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {number} revision 
+     * @param {number} [pageSize] 
+     * @param {string} [pageToken] 
+     * @param {string} [orderBy] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public listBatchesForTestSuiteRevision(projectID: string, testSuiteID: string, revision: number, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).listBatchesForTestSuiteRevision(projectID, testSuiteID, revision, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * List the logs associated with a given job
      * @param {string} projectID 
      * @param {string} batchID 
@@ -5654,6 +7703,7 @@ export class BatchesApi extends BaseAPI {
      * List the jobs in the given batch.
      * @param {string} projectID 
      * @param {string} batchID 
+     * @param {JobStatus} [status] Filter jobs by status
      * @param {number} [pageSize] 
      * @param {string} [pageToken] 
      * @param {string} [orderBy] 
@@ -5661,8 +7711,8 @@ export class BatchesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BatchesApi
      */
-    public listJobs(projectID: string, batchID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
-        return BatchesApiFp(this.configuration).listJobs(projectID, batchID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    public listJobs(projectID: string, batchID: string, status?: JobStatus, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).listJobs(projectID, batchID, status, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -5745,6 +7795,45 @@ export class BatchesApi extends BaseAPI {
     }
 
     /**
+     * Returns all the revisions of a specific test suite.
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public listTestSuiteRevisions(projectID: string, testSuiteID: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).listTestSuiteRevisions(projectID, testSuiteID, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Returns the list of test suites at their latest revision
+     * @param {string} projectID 
+     * @param {number} [pageSize] 
+     * @param {string} [pageToken] 
+     * @param {string} [orderBy] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public listTestSuites(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).listTestSuites(projectID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Revise a test suite, generating a new revision. Supply a false value for ad-hoc to convert an existing ad hoc test suite to a full test suite.
+     * @param {string} projectID 
+     * @param {string} testSuiteID 
+     * @param {ReviseTestSuiteInput} [reviseTestSuiteInput] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    public reviseTestSuite(projectID: string, testSuiteID: string, reviseTestSuiteInput?: ReviseTestSuiteInput, options?: AxiosRequestConfig) {
+        return BatchesApiFp(this.configuration).reviseTestSuite(projectID, testSuiteID, reviseTestSuiteInput, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Updates a batch\'s metrics status.
      * @param {string} projectID 
      * @param {string} batchID 
@@ -5781,14 +7870,14 @@ export class BatchesApi extends BaseAPI {
 export const BuildsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Adds a build.  ID should be omitted and will be returned in the response.
+         * Adds a build.
          * @param {string} projectID 
          * @param {string} branchID 
-         * @param {Build} [build] 
+         * @param {CreateBuildForBranchInput} [createBuildForBranchInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createBuildForBranch: async (projectID: string, branchID: string, build?: Build, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createBuildForBranch: async (projectID: string, branchID: string, createBuildForBranchInput?: CreateBuildForBranchInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createBuildForBranch', 'projectID', projectID)
             // verify required parameter 'branchID' is not null or undefined
@@ -5826,7 +7915,7 @@ export const BuildsApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(build, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createBuildForBranchInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -5834,14 +7923,14 @@ export const BuildsApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * Adds a build.  ID should be omitted and will be returned in the response.
+         * Adds a build.
          * @param {string} projectID 
          * @param {string} systemID 
-         * @param {Build} [build] 
+         * @param {CreateBuildForSystemInput} [createBuildForSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createBuildForSystem: async (projectID: string, systemID: string, build?: Build, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createBuildForSystem: async (projectID: string, systemID: string, createBuildForSystemInput?: CreateBuildForSystemInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createBuildForSystem', 'projectID', projectID)
             // verify required parameter 'systemID' is not null or undefined
@@ -5879,7 +7968,7 @@ export const BuildsApiAxiosParamCreator = function (configuration?: Configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(build, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createBuildForSystemInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6293,27 +8382,27 @@ export const BuildsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = BuildsApiAxiosParamCreator(configuration)
     return {
         /**
-         * Adds a build.  ID should be omitted and will be returned in the response.
+         * Adds a build.
          * @param {string} projectID 
          * @param {string} branchID 
-         * @param {Build} [build] 
+         * @param {CreateBuildForBranchInput} [createBuildForBranchInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createBuildForBranch(projectID: string, branchID: string, build?: Build, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Build>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createBuildForBranch(projectID, branchID, build, options);
+        async createBuildForBranch(projectID: string, branchID: string, createBuildForBranchInput?: CreateBuildForBranchInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Build>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBuildForBranch(projectID, branchID, createBuildForBranchInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Adds a build.  ID should be omitted and will be returned in the response.
+         * Adds a build.
          * @param {string} projectID 
          * @param {string} systemID 
-         * @param {Build} [build] 
+         * @param {CreateBuildForSystemInput} [createBuildForSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createBuildForSystem(projectID: string, systemID: string, build?: Build, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Build>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createBuildForSystem(projectID, systemID, build, options);
+        async createBuildForSystem(projectID: string, systemID: string, createBuildForSystemInput?: CreateBuildForSystemInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Build>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBuildForSystem(projectID, systemID, createBuildForSystemInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -6415,26 +8504,26 @@ export const BuildsApiFactory = function (configuration?: Configuration, basePat
     const localVarFp = BuildsApiFp(configuration)
     return {
         /**
-         * Adds a build.  ID should be omitted and will be returned in the response.
+         * Adds a build.
          * @param {string} projectID 
          * @param {string} branchID 
-         * @param {Build} [build] 
+         * @param {CreateBuildForBranchInput} [createBuildForBranchInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createBuildForBranch(projectID: string, branchID: string, build?: Build, options?: any): AxiosPromise<Build> {
-            return localVarFp.createBuildForBranch(projectID, branchID, build, options).then((request) => request(axios, basePath));
+        createBuildForBranch(projectID: string, branchID: string, createBuildForBranchInput?: CreateBuildForBranchInput, options?: any): AxiosPromise<Build> {
+            return localVarFp.createBuildForBranch(projectID, branchID, createBuildForBranchInput, options).then((request) => request(axios, basePath));
         },
         /**
-         * Adds a build.  ID should be omitted and will be returned in the response.
+         * Adds a build.
          * @param {string} projectID 
          * @param {string} systemID 
-         * @param {Build} [build] 
+         * @param {CreateBuildForSystemInput} [createBuildForSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createBuildForSystem(projectID: string, systemID: string, build?: Build, options?: any): AxiosPromise<Build> {
-            return localVarFp.createBuildForSystem(projectID, systemID, build, options).then((request) => request(axios, basePath));
+        createBuildForSystem(projectID: string, systemID: string, createBuildForSystemInput?: CreateBuildForSystemInput, options?: any): AxiosPromise<Build> {
+            return localVarFp.createBuildForSystem(projectID, systemID, createBuildForSystemInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete a build.
@@ -6528,29 +8617,29 @@ export const BuildsApiFactory = function (configuration?: Configuration, basePat
  */
 export class BuildsApi extends BaseAPI {
     /**
-     * Adds a build.  ID should be omitted and will be returned in the response.
+     * Adds a build.
      * @param {string} projectID 
      * @param {string} branchID 
-     * @param {Build} [build] 
+     * @param {CreateBuildForBranchInput} [createBuildForBranchInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BuildsApi
      */
-    public createBuildForBranch(projectID: string, branchID: string, build?: Build, options?: AxiosRequestConfig) {
-        return BuildsApiFp(this.configuration).createBuildForBranch(projectID, branchID, build, options).then((request) => request(this.axios, this.basePath));
+    public createBuildForBranch(projectID: string, branchID: string, createBuildForBranchInput?: CreateBuildForBranchInput, options?: AxiosRequestConfig) {
+        return BuildsApiFp(this.configuration).createBuildForBranch(projectID, branchID, createBuildForBranchInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Adds a build.  ID should be omitted and will be returned in the response.
+     * Adds a build.
      * @param {string} projectID 
      * @param {string} systemID 
-     * @param {Build} [build] 
+     * @param {CreateBuildForSystemInput} [createBuildForSystemInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BuildsApi
      */
-    public createBuildForSystem(projectID: string, systemID: string, build?: Build, options?: AxiosRequestConfig) {
-        return BuildsApiFp(this.configuration).createBuildForSystem(projectID, systemID, build, options).then((request) => request(this.axios, this.basePath));
+    public createBuildForSystem(projectID: string, systemID: string, createBuildForSystemInput?: CreateBuildForSystemInput, options?: AxiosRequestConfig) {
+        return BuildsApiFp(this.configuration).createBuildForSystem(projectID, systemID, createBuildForSystemInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -6711,13 +8800,13 @@ export const ExperienceTagsApiAxiosParamCreator = function (configuration?: Conf
             };
         },
         /**
-         * Adds an experience tag.  ID should be omitted and will be included in the response.
+         * Adds an experience tag.
          * @param {string} projectID 
-         * @param {ExperienceTag} [experienceTag] 
+         * @param {CreateExperienceTagInput} [createExperienceTagInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createExperienceTag: async (projectID: string, experienceTag?: ExperienceTag, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createExperienceTag: async (projectID: string, createExperienceTagInput?: CreateExperienceTagInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createExperienceTag', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/experienceTags`
@@ -6752,7 +8841,7 @@ export const ExperienceTagsApiAxiosParamCreator = function (configuration?: Conf
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(experienceTag, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createExperienceTagInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6860,13 +8949,14 @@ export const ExperienceTagsApiAxiosParamCreator = function (configuration?: Conf
         /**
          * Returns a list of all experience tags.
          * @param {string} projectID 
+         * @param {string} [name] Filter experience tags by name
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperienceTags: async (projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listExperienceTags: async (projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('listExperienceTags', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/experienceTags`
@@ -6893,6 +8983,10 @@ export const ExperienceTagsApiAxiosParamCreator = function (configuration?: Conf
             // authentication OAuth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth", ["experienceTags:read"], configuration)
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
@@ -7033,11 +9127,11 @@ export const ExperienceTagsApiAxiosParamCreator = function (configuration?: Conf
          * Updates the experience tag.  Experience membership cannot be changed with this method.
          * @param {string} projectID 
          * @param {string} experienceTagID 
-         * @param {ExperienceTagInput} [experienceTagInput] 
+         * @param {UpdateExperienceTagInput} [updateExperienceTagInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateExperienceTag: async (projectID: string, experienceTagID: string, experienceTagInput?: ExperienceTagInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateExperienceTag: async (projectID: string, experienceTagID: string, updateExperienceTagInput?: UpdateExperienceTagInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('updateExperienceTag', 'projectID', projectID)
             // verify required parameter 'experienceTagID' is not null or undefined
@@ -7075,7 +9169,7 @@ export const ExperienceTagsApiAxiosParamCreator = function (configuration?: Conf
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(experienceTagInput, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateExperienceTagInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7105,14 +9199,14 @@ export const ExperienceTagsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Adds an experience tag.  ID should be omitted and will be included in the response.
+         * Adds an experience tag.
          * @param {string} projectID 
-         * @param {ExperienceTag} [experienceTag] 
+         * @param {CreateExperienceTagInput} [createExperienceTagInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createExperienceTag(projectID: string, experienceTag?: ExperienceTag, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExperienceTag>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createExperienceTag(projectID, experienceTag, options);
+        async createExperienceTag(projectID: string, createExperienceTagInput?: CreateExperienceTagInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExperienceTag>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createExperienceTag(projectID, createExperienceTagInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7140,14 +9234,15 @@ export const ExperienceTagsApiFp = function(configuration?: Configuration) {
         /**
          * Returns a list of all experience tags.
          * @param {string} projectID 
+         * @param {string} [name] Filter experience tags by name
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listExperienceTags(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListExperienceTagsOutput>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperienceTags(projectID, pageSize, pageToken, orderBy, options);
+        async listExperienceTags(projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListExperienceTagsOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperienceTags(projectID, name, pageSize, pageToken, orderBy, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7179,12 +9274,12 @@ export const ExperienceTagsApiFp = function(configuration?: Configuration) {
          * Updates the experience tag.  Experience membership cannot be changed with this method.
          * @param {string} projectID 
          * @param {string} experienceTagID 
-         * @param {ExperienceTagInput} [experienceTagInput] 
+         * @param {UpdateExperienceTagInput} [updateExperienceTagInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateExperienceTag(projectID: string, experienceTagID: string, experienceTagInput?: ExperienceTagInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExperienceTag>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExperienceTag(projectID, experienceTagID, experienceTagInput, options);
+        async updateExperienceTag(projectID: string, experienceTagID: string, updateExperienceTagInput?: UpdateExperienceTagInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ExperienceTag>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExperienceTag(projectID, experienceTagID, updateExperienceTagInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -7209,14 +9304,14 @@ export const ExperienceTagsApiFactory = function (configuration?: Configuration,
             return localVarFp.addExperienceTagToExperience(projectID, experienceTagID, experienceID, options).then((request) => request(axios, basePath));
         },
         /**
-         * Adds an experience tag.  ID should be omitted and will be included in the response.
+         * Adds an experience tag.
          * @param {string} projectID 
-         * @param {ExperienceTag} [experienceTag] 
+         * @param {CreateExperienceTagInput} [createExperienceTagInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createExperienceTag(projectID: string, experienceTag?: ExperienceTag, options?: any): AxiosPromise<ExperienceTag> {
-            return localVarFp.createExperienceTag(projectID, experienceTag, options).then((request) => request(axios, basePath));
+        createExperienceTag(projectID: string, createExperienceTagInput?: CreateExperienceTagInput, options?: any): AxiosPromise<ExperienceTag> {
+            return localVarFp.createExperienceTag(projectID, createExperienceTagInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes an experience tag.
@@ -7241,14 +9336,15 @@ export const ExperienceTagsApiFactory = function (configuration?: Configuration,
         /**
          * Returns a list of all experience tags.
          * @param {string} projectID 
+         * @param {string} [name] Filter experience tags by name
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperienceTags(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListExperienceTagsOutput> {
-            return localVarFp.listExperienceTags(projectID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        listExperienceTags(projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListExperienceTagsOutput> {
+            return localVarFp.listExperienceTags(projectID, name, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns a list of all experiences with the given experience tag.
@@ -7277,12 +9373,12 @@ export const ExperienceTagsApiFactory = function (configuration?: Configuration,
          * Updates the experience tag.  Experience membership cannot be changed with this method.
          * @param {string} projectID 
          * @param {string} experienceTagID 
-         * @param {ExperienceTagInput} [experienceTagInput] 
+         * @param {UpdateExperienceTagInput} [updateExperienceTagInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateExperienceTag(projectID: string, experienceTagID: string, experienceTagInput?: ExperienceTagInput, options?: any): AxiosPromise<ExperienceTag> {
-            return localVarFp.updateExperienceTag(projectID, experienceTagID, experienceTagInput, options).then((request) => request(axios, basePath));
+        updateExperienceTag(projectID: string, experienceTagID: string, updateExperienceTagInput?: UpdateExperienceTagInput, options?: any): AxiosPromise<ExperienceTag> {
+            return localVarFp.updateExperienceTag(projectID, experienceTagID, updateExperienceTagInput, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -7308,15 +9404,15 @@ export class ExperienceTagsApi extends BaseAPI {
     }
 
     /**
-     * Adds an experience tag.  ID should be omitted and will be included in the response.
+     * Adds an experience tag.
      * @param {string} projectID 
-     * @param {ExperienceTag} [experienceTag] 
+     * @param {CreateExperienceTagInput} [createExperienceTagInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ExperienceTagsApi
      */
-    public createExperienceTag(projectID: string, experienceTag?: ExperienceTag, options?: AxiosRequestConfig) {
-        return ExperienceTagsApiFp(this.configuration).createExperienceTag(projectID, experienceTag, options).then((request) => request(this.axios, this.basePath));
+    public createExperienceTag(projectID: string, createExperienceTagInput?: CreateExperienceTagInput, options?: AxiosRequestConfig) {
+        return ExperienceTagsApiFp(this.configuration).createExperienceTag(projectID, createExperienceTagInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7346,6 +9442,7 @@ export class ExperienceTagsApi extends BaseAPI {
     /**
      * Returns a list of all experience tags.
      * @param {string} projectID 
+     * @param {string} [name] Filter experience tags by name
      * @param {number} [pageSize] 
      * @param {string} [pageToken] 
      * @param {string} [orderBy] 
@@ -7353,8 +9450,8 @@ export class ExperienceTagsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ExperienceTagsApi
      */
-    public listExperienceTags(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
-        return ExperienceTagsApiFp(this.configuration).listExperienceTags(projectID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    public listExperienceTags(projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return ExperienceTagsApiFp(this.configuration).listExperienceTags(projectID, name, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -7388,13 +9485,13 @@ export class ExperienceTagsApi extends BaseAPI {
      * Updates the experience tag.  Experience membership cannot be changed with this method.
      * @param {string} projectID 
      * @param {string} experienceTagID 
-     * @param {ExperienceTagInput} [experienceTagInput] 
+     * @param {UpdateExperienceTagInput} [updateExperienceTagInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ExperienceTagsApi
      */
-    public updateExperienceTag(projectID: string, experienceTagID: string, experienceTagInput?: ExperienceTagInput, options?: AxiosRequestConfig) {
-        return ExperienceTagsApiFp(this.configuration).updateExperienceTag(projectID, experienceTagID, experienceTagInput, options).then((request) => request(this.axios, this.basePath));
+    public updateExperienceTag(projectID: string, experienceTagID: string, updateExperienceTagInput?: UpdateExperienceTagInput, options?: AxiosRequestConfig) {
+        return ExperienceTagsApiFp(this.configuration).updateExperienceTag(projectID, experienceTagID, updateExperienceTagInput, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -7407,13 +9504,13 @@ export class ExperienceTagsApi extends BaseAPI {
 export const ExperiencesApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Adds an experience.  ID should be omitted and will be returned in the response.
+         * Adds an experience.
          * @param {string} projectID 
-         * @param {Experience} [experience] 
+         * @param {CreateExperienceInput} [createExperienceInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createExperience: async (projectID: string, experience?: Experience, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createExperience: async (projectID: string, createExperienceInput?: CreateExperienceInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createExperience', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/experiences`
@@ -7448,7 +9545,7 @@ export const ExperiencesApiAxiosParamCreator = function (configuration?: Configu
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(experience, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createExperienceInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7674,13 +9771,14 @@ export const ExperiencesApiAxiosParamCreator = function (configuration?: Configu
         /**
          * Returns the list of experiences.
          * @param {string} projectID 
+         * @param {string} [name] Filter experiences by name
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiences: async (projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listExperiences: async (projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('listExperiences', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/experiences`
@@ -7707,6 +9805,10 @@ export const ExperiencesApiAxiosParamCreator = function (configuration?: Configu
             // authentication OAuth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth", ["experiences:read"], configuration)
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
@@ -7735,11 +9837,11 @@ export const ExperiencesApiAxiosParamCreator = function (configuration?: Configu
          * Updates the experience.
          * @param {string} projectID 
          * @param {string} experienceID 
-         * @param {ExperienceInput} [experienceInput] 
+         * @param {UpdateExperienceInput} [updateExperienceInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateExperience: async (projectID: string, experienceID: string, experienceInput?: ExperienceInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateExperience: async (projectID: string, experienceID: string, updateExperienceInput?: UpdateExperienceInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('updateExperience', 'projectID', projectID)
             // verify required parameter 'experienceID' is not null or undefined
@@ -7777,7 +9879,7 @@ export const ExperiencesApiAxiosParamCreator = function (configuration?: Configu
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(experienceInput, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateExperienceInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -7840,14 +9942,14 @@ export const ExperiencesApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ExperiencesApiAxiosParamCreator(configuration)
     return {
         /**
-         * Adds an experience.  ID should be omitted and will be returned in the response.
+         * Adds an experience.
          * @param {string} projectID 
-         * @param {Experience} [experience] 
+         * @param {CreateExperienceInput} [createExperienceInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createExperience(projectID: string, experience?: Experience, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Experience>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createExperience(projectID, experience, options);
+        async createExperience(projectID: string, createExperienceInput?: CreateExperienceInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Experience>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createExperience(projectID, createExperienceInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7901,26 +10003,27 @@ export const ExperiencesApiFp = function(configuration?: Configuration) {
         /**
          * Returns the list of experiences.
          * @param {string} projectID 
+         * @param {string} [name] Filter experiences by name
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listExperiences(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListExperiencesOutput>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiences(projectID, pageSize, pageToken, orderBy, options);
+        async listExperiences(projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListExperiencesOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiences(projectID, name, pageSize, pageToken, orderBy, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * Updates the experience.
          * @param {string} projectID 
          * @param {string} experienceID 
-         * @param {ExperienceInput} [experienceInput] 
+         * @param {UpdateExperienceInput} [updateExperienceInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateExperience(projectID: string, experienceID: string, experienceInput?: ExperienceInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Experience>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExperience(projectID, experienceID, experienceInput, options);
+        async updateExperience(projectID: string, experienceID: string, updateExperienceInput?: UpdateExperienceInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Experience>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateExperience(projectID, experienceID, updateExperienceInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -7944,14 +10047,14 @@ export const ExperiencesApiFactory = function (configuration?: Configuration, ba
     const localVarFp = ExperiencesApiFp(configuration)
     return {
         /**
-         * Adds an experience.  ID should be omitted and will be returned in the response.
+         * Adds an experience.
          * @param {string} projectID 
-         * @param {Experience} [experience] 
+         * @param {CreateExperienceInput} [createExperienceInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createExperience(projectID: string, experience?: Experience, options?: any): AxiosPromise<Experience> {
-            return localVarFp.createExperience(projectID, experience, options).then((request) => request(axios, basePath));
+        createExperience(projectID: string, createExperienceInput?: CreateExperienceInput, options?: any): AxiosPromise<Experience> {
+            return localVarFp.createExperience(projectID, createExperienceInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes an experience.
@@ -8000,25 +10103,26 @@ export const ExperiencesApiFactory = function (configuration?: Configuration, ba
         /**
          * Returns the list of experiences.
          * @param {string} projectID 
+         * @param {string} [name] Filter experiences by name
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiences(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListExperiencesOutput> {
-            return localVarFp.listExperiences(projectID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        listExperiences(projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListExperiencesOutput> {
+            return localVarFp.listExperiences(projectID, name, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
         /**
          * Updates the experience.
          * @param {string} projectID 
          * @param {string} experienceID 
-         * @param {ExperienceInput} [experienceInput] 
+         * @param {UpdateExperienceInput} [updateExperienceInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateExperience(projectID: string, experienceID: string, experienceInput?: ExperienceInput, options?: any): AxiosPromise<Experience> {
-            return localVarFp.updateExperience(projectID, experienceID, experienceInput, options).then((request) => request(axios, basePath));
+        updateExperience(projectID: string, experienceID: string, updateExperienceInput?: UpdateExperienceInput, options?: any): AxiosPromise<Experience> {
+            return localVarFp.updateExperience(projectID, experienceID, updateExperienceInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Validates an experience location can be reached by ReSim.
@@ -8040,15 +10144,15 @@ export const ExperiencesApiFactory = function (configuration?: Configuration, ba
  */
 export class ExperiencesApi extends BaseAPI {
     /**
-     * Adds an experience.  ID should be omitted and will be returned in the response.
+     * Adds an experience.
      * @param {string} projectID 
-     * @param {Experience} [experience] 
+     * @param {CreateExperienceInput} [createExperienceInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ExperiencesApi
      */
-    public createExperience(projectID: string, experience?: Experience, options?: AxiosRequestConfig) {
-        return ExperiencesApiFp(this.configuration).createExperience(projectID, experience, options).then((request) => request(this.axios, this.basePath));
+    public createExperience(projectID: string, createExperienceInput?: CreateExperienceInput, options?: AxiosRequestConfig) {
+        return ExperiencesApiFp(this.configuration).createExperience(projectID, createExperienceInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8106,6 +10210,7 @@ export class ExperiencesApi extends BaseAPI {
     /**
      * Returns the list of experiences.
      * @param {string} projectID 
+     * @param {string} [name] Filter experiences by name
      * @param {number} [pageSize] 
      * @param {string} [pageToken] 
      * @param {string} [orderBy] 
@@ -8113,21 +10218,21 @@ export class ExperiencesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ExperiencesApi
      */
-    public listExperiences(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
-        return ExperiencesApiFp(this.configuration).listExperiences(projectID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    public listExperiences(projectID: string, name?: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return ExperiencesApiFp(this.configuration).listExperiences(projectID, name, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Updates the experience.
      * @param {string} projectID 
      * @param {string} experienceID 
-     * @param {ExperienceInput} [experienceInput] 
+     * @param {UpdateExperienceInput} [updateExperienceInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ExperiencesApi
      */
-    public updateExperience(projectID: string, experienceID: string, experienceInput?: ExperienceInput, options?: AxiosRequestConfig) {
-        return ExperiencesApiFp(this.configuration).updateExperience(projectID, experienceID, experienceInput, options).then((request) => request(this.axios, this.basePath));
+    public updateExperience(projectID: string, experienceID: string, updateExperienceInput?: UpdateExperienceInput, options?: AxiosRequestConfig) {
+        return ExperiencesApiFp(this.configuration).updateExperience(projectID, experienceID, updateExperienceInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10104,13 +12209,13 @@ export class MetricsApi extends BaseAPI {
 export const MetricsBuildsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Adds a metrics build.  ID should be omitted and will be returned in the response.
+         * Adds a metrics build.
          * @param {string} projectID 
-         * @param {MetricsBuild} [metricsBuild] 
+         * @param {CreateMetricsBuildInput} [createMetricsBuildInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createMetricsBuild: async (projectID: string, metricsBuild?: MetricsBuild, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createMetricsBuild: async (projectID: string, createMetricsBuildInput?: CreateMetricsBuildInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createMetricsBuild', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/metricsBuilds`
@@ -10145,7 +12250,7 @@ export const MetricsBuildsApiAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(metricsBuild, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createMetricsBuildInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10331,14 +12436,14 @@ export const MetricsBuildsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = MetricsBuildsApiAxiosParamCreator(configuration)
     return {
         /**
-         * Adds a metrics build.  ID should be omitted and will be returned in the response.
+         * Adds a metrics build.
          * @param {string} projectID 
-         * @param {MetricsBuild} [metricsBuild] 
+         * @param {CreateMetricsBuildInput} [createMetricsBuildInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createMetricsBuild(projectID: string, metricsBuild?: MetricsBuild, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MetricsBuild>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createMetricsBuild(projectID, metricsBuild, options);
+        async createMetricsBuild(projectID: string, createMetricsBuildInput?: CreateMetricsBuildInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<MetricsBuild>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createMetricsBuild(projectID, createMetricsBuildInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -10389,14 +12494,14 @@ export const MetricsBuildsApiFactory = function (configuration?: Configuration, 
     const localVarFp = MetricsBuildsApiFp(configuration)
     return {
         /**
-         * Adds a metrics build.  ID should be omitted and will be returned in the response.
+         * Adds a metrics build.
          * @param {string} projectID 
-         * @param {MetricsBuild} [metricsBuild] 
+         * @param {CreateMetricsBuildInput} [createMetricsBuildInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createMetricsBuild(projectID: string, metricsBuild?: MetricsBuild, options?: any): AxiosPromise<MetricsBuild> {
-            return localVarFp.createMetricsBuild(projectID, metricsBuild, options).then((request) => request(axios, basePath));
+        createMetricsBuild(projectID: string, createMetricsBuildInput?: CreateMetricsBuildInput, options?: any): AxiosPromise<MetricsBuild> {
+            return localVarFp.createMetricsBuild(projectID, createMetricsBuildInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns a specific metrics build.
@@ -10443,15 +12548,15 @@ export const MetricsBuildsApiFactory = function (configuration?: Configuration, 
  */
 export class MetricsBuildsApi extends BaseAPI {
     /**
-     * Adds a metrics build.  ID should be omitted and will be returned in the response.
+     * Adds a metrics build.
      * @param {string} projectID 
-     * @param {MetricsBuild} [metricsBuild] 
+     * @param {CreateMetricsBuildInput} [createMetricsBuildInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsBuildsApi
      */
-    public createMetricsBuild(projectID: string, metricsBuild?: MetricsBuild, options?: AxiosRequestConfig) {
-        return MetricsBuildsApiFp(this.configuration).createMetricsBuild(projectID, metricsBuild, options).then((request) => request(this.axios, this.basePath));
+    public createMetricsBuild(projectID: string, createMetricsBuildInput?: CreateMetricsBuildInput, options?: AxiosRequestConfig) {
+        return MetricsBuildsApiFp(this.configuration).createMetricsBuild(projectID, createMetricsBuildInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -10602,7 +12707,7 @@ export const ParameterSweepsApiAxiosParamCreator = function (configuration?: Con
             };
         },
         /**
-         * Returns a specific parameer sweep.
+         * Returns a specific parameter sweep.
          * @param {string} projectID 
          * @param {string} sweepID 
          * @param {*} [options] Override http request option.
@@ -10743,7 +12848,7 @@ export const ParameterSweepsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Returns a specific parameer sweep.
+         * Returns a specific parameter sweep.
          * @param {string} projectID 
          * @param {string} sweepID 
          * @param {*} [options] Override http request option.
@@ -10797,7 +12902,7 @@ export const ParameterSweepsApiFactory = function (configuration?: Configuration
             return localVarFp.createParameterSweep(projectID, parameterSweepInput, options).then((request) => request(axios, basePath));
         },
         /**
-         * Returns a specific parameer sweep.
+         * Returns a specific parameter sweep.
          * @param {string} projectID 
          * @param {string} sweepID 
          * @param {*} [options] Override http request option.
@@ -10853,7 +12958,7 @@ export class ParameterSweepsApi extends BaseAPI {
     }
 
     /**
-     * Returns a specific parameer sweep.
+     * Returns a specific parameter sweep.
      * @param {string} projectID 
      * @param {string} sweepID 
      * @param {*} [options] Override http request option.
@@ -10888,13 +12993,13 @@ export class ParameterSweepsApi extends BaseAPI {
 export const ProjectsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Adds a branch for a project.  ID should be omitted and will be returned in the response.
+         * Adds a branch for a project.
          * @param {string} projectID 
-         * @param {Branch} [branch] 
+         * @param {CreateBranchInput} [createBranchInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createBranchForProject: async (projectID: string, branch?: Branch, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createBranchForProject: async (projectID: string, createBranchInput?: CreateBranchInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createBranchForProject', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/branches`
@@ -10929,7 +13034,7 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(branch, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createBranchInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -10937,12 +13042,12 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * Adds a project.  ID should be omitted and will be returned in the response.
-         * @param {Project} [project] 
+         * Adds a project.
+         * @param {CreateProjectInput} [createProjectInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createProject: async (project?: Project, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createProject: async (createProjectInput?: CreateProjectInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/projects`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -10974,7 +13079,7 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(project, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createProjectInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11172,13 +13277,15 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * Returns the list of branches for a project.
          * @param {string} projectID 
+         * @param {string} [name] Filter branches by name
+         * @param {BranchType} [branchType] Filter branches by branchType
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listBranchesForProject: async (projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listBranchesForProject: async (projectID: string, name?: string, branchType?: BranchType, pageSize?: number, pageToken?: string, orderBy?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('listBranchesForProject', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/branches`
@@ -11205,6 +13312,14 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
             // authentication OAuth required
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "OAuth", ["projects:read"], configuration)
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            if (branchType !== undefined) {
+                localVarQueryParameter['branchType'] = branchType;
+            }
 
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
@@ -11288,11 +13403,11 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * Updates the project.
          * @param {string} projectID 
-         * @param {ProjectUpdateInput} [projectUpdateInput] 
+         * @param {UpdateProjectInput} [updateProjectInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateProject: async (projectID: string, projectUpdateInput?: ProjectUpdateInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateProject: async (projectID: string, updateProjectInput?: UpdateProjectInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('updateProject', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}`
@@ -11327,7 +13442,7 @@ export const ProjectsApiAxiosParamCreator = function (configuration?: Configurat
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(projectUpdateInput, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateProjectInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -11345,24 +13460,24 @@ export const ProjectsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ProjectsApiAxiosParamCreator(configuration)
     return {
         /**
-         * Adds a branch for a project.  ID should be omitted and will be returned in the response.
+         * Adds a branch for a project.
          * @param {string} projectID 
-         * @param {Branch} [branch] 
+         * @param {CreateBranchInput} [createBranchInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createBranchForProject(projectID: string, branch?: Branch, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Branch>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createBranchForProject(projectID, branch, options);
+        async createBranchForProject(projectID: string, createBranchInput?: CreateBranchInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Branch>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createBranchForProject(projectID, createBranchInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Adds a project.  ID should be omitted and will be returned in the response.
-         * @param {Project} [project] 
+         * Adds a project.
+         * @param {CreateProjectInput} [createProjectInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createProject(project?: Project, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createProject(project, options);
+        async createProject(createProjectInput?: CreateProjectInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createProject(createProjectInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11410,14 +13525,16 @@ export const ProjectsApiFp = function(configuration?: Configuration) {
         /**
          * Returns the list of branches for a project.
          * @param {string} projectID 
+         * @param {string} [name] Filter branches by name
+         * @param {BranchType} [branchType] Filter branches by branchType
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listBranchesForProject(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListBranchesOutput>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listBranchesForProject(projectID, pageSize, pageToken, orderBy, options);
+        async listBranchesForProject(projectID: string, name?: string, branchType?: BranchType, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListBranchesOutput>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listBranchesForProject(projectID, name, branchType, pageSize, pageToken, orderBy, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -11435,12 +13552,12 @@ export const ProjectsApiFp = function(configuration?: Configuration) {
         /**
          * Updates the project.
          * @param {string} projectID 
-         * @param {ProjectUpdateInput} [projectUpdateInput] 
+         * @param {UpdateProjectInput} [updateProjectInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateProject(projectID: string, projectUpdateInput?: ProjectUpdateInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateProject(projectID, projectUpdateInput, options);
+        async updateProject(projectID: string, updateProjectInput?: UpdateProjectInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateProject(projectID, updateProjectInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -11454,23 +13571,23 @@ export const ProjectsApiFactory = function (configuration?: Configuration, baseP
     const localVarFp = ProjectsApiFp(configuration)
     return {
         /**
-         * Adds a branch for a project.  ID should be omitted and will be returned in the response.
+         * Adds a branch for a project.
          * @param {string} projectID 
-         * @param {Branch} [branch] 
+         * @param {CreateBranchInput} [createBranchInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createBranchForProject(projectID: string, branch?: Branch, options?: any): AxiosPromise<Branch> {
-            return localVarFp.createBranchForProject(projectID, branch, options).then((request) => request(axios, basePath));
+        createBranchForProject(projectID: string, createBranchInput?: CreateBranchInput, options?: any): AxiosPromise<Branch> {
+            return localVarFp.createBranchForProject(projectID, createBranchInput, options).then((request) => request(axios, basePath));
         },
         /**
-         * Adds a project.  ID should be omitted and will be returned in the response.
-         * @param {Project} [project] 
+         * Adds a project.
+         * @param {CreateProjectInput} [createProjectInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createProject(project?: Project, options?: any): AxiosPromise<Project> {
-            return localVarFp.createProject(project, options).then((request) => request(axios, basePath));
+        createProject(createProjectInput?: CreateProjectInput, options?: any): AxiosPromise<Project> {
+            return localVarFp.createProject(createProjectInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes a branch for a project.
@@ -11513,14 +13630,16 @@ export const ProjectsApiFactory = function (configuration?: Configuration, baseP
         /**
          * Returns the list of branches for a project.
          * @param {string} projectID 
+         * @param {string} [name] Filter branches by name
+         * @param {BranchType} [branchType] Filter branches by branchType
          * @param {number} [pageSize] 
          * @param {string} [pageToken] 
          * @param {string} [orderBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listBranchesForProject(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListBranchesOutput> {
-            return localVarFp.listBranchesForProject(projectID, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
+        listBranchesForProject(projectID: string, name?: string, branchType?: BranchType, pageSize?: number, pageToken?: string, orderBy?: string, options?: any): AxiosPromise<ListBranchesOutput> {
+            return localVarFp.listBranchesForProject(projectID, name, branchType, pageSize, pageToken, orderBy, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns the list of projects.
@@ -11536,12 +13655,12 @@ export const ProjectsApiFactory = function (configuration?: Configuration, baseP
         /**
          * Updates the project.
          * @param {string} projectID 
-         * @param {ProjectUpdateInput} [projectUpdateInput] 
+         * @param {UpdateProjectInput} [updateProjectInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateProject(projectID: string, projectUpdateInput?: ProjectUpdateInput, options?: any): AxiosPromise<Project> {
-            return localVarFp.updateProject(projectID, projectUpdateInput, options).then((request) => request(axios, basePath));
+        updateProject(projectID: string, updateProjectInput?: UpdateProjectInput, options?: any): AxiosPromise<Project> {
+            return localVarFp.updateProject(projectID, updateProjectInput, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -11554,26 +13673,26 @@ export const ProjectsApiFactory = function (configuration?: Configuration, baseP
  */
 export class ProjectsApi extends BaseAPI {
     /**
-     * Adds a branch for a project.  ID should be omitted and will be returned in the response.
+     * Adds a branch for a project.
      * @param {string} projectID 
-     * @param {Branch} [branch] 
+     * @param {CreateBranchInput} [createBranchInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApi
      */
-    public createBranchForProject(projectID: string, branch?: Branch, options?: AxiosRequestConfig) {
-        return ProjectsApiFp(this.configuration).createBranchForProject(projectID, branch, options).then((request) => request(this.axios, this.basePath));
+    public createBranchForProject(projectID: string, createBranchInput?: CreateBranchInput, options?: AxiosRequestConfig) {
+        return ProjectsApiFp(this.configuration).createBranchForProject(projectID, createBranchInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Adds a project.  ID should be omitted and will be returned in the response.
-     * @param {Project} [project] 
+     * Adds a project.
+     * @param {CreateProjectInput} [createProjectInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApi
      */
-    public createProject(project?: Project, options?: AxiosRequestConfig) {
-        return ProjectsApiFp(this.configuration).createProject(project, options).then((request) => request(this.axios, this.basePath));
+    public createProject(createProjectInput?: CreateProjectInput, options?: AxiosRequestConfig) {
+        return ProjectsApiFp(this.configuration).createProject(createProjectInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11625,6 +13744,8 @@ export class ProjectsApi extends BaseAPI {
     /**
      * Returns the list of branches for a project.
      * @param {string} projectID 
+     * @param {string} [name] Filter branches by name
+     * @param {BranchType} [branchType] Filter branches by branchType
      * @param {number} [pageSize] 
      * @param {string} [pageToken] 
      * @param {string} [orderBy] 
@@ -11632,8 +13753,8 @@ export class ProjectsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ProjectsApi
      */
-    public listBranchesForProject(projectID: string, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
-        return ProjectsApiFp(this.configuration).listBranchesForProject(projectID, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
+    public listBranchesForProject(projectID: string, name?: string, branchType?: BranchType, pageSize?: number, pageToken?: string, orderBy?: string, options?: AxiosRequestConfig) {
+        return ProjectsApiFp(this.configuration).listBranchesForProject(projectID, name, branchType, pageSize, pageToken, orderBy, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -11652,13 +13773,13 @@ export class ProjectsApi extends BaseAPI {
     /**
      * Updates the project.
      * @param {string} projectID 
-     * @param {ProjectUpdateInput} [projectUpdateInput] 
+     * @param {UpdateProjectInput} [updateProjectInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProjectsApi
      */
-    public updateProject(projectID: string, projectUpdateInput?: ProjectUpdateInput, options?: AxiosRequestConfig) {
-        return ProjectsApiFp(this.configuration).updateProject(projectID, projectUpdateInput, options).then((request) => request(this.axios, this.basePath));
+    public updateProject(projectID: string, updateProjectInput?: UpdateProjectInput, options?: AxiosRequestConfig) {
+        return ProjectsApiFp(this.configuration).updateProject(projectID, updateProjectInput, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -11966,13 +14087,13 @@ export const SystemsApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * Adds a system.  ID should be omitted and will be returned in the response.
+         * Adds a system.
          * @param {string} projectID 
-         * @param {System} [system] 
+         * @param {CreateSystemInput} [createSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSystem: async (projectID: string, system?: System, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createSystem: async (projectID: string, createSystemInput?: CreateSystemInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('createSystem', 'projectID', projectID)
             const localVarPath = `/projects/{projectID}/systems`
@@ -12007,7 +14128,7 @@ export const SystemsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(system, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createSystemInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12346,11 +14467,11 @@ export const SystemsApiAxiosParamCreator = function (configuration?: Configurati
          * Updates the system.
          * @param {string} projectID 
          * @param {string} systemID 
-         * @param {SystemInput} [systemInput] 
+         * @param {UpdateSystemInput} [updateSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateSystem: async (projectID: string, systemID: string, systemInput?: SystemInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateSystem: async (projectID: string, systemID: string, updateSystemInput?: UpdateSystemInput, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projectID' is not null or undefined
             assertParamExists('updateSystem', 'projectID', projectID)
             // verify required parameter 'systemID' is not null or undefined
@@ -12388,7 +14509,7 @@ export const SystemsApiAxiosParamCreator = function (configuration?: Configurati
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(systemInput, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateSystemInput, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -12430,14 +14551,14 @@ export const SystemsApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
-         * Adds a system.  ID should be omitted and will be returned in the response.
+         * Adds a system.
          * @param {string} projectID 
-         * @param {System} [system] 
+         * @param {CreateSystemInput} [createSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createSystem(projectID: string, system?: System, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<System>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createSystem(projectID, system, options);
+        async createSystem(projectID: string, createSystemInput?: CreateSystemInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<System>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createSystem(projectID, createSystemInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -12517,12 +14638,12 @@ export const SystemsApiFp = function(configuration?: Configuration) {
          * Updates the system.
          * @param {string} projectID 
          * @param {string} systemID 
-         * @param {SystemInput} [systemInput] 
+         * @param {UpdateSystemInput} [updateSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateSystem(projectID: string, systemID: string, systemInput?: SystemInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<System>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSystem(projectID, systemID, systemInput, options);
+        async updateSystem(projectID: string, systemID: string, updateSystemInput?: UpdateSystemInput, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<System>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSystem(projectID, systemID, updateSystemInput, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -12558,14 +14679,14 @@ export const SystemsApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.addSystemToMetricsBuild(projectID, systemID, metricsBuildID, options).then((request) => request(axios, basePath));
         },
         /**
-         * Adds a system.  ID should be omitted and will be returned in the response.
+         * Adds a system.
          * @param {string} projectID 
-         * @param {System} [system] 
+         * @param {CreateSystemInput} [createSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSystem(projectID: string, system?: System, options?: any): AxiosPromise<System> {
-            return localVarFp.createSystem(projectID, system, options).then((request) => request(axios, basePath));
+        createSystem(projectID: string, createSystemInput?: CreateSystemInput, options?: any): AxiosPromise<System> {
+            return localVarFp.createSystem(projectID, createSystemInput, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns a specific system.
@@ -12638,12 +14759,12 @@ export const SystemsApiFactory = function (configuration?: Configuration, basePa
          * Updates the system.
          * @param {string} projectID 
          * @param {string} systemID 
-         * @param {SystemInput} [systemInput] 
+         * @param {UpdateSystemInput} [updateSystemInput] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateSystem(projectID: string, systemID: string, systemInput?: SystemInput, options?: any): AxiosPromise<System> {
-            return localVarFp.updateSystem(projectID, systemID, systemInput, options).then((request) => request(axios, basePath));
+        updateSystem(projectID: string, systemID: string, updateSystemInput?: UpdateSystemInput, options?: any): AxiosPromise<System> {
+            return localVarFp.updateSystem(projectID, systemID, updateSystemInput, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -12682,15 +14803,15 @@ export class SystemsApi extends BaseAPI {
     }
 
     /**
-     * Adds a system.  ID should be omitted and will be returned in the response.
+     * Adds a system.
      * @param {string} projectID 
-     * @param {System} [system] 
+     * @param {CreateSystemInput} [createSystemInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SystemsApi
      */
-    public createSystem(projectID: string, system?: System, options?: AxiosRequestConfig) {
-        return SystemsApiFp(this.configuration).createSystem(projectID, system, options).then((request) => request(this.axios, this.basePath));
+    public createSystem(projectID: string, createSystemInput?: CreateSystemInput, options?: AxiosRequestConfig) {
+        return SystemsApiFp(this.configuration).createSystem(projectID, createSystemInput, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -12776,13 +14897,13 @@ export class SystemsApi extends BaseAPI {
      * Updates the system.
      * @param {string} projectID 
      * @param {string} systemID 
-     * @param {SystemInput} [systemInput] 
+     * @param {UpdateSystemInput} [updateSystemInput] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SystemsApi
      */
-    public updateSystem(projectID: string, systemID: string, systemInput?: SystemInput, options?: AxiosRequestConfig) {
-        return SystemsApiFp(this.configuration).updateSystem(projectID, systemID, systemInput, options).then((request) => request(this.axios, this.basePath));
+    public updateSystem(projectID: string, systemID: string, updateSystemInput?: UpdateSystemInput, options?: AxiosRequestConfig) {
+        return SystemsApiFp(this.configuration).updateSystem(projectID, systemID, updateSystemInput, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
