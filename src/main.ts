@@ -113,7 +113,7 @@ export async function run(): Promise<void> {
         debug(pullRequestEvent.head)
         shortCommitSha = pullRequestEvent.head.sha.slice(0, 8)
         buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`
-      } 
+      }
     } else if (github.context.eventName === 'push') {
       if (github.context.payload.push !== undefined) {
         const pushRequestEvent = github.context.payload.push
