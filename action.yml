@@ -17,6 +17,8 @@ inputs:
     required: true
   image:
     required: true
+  test_suite:
+    required: false
   experience_tags:
     required: false
   experiences:

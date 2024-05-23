@@ -75566,6 +75566,7 @@ const auth = __importStar(__nccwpck_require__(3497));
 const client_1 = __nccwpck_require__(7929);
 const projects_1 = __nccwpck_require__(5827);
 const systems_1 = __nccwpck_require__(3941);
+const test_suites_1 = __nccwpck_require__(9403);
 __nccwpck_require__(9301);
 const debug_1 = __importDefault(__nccwpck_require__(8237));
 const builds_1 = __nccwpck_require__(8631);
@@ -75577,9 +75578,17 @@ const debug = (0, debug_1.default)('action');
 async function run() {
     try {
         const apiEndpoint = core.getInput('api_endpoint');
-        if (core.getInput('experience_tags') === '' &&
+        if (core.getInput('test_suite') !== '' &&
+            (core.getInput('experience_tags') !== '' ||
+                core.getInput('experiences') !== '' ||
+                core.getInput('metrics_build_id') !== '')) {
+            core.setFailed('Cannot set test_suite with experience_tags, experiences, or metrics_build_id');
+            return;
+        }
+        if (core.getInput('test_suite') === '' &&
+            core.getInput('experience_tags') === '' &&
             core.getInput('experiences') === '') {
-            core.setFailed('Must set at least one of experiences or experience_tags');
+            core.setFailed('Must set at least one of experiences or experience_tags, when not using a test_suite');
             return;
         }
         if (core.getInput('project') === '') {
@@ -75631,30 +75640,59 @@ async function run() {
         const buildsApi = new client_1.BuildsApi(config);
         const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildDescription, shortCommitSha);
         debug(newBuild);
+        if (newBuild.buildID === undefined) {
+            core.setFailed('Could not obtain build id');
+            return;
+        }
         const batchesApi = new client_1.BatchesApi(config);
-        const batchRequest = {
-            buildID: newBuild.buildID
-        };
-        if (associatedAccount !== '') {
-            batchRequest.associatedAccount = associatedAccount;
+        // A variable to be the new batch id depending on whether we do a test suite run
+        // or a standard batch (a string or undefined):
+        let newBatchID = undefined;
+        // If test suite is set
+        if (core.getInput('test_suite') !== '') {
+            const testSuiteName = core.getInput('test_suite');
+            // Create a test suite batch input
+            const runSuiteRequest = {
+                buildID: newBuild.buildID
+            };
+            // Check that newBuild.buildID is defined and then use its string:
+            if (newBuild.buildID !== undefined) {
+                runSuiteRequest.buildID = newBuild.buildID;
+            }
+            // Obtain the test suite ID
+            const testSuiteID = await (0, test_suites_1.getTestSuiteID)(batchesApi, projectID, testSuiteName);
+            debug(`test suite ID is ${testSuiteID}`);
+            runSuiteRequest.associatedAccount = associatedAccount;
+            const newBatchResponse = await batchesApi.createBatchForTestSuite(projectID, testSuiteID, runSuiteRequest);
+            const newBatch = newBatchResponse.data;
+            debug('batch launched');
+            newBatchID = newBatch.batchID;
         }
-        if (core.getInput('experience_tags') !== '') {
-            const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
-            batchRequest.experienceTagNames = experienceTagNames;
+        else {
+            const batchRequest = {
+                buildID: newBuild.buildID
+            };
+            if (associatedAccount !== '') {
+                batchRequest.associatedAccount = associatedAccount;
+            }
+            if (core.getInput('experience_tags') !== '') {
+                const experienceTagNames = arrayInputSplit(core.getInput('experience_tags'));
+                batchRequest.experienceTagNames = experienceTagNames;
+            }
+            if (core.getInput('experiences') !== '') {
+                const experienceNames = arrayInputSplit(core.getInput('experiences'));
+                batchRequest.experienceNames = experienceNames;
+            }
+            if (core.getInput('metrics_build_id') !== '') {
+                const metricsBuildID = core.getInput('metrics_build_id');
+                batchRequest.metricsBuildID = metricsBuildID;
+            }
+            debug('batchRequest exists');
+            const newBatchResponse = await batchesApi.createBatch(projectID, batchRequest);
+            const newBatch = newBatchResponse.data;
+            debug('batch launched');
+            newBatchID = newBatch.batchID;
         }
-        if (core.getInput('experiences') !== '') {
-            const experienceNames = arrayInputSplit(core.getInput('experiences'));
-            batchRequest.experienceNames = experienceNames;
-        }
-        if (core.getInput('metrics_build_id') !== '') {
-            const metricsBuildID = core.getInput('metrics_build_id');
-            batchRequest.metricsBuildID = metricsBuildID;
-        }
-        debug('batchRequest exists');
-        const newBatchResponse = await batchesApi.createBatch(projectID, batchRequest);
-        const newBatch = newBatchResponse.data;
-        debug('batch launched');
-        const newBatchID = newBatch.batchID;
         core.info(`Launched batch ${newBatchID}`);
         if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
             core.info(`View results on ReSim: https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`);
@@ -75837,6 +75875,39 @@ async function getSystemID(systemsApi, projectID, systemName) {
     throw new Error(`Could not find system ${systemName}`);
 }
 exports.getSystemID = getSystemID;
+
+
+/***/ }),
+
+/***/ 9403:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getTestSuiteID = exports.listTestSuites = void 0;
+async function listTestSuites(projectID, api) {
+    const testSuites = [];
+    let pageToken = undefined;
+    while (pageToken !== '') {
+        const response = await api.listTestSuites(projectID, 100, pageToken);
+        if (response.data.testSuites) {
+            testSuites.push(...response.data.testSuites);
+        }
+        pageToken = response.data.nextPageToken;
+    }
+    return testSuites;
+}
+exports.listTestSuites = listTestSuites;
+async function getTestSuiteID(batchesApi, projectID, testSuiteName) {
+    const suites = await listTestSuites(projectID, batchesApi);
+    const thisTestSuite = suites.find(ts => ts.name === testSuiteName);
+    if (thisTestSuite?.systemID !== undefined) {
+        return thisTestSuite.systemID;
+    }
+    throw new Error(`Could not find test suite ${testSuiteName}`);
+}
+exports.getTestSuiteID = getTestSuiteID;
 
 
 /***/ }),

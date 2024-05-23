@@ -9,6 +9,7 @@ import type { AxiosResponse } from 'axios'
 import { Batch, BatchesApi, Build } from '../src/client'
 import * as projects from '../src/projects'
 import * as systems from '../src/systems'
+import * as test_suites from '../src/test_suites'
 
 import * as builds from '../src/builds'
 
@@ -21,6 +22,7 @@ const findOrCreateBranchMock = jest.spyOn(projects, 'findOrCreateBranch')
 const createBranchMock = jest.spyOn(projects, 'createBranch')
 
 const getSystemIDMock = jest.spyOn(systems, 'getSystemID')
+const getTestSuiteIDMock = jest.spyOn(test_suites, 'getTestSuiteID')
 const createBuildMock = jest.spyOn(builds, 'createBuild')
 
 const defaultInput = (name: string): string => {
@@ -59,6 +61,54 @@ const noExperienceInput = (name: string): string => {
   }
 }
 
+const testSuiteInput = (name: string): string => {
+  switch (name) {
+    case 'api_endpoint':
+      return 'https://api.resim.io/v1/'
+    case 'auth0_tenant_url':
+      return 'https://resim-dev.us.auth0.com/'
+    case 'client_id':
+      return 'ID'
+    case 'client_secret':
+      return 'secret'
+    case 'test_suite':
+      return 'my_test'
+    case 'image':
+      return 'a.docker/image:tag'
+    case 'project':
+      return 'a-resim-project'
+    case 'system':
+      return 'a-resim-system'
+    default:
+      return ''
+  }
+}
+
+const badTestSuiteInput = (name: string): string => {
+  switch (name) {
+    case 'api_endpoint':
+      return 'https://api.resim.io/v1/'
+    case 'auth0_tenant_url':
+      return 'https://resim-dev.us.auth0.com/'
+    case 'client_id':
+      return 'ID'
+    case 'client_secret':
+      return 'secret'
+    case 'test_suite':
+      return 'my_test'
+    case 'experience_tags':
+      return 'tag1,tag2'
+    case 'image':
+      return 'a.docker/image:tag'
+    case 'project':
+      return 'a-resim-project'
+    case 'system':
+      return 'a-resim-system'
+    default:
+      return ''
+  }
+}
+
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
 
@@ -72,6 +122,16 @@ describe('action', () => {
 
   it('fails if neither experiences nor experience_tags is set', async () => {
     getInputMock.mockImplementation(noExperienceInput)
+    setFailedMock.mockImplementation()
+
+    await main.run()
+
+    expect(setFailedMock).toHaveBeenCalled()
+    expect(getTokenMock).not.toHaveBeenCalled()
+  })
+
+  it('fails if both experiences and test suites are set', async () => {
+    getInputMock.mockImplementation(badTestSuiteInput)
     setFailedMock.mockImplementation()
 
     await main.run()
@@ -156,6 +216,77 @@ describe('action', () => {
     expect(getSystemIDMock).toHaveBeenCalledTimes(1)
     expect(createBranchMock).not.toHaveBeenCalled()
     expect(createBatchMock).toHaveBeenCalled()
+    expect(runMock).toHaveReturned()
+    expect(getTokenMock).toHaveBeenCalled()
+  })
+
+  it('runs a test suite, branch already exists', async () => {
+    getInputMock.mockImplementation(testSuiteInput)
+    getBooleanInputMock.mockReturnValue(false)
+
+    const branchID = uuid.v4()
+    const projectID = uuid.v4()
+    const systemID = uuid.v4()
+    const buildID = uuid.v4()
+    const batchID = uuid.v4()
+    const testSuiteID = uuid.v4()
+
+    getTokenMock.mockImplementation(async (): Promise<string> => {
+      return Promise.resolve('token')
+    })
+
+    getProjectIDMock.mockResolvedValueOnce(projectID)
+    getSystemIDMock.mockResolvedValueOnce(systemID)
+    getTestSuiteIDMock.mockResolvedValueOnce(testSuiteID)
+
+    // pretend we're in a PR to test this code path
+    process.env.GITHUB_HEAD_REF = 'pr-branch'
+    process.env.GITHUB_EVENT_NAME = 'pull_request'
+    process.env.GITHUB_ACTOR = 'github-user'
+    const associatedAccount: string = process.env.GITHUB_ACTOR
+    findOrCreateBranchMock.mockResolvedValueOnce(branchID)
+
+    Object.defineProperty(github, 'context', {
+      value: {
+        eventName: 'pull_request',
+        payload: {
+          pull_request: {
+            head: {
+              sha: '03403a4f2db7fc85c79c4da80bd3ea719eb8dce5'
+            },
+            number: 123,
+            title: 'Test PR'
+          }
+        }
+      }
+    })
+
+    const newBuild: Build = {
+      branchID,
+      systemID,
+      description: `#123 - Test PR`,
+      imageUri: 'a.docker/image:tag',
+      buildID,
+      version: '03403a4f'
+    }
+    createBuildMock.mockResolvedValueOnce(newBuild)
+
+    const newBatch: Batch = {
+      associatedAccount,
+      batchID
+    }
+
+    const testSuiteBatchInputMock = jest
+      .spyOn(BatchesApi.prototype, 'createBatchForTestSuite')
+      .mockResolvedValueOnce({ data: newBatch } as AxiosResponse)
+
+    await main.run()
+
+    expect(getProjectIDMock).toHaveBeenCalledTimes(1)
+    expect(getSystemIDMock).toHaveBeenCalledTimes(1)
+    expect(getTestSuiteIDMock).toHaveBeenCalledTimes(1)
+    expect(createBranchMock).not.toHaveBeenCalled()
+    expect(testSuiteBatchInputMock).toHaveBeenCalled()
     expect(runMock).toHaveReturned()
     expect(getTokenMock).toHaveBeenCalled()
   })
