@@ -42,6 +42,8 @@ If you want to run a test suite in ReSim from a separate workflow, or just want 
 - `image` should be set to an image URI, where the image tag reflects the version of your software you'd like to test. The `system` flag will be what is used to register the build
 - The secrets used for authentication have to be passed in explicitly (a [GitHub requirement](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#using-secrets-in-a-workflow))
 
+### Run Ad Hoc Test Batch with existing image
+
 If you do not want to use a test suite, but simply use a fixed set of experiences and metrics build, you can add a step like this:
 
 ```yaml
