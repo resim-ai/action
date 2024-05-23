@@ -112,7 +112,8 @@ describe('action', () => {
     // pretend we're in a PR to test this code path
     process.env.GITHUB_HEAD_REF = 'pr-branch'
     process.env.GITHUB_EVENT_NAME = 'pull_request'
-
+    process.env.GITHUB_ACTOR = 'github-user'
+    const associatedAccount: string = process.env.GITHUB_ACTOR
     findOrCreateBranchMock.mockResolvedValueOnce(branchID)
 
     Object.defineProperty(github, 'context', {
@@ -141,6 +142,7 @@ describe('action', () => {
     createBuildMock.mockResolvedValueOnce(newBuild)
 
     const newBatch: Batch = {
+      associatedAccount,
       batchID
     }
 

@@ -64,6 +64,12 @@ export async function run(): Promise<void> {
     const systemID = await getSystemID(systemsApi, projectID, systemName)
     debug(`system ID is ${systemID}`)
 
+    let associatedAccount = ''
+    if (process.env.GITHUB_ACTOR !== undefined) {
+      associatedAccount = process.env.GITHUB_ACTOR
+    }
+    debug(`associatedAccount is ${associatedAccount}`)
+
     let branchName = ''
     if (process.env.GITHUB_REF_NAME !== undefined) {
       branchName = process.env.GITHUB_REF_NAME
@@ -110,6 +116,10 @@ export async function run(): Promise<void> {
 
     const batchRequest: BatchInput = {
       buildID: newBuild.buildID
+    }
+
+    if (associatedAccount !== '') {
+      batchRequest.associatedAccount = associatedAccount
     }
 
     if (core.getInput('experience_tags') !== '') {

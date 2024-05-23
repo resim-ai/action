@@ -3,7 +3,8 @@ import {
   ProjectsApi,
   ListProjectsOutput,
   Branch,
-  ListBranchesOutput
+  ListBranchesOutput,
+  CreateBranchInput
 } from './client'
 import type { AxiosResponse } from 'axios'
 import { isAxiosError } from 'axios'
@@ -30,7 +31,6 @@ export async function getLatestProject(api: ProjectsApi): Promise<Project> {
       throw new Error(error.response?.data.message)
     }
   }
-
   return new Error('Could not find latest project')
 }
 
@@ -63,7 +63,14 @@ export async function getBranchID(
   let pageToken: string | undefined = undefined
   while (pageToken !== '') {
     const response: AxiosResponse<ListBranchesOutput> =
-      await api.listBranchesForProject(projectID, 100, pageToken, 'timestamp')
+      await api.listBranchesForProject(
+        projectID,
+        undefined,
+        undefined,
+        100,
+        pageToken,
+        'timestamp'
+      )
     if (response.data.branches) {
       branches.push(...response.data.branches)
     }
@@ -84,7 +91,7 @@ export async function createBranch(
   projectID: string,
   branchName: string
 ): Promise<string> {
-  const newBranchBody: Branch = {
+  const newBranchBody: CreateBranchInput = {
     branchType: 'CHANGE_REQUEST',
     name: branchName
   }
