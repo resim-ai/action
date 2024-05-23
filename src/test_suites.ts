@@ -27,8 +27,8 @@ export async function getTestSuiteID(
 ): Promise<string> {
   const suites = await listTestSuites(projectID, batchesApi)
   const thisTestSuite = suites.find(ts => ts.name === testSuiteName)
-  if (thisTestSuite?.systemID !== undefined) {
-    return thisTestSuite.systemID
+  if (thisTestSuite?.testSuiteID !== undefined) {
+    return thisTestSuite.testSuiteID
   }
   throw new Error(`Could not find test suite ${testSuiteName}`)
 }
