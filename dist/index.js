@@ -75636,6 +75636,14 @@ async function run() {
                 buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`;
             }
         }
+        else if (github.context.eventName === 'push') {
+            if (github.context.payload.push !== undefined) {
+                const pushRequestEvent = github.context.payload.push;
+                // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
+                shortCommitSha = pushRequestEvent.after.slice(0, 8);
+                buildDescription = `Push to ${pushRequestEvent.ref.split('/').pop()} @ ${shortCommitSha}`;
+            }
+        }
         // register build
         const buildsApi = new client_1.BuildsApi(config);
         const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildDescription, shortCommitSha);

@@ -114,6 +114,13 @@ export async function run(): Promise<void> {
         shortCommitSha = pullRequestEvent.head.sha.slice(0, 8)
         buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`
       }
+    } else if (github.context.eventName === 'push') {
+      if (github.context.payload.push !== undefined) {
+        const pushRequestEvent = github.context.payload.push
+        // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
+        shortCommitSha = pushRequestEvent.after.slice(0, 8)
+        buildDescription = `Push to ${pushRequestEvent.ref.split('/').pop()} @ ${shortCommitSha}`
+      }
     }
 
     // register build
