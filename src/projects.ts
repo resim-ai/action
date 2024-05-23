@@ -31,7 +31,7 @@ export async function getLatestProject(api: ProjectsApi): Promise<Project> {
       throw new Error(error.response?.data.message)
     }
   }
-  return new Error('Could not find latest project')
+  throw new Error('Could not find latest project')
 }
 
 export async function listProjects(api: ProjectsApi): Promise<Project[]> {
