@@ -8,12 +8,14 @@ import {
   BatchInput,
   ProjectsApi,
   SystemsApi,
-  BuildsApi
+  BuildsApi,
+  TestSuiteBatchInput
 } from './client'
 import type { AxiosResponse } from 'axios'
 
 import { getProjectID, findOrCreateBranch } from './projects'
 import { getSystemID } from './systems'
+import { getTestSuiteID } from './test_suites'
 
 import 'axios-debug-log'
 import Debug from 'debug'
@@ -30,10 +32,25 @@ export async function run(): Promise<void> {
     const apiEndpoint = core.getInput('api_endpoint')
 
     if (
+      core.getInput('test_suite') !== '' &&
+      (core.getInput('experience_tags') !== '' ||
+        core.getInput('experiences') !== '' ||
+        core.getInput('metrics_build_id') !== '')
+    ) {
+      core.setFailed(
+        'Cannot set test_suite with experience_tags, experiences, or metrics_build_id'
+      )
+      return
+    }
+
+    if (
+      core.getInput('test_suite') === '' &&
       core.getInput('experience_tags') === '' &&
       core.getInput('experiences') === ''
     ) {
-      core.setFailed('Must set at least one of experiences or experience_tags')
+      core.setFailed(
+        'Must set at least one of experiences or experience_tags when not setting test_suite'
+      )
       return
     }
 
@@ -63,6 +80,12 @@ export async function run(): Promise<void> {
     const systemsApi = new SystemsApi(config)
     const systemID = await getSystemID(systemsApi, projectID, systemName)
     debug(`system ID is ${systemID}`)
+
+    let associatedAccount = ''
+    if (process.env.GITHUB_ACTOR !== undefined) {
+      associatedAccount = process.env.GITHUB_ACTOR
+    }
+    debug(`associatedAccount is ${associatedAccount}`)
 
     let branchName = ''
     if (process.env.GITHUB_REF_NAME !== undefined) {
@@ -106,39 +129,77 @@ export async function run(): Promise<void> {
     )
     debug(newBuild)
 
+    if (newBuild.buildID === undefined) {
+      core.setFailed('Could not obtain build id')
+      return
+    }
     const batchesApi = new BatchesApi(config)
+    // A variable to be the new batch id depending on whether we do a test suite run
+    // or a standard batch (a string or undefined):
+    let newBatchID: string | undefined = undefined
 
-    const batchRequest: BatchInput = {
-      buildID: newBuild.buildID
-    }
+    // If test suite is set
+    if (core.getInput('test_suite') !== '') {
+      const testSuiteName = core.getInput('test_suite')
+      // Create a test suite batch input
+      const runSuiteRequest: TestSuiteBatchInput = {
+        buildID: newBuild.buildID
+      }
 
-    if (core.getInput('experience_tags') !== '') {
-      const experienceTagNames = arrayInputSplit(
-        core.getInput('experience_tags')
+      // Obtain the test suite ID
+      const testSuiteID = await getTestSuiteID(
+        batchesApi,
+        projectID,
+        testSuiteName
       )
-      batchRequest.experienceTagNames = experienceTagNames
+      debug(`test suite ID is ${testSuiteID}`)
+      runSuiteRequest.associatedAccount = associatedAccount
+      const newBatchResponse: AxiosResponse<Batch> =
+        await batchesApi.createBatchForTestSuite(
+          projectID,
+          testSuiteID,
+          runSuiteRequest
+        )
+
+      const newBatch: Batch = newBatchResponse.data
+      debug('batch launched')
+
+      newBatchID = newBatch.batchID
+    } else {
+      const batchRequest: BatchInput = {
+        buildID: newBuild.buildID
+      }
+
+      if (associatedAccount !== '') {
+        batchRequest.associatedAccount = associatedAccount
+      }
+
+      if (core.getInput('experience_tags') !== '') {
+        const experienceTagNames = arrayInputSplit(
+          core.getInput('experience_tags')
+        )
+        batchRequest.experienceTagNames = experienceTagNames
+      }
+
+      if (core.getInput('experiences') !== '') {
+        const experienceNames = arrayInputSplit(core.getInput('experiences'))
+        batchRequest.experienceNames = experienceNames
+      }
+
+      if (core.getInput('metrics_build_id') !== '') {
+        const metricsBuildID = core.getInput('metrics_build_id')
+        batchRequest.metricsBuildID = metricsBuildID
+      }
+
+      debug('batchRequest exists')
+      const newBatchResponse: AxiosResponse<Batch> =
+        await batchesApi.createBatch(projectID, batchRequest)
+
+      const newBatch: Batch = newBatchResponse.data
+      debug('batch launched')
+
+      newBatchID = newBatch.batchID
     }
-
-    if (core.getInput('experiences') !== '') {
-      const experienceNames = arrayInputSplit(core.getInput('experiences'))
-      batchRequest.experienceNames = experienceNames
-    }
-
-    if (core.getInput('metrics_build_id') !== '') {
-      const metricsBuildID = core.getInput('metrics_build_id')
-      batchRequest.metricsBuildID = metricsBuildID
-    }
-
-    debug('batchRequest exists')
-    const newBatchResponse: AxiosResponse<Batch> = await batchesApi.createBatch(
-      projectID,
-      batchRequest
-    )
-
-    const newBatch: Batch = newBatchResponse.data
-    debug('batch launched')
-
-    const newBatchID = newBatch.batchID
 
     core.info(`Launched batch ${newBatchID}`)
     if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {

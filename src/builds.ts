@@ -1,4 +1,4 @@
-import { Build, BuildsApi } from './client'
+import { Build, BuildsApi, CreateBuildForBranchInput } from './client'
 
 export async function createBuild(
   api: BuildsApi,
@@ -9,8 +9,7 @@ export async function createBuild(
   description: string,
   version: string
 ): Promise<Build> {
-  const newBuildBody: Build = {
-    projectID,
+  const newBuildBody: CreateBuildForBranchInput = {
     systemID,
     imageUri,
     description,

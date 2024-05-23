@@ -90,6 +90,22 @@ jobs:
         env:
           DEBUG: '*'
 
+      - name: Test Action - test suites
+        id: test-action-suites
+        uses: ./
+        with:
+          api_endpoint: 'https://api.resim.io/v1'
+          auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
+          client_id: ${{ secrets.TEST_CLIENT_ID }}
+          client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
+          project: github-action-testing
+          system: actions
+          test_suite: "actions-test-suite"
+          image: ${{ steps.image.outputs.image_id }}
+          comment_on_pr: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          DEBUG: '*'
       - name: Test Action - project doesn't exist
         id: test-action-no-proj
         continue-on-error: true
