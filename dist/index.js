@@ -75637,8 +75637,9 @@ async function run() {
             }
         }
         else if (github.context.eventName === 'push') {
-            if (github.context.payload.push !== undefined) {
-                const pushRequestEvent = github.context.payload.push;
+            if (github.context.payload !== undefined) {
+                const pushRequestEvent = github.context.payload;
+                debug(pushRequestEvent.after);
                 // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
                 shortCommitSha = pushRequestEvent.after.slice(0, 8);
                 buildDescription = `Push to ${pushRequestEvent.ref.split('/').pop()} @ ${shortCommitSha}`;
