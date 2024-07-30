@@ -64527,7 +64527,6 @@ async function getToken() {
             token = response.data.access_token;
         }
         else if (resimUsername !== '' && resimPassword !== '') {
-            core.info("i'm here");
             config = {
                 method: 'POST',
                 url: tokenEndpoint,
@@ -64546,9 +64545,12 @@ async function getToken() {
         }
         else {
             core.setFailed('credentials not found - set client ID and secret, or username and password');
+            token = 'ERROR';
         }
-        await promises_1.default.writeFile(tokenPath, token);
-        await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
+        if (token !== 'ERROR') {
+            await promises_1.default.writeFile(tokenPath, token);
+            await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
+        }
     }
     await promises_1.default.unlink(tokenPath);
     return token;
@@ -75624,6 +75626,9 @@ async function run() {
         }
         const token = await auth.getToken();
         debug('got auth');
+        if (token === 'ERROR') {
+            throw new Error('Please set client credentials or username and password');
+        }
         const config = new client_1.Configuration({
             basePath: apiEndpoint,
             accessToken: token

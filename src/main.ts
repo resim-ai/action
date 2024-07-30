@@ -62,7 +62,7 @@ export async function run(): Promise<void> {
     const token = await auth.getToken()
     debug('got auth')
     if (token === 'ERROR') {
-      throw new Error("Please set client credentials or username and password")
+      throw new Error('Please set client credentials or username and password')
     }
 
     const config = new Configuration({
