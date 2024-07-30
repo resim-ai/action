@@ -66,7 +66,6 @@ export async function getToken(): Promise<string> {
       const response: AxiosResponse = await axios(config)
       token = response.data.access_token
     } else if (resimUsername !== '' && resimPassword !== '') {
-      core.info("i'm here")
       config = {
         method: 'POST',
         url: tokenEndpoint,
@@ -86,10 +85,13 @@ export async function getToken(): Promise<string> {
       core.setFailed(
         'credentials not found - set client ID and secret, or username and password'
       )
+      token = 'ERROR'
     }
 
-    await fs.writeFile(tokenPath, token)
-    await cache.saveCache([tokenPath], `resim-token-${uuidv4()}`)
+    if (token !== 'ERROR') {
+      await fs.writeFile(tokenPath, token)
+      await cache.saveCache([tokenPath], `resim-token-${uuidv4()}`)
+    }
   }
 
   await fs.unlink(tokenPath)

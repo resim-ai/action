@@ -38,6 +38,8 @@ const passwordInput = (name: string): string => {
       return 'un'
     case 'resim_password':
       return 'pw'
+    case 'password_auth_client_id':
+      return '0Ip56H1LLAo6Dc6IfePaNzgpUxbJGyVI'
     default:
       return ''
   }
