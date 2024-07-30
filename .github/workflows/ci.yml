@@ -78,8 +78,8 @@ jobs:
         with:
           api_endpoint: 'https://api.resim.io/v1'
           auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
-          client_id: ${{ secrets.TEST_CLIENT_ID }}
-          client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
+          resim_username: 'resim.ai'
+          resim_password: ${{ secrets.RESIM_PASSWORD }}
           project: github-action-testing
           system: actions
           experiences: actions experience-a,"actions experience-b"
@@ -116,6 +116,22 @@ jobs:
           client_id: ${{ secrets.TEST_CLIENT_ID }}
           client_secret: ${{ secrets.TEST_CLIENT_SECRET }}
           project: this project does not exist
+          system: actions
+          experiences: actions experience-a,"actions experience-b"
+          image: ${{ steps.image.outputs.image_id }}
+          comment_on_pr: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          DEBUG: '*'
+
+      - name: Test Action - no auth set
+        id: test-action-no-auth
+        continue-on-error: true
+        uses: ./
+        with:
+          api_endpoint: 'https://api.resim.io/v1'
+          auth0_tenant_url: 'https://resim-dev.us.auth0.com/'
+          project: github-action-testing
           system: actions
           experiences: actions experience-a,"actions experience-b"
           image: ${{ steps.image.outputs.image_id }}

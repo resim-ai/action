@@ -120,7 +120,9 @@ export async function run(): Promise<void> {
         debug(pushRequestEvent.after)
         // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
         shortCommitSha = pushRequestEvent.after.slice(0, 8)
-        buildDescription = `Push to ${pushRequestEvent.ref.split('/').pop()} @ ${shortCommitSha}`
+        buildDescription = `Push to ${pushRequestEvent.ref
+          .split('/')
+          .pop()} @ ${shortCommitSha}`
       }
     }
 

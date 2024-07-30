@@ -7,10 +7,17 @@ inputs:
   auth0_tenant_url:
     required: true
     default: 'https://resim.us.auth0.com/'
+  password_client_id:
+    required: true
+    default: '0Ip56H1LLAo6Dc6IfePaNzgpUxbJGyVI'
+  resim_username:
+    required: false
+  resim_password:
+    required: false
   client_id:
-    required: true
+    required: false
   client_secret:
-    required: true
+    required: false
   project:
     required: true
   system:
