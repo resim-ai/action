@@ -14,9 +14,15 @@ export async function getToken(): Promise<string> {
   const apiAudience = 'https://api.resim.ai'
   const clientID = core.getInput('client_id')
   const clientSecret = core.getInput('client_secret')
+  const resimUsername = core.getInput('resim_username')
+  const resimPassword = core.getInput('resim_password')
+  const unpwClientId = core.getInput('password_auth_client_id')
   const auth0TenantUrl: string = core.getInput('auth0_tenant_url')
   const tokenEndpoint = `${auth0TenantUrl}oauth/token`
   const apiEndpoint: string = core.getInput('api_endpoint')
+  const passwordAuthGrantType =
+    'http://auth0.com/oauth/grant-type/password-realm'
+  const passwordAuthRealm = 'cli-users'
 
   let token = ''
   let tokenValid = false
@@ -46,23 +52,49 @@ export async function getToken(): Promise<string> {
   }
 
   if (!tokenValid) {
-    const config: AxiosRequestConfig = {
-      method: 'POST',
-      url: tokenEndpoint,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: new URLSearchParams({
-        grant_type: 'client_credentials',
-        client_id: clientID,
-        client_secret: clientSecret,
-        audience: apiAudience
-      })
+    let config: AxiosRequestConfig
+
+    if (clientID !== '' && clientSecret !== '') {
+      config = {
+        method: 'POST',
+        url: tokenEndpoint,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: clientID,
+          client_secret: clientSecret,
+          audience: apiAudience
+        })
+      }
+      const response: AxiosResponse = await axios(config)
+      token = response.data.access_token
+    } else if (resimUsername !== '' && resimPassword !== '') {
+      config = {
+        method: 'POST',
+        url: tokenEndpoint,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: new URLSearchParams({
+          grant_type: passwordAuthGrantType,
+          realm: passwordAuthRealm,
+          client_id: unpwClientId,
+          audience: apiAudience,
+          username: resimUsername,
+          password: resimPassword
+        })
+      }
+      const response: AxiosResponse = await axios(config)
+      token = response.data.access_token
+    } else {
+      core.setFailed(
+        'credentials not found - set client ID and secret, or username and password'
+      )
+      token = 'ERROR'
     }
 
-    const response: AxiosResponse = await axios(config)
-    token = response.data.access_token
-
-    await fs.writeFile(tokenPath, token)
-    await cache.saveCache([tokenPath], `resim-token-${uuidv4()}`)
+    if (token !== 'ERROR') {
+      await fs.writeFile(tokenPath, token)
+      await cache.saveCache([tokenPath], `resim-token-${uuidv4()}`)
+    }
   }
 
   await fs.unlink(tokenPath)

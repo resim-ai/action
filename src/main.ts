@@ -61,6 +61,9 @@ export async function run(): Promise<void> {
 
     const token = await auth.getToken()
     debug('got auth')
+    if (token === 'ERROR') {
+      throw new Error('Please set client credentials or username and password')
+    }
 
     const config = new Configuration({
       basePath: apiEndpoint,
@@ -120,7 +123,9 @@ export async function run(): Promise<void> {
         debug(pushRequestEvent.after)
         // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
         shortCommitSha = pushRequestEvent.after.slice(0, 8)
-        buildDescription = `Push to ${pushRequestEvent.ref.split('/').pop()} @ ${shortCommitSha}`
+        buildDescription = `Push to ${pushRequestEvent.ref
+          .split('/')
+          .pop()} @ ${shortCommitSha}`
       }
     }
 

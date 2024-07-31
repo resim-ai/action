@@ -64484,9 +64484,14 @@ async function getToken() {
     const apiAudience = 'https://api.resim.ai';
     const clientID = core.getInput('client_id');
     const clientSecret = core.getInput('client_secret');
+    const resimUsername = core.getInput('resim_username');
+    const resimPassword = core.getInput('resim_password');
+    const unpwClientId = core.getInput('password_auth_client_id');
     const auth0TenantUrl = core.getInput('auth0_tenant_url');
     const tokenEndpoint = `${auth0TenantUrl}oauth/token`;
     const apiEndpoint = core.getInput('api_endpoint');
+    const passwordAuthGrantType = 'http://auth0.com/oauth/grant-type/password-realm';
+    const passwordAuthRealm = 'cli-users';
     let token = '';
     let tokenValid = false;
     const cacheKey = await cache.restoreCache([tokenPath], '', ['resim-token-', 'resim-token']);
@@ -64507,21 +64512,47 @@ async function getToken() {
         }
     }
     if (!tokenValid) {
-        const config = {
-            method: 'POST',
-            url: tokenEndpoint,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: new URLSearchParams({
-                grant_type: 'client_credentials',
-                client_id: clientID,
-                client_secret: clientSecret,
-                audience: apiAudience
-            })
-        };
-        const response = await (0, axios_1.default)(config);
-        token = response.data.access_token;
-        await promises_1.default.writeFile(tokenPath, token);
-        await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
+        let config;
+        if (clientID !== '' && clientSecret !== '') {
+            config = {
+                method: 'POST',
+                url: tokenEndpoint,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: new URLSearchParams({
+                    grant_type: 'client_credentials',
+                    client_id: clientID,
+                    client_secret: clientSecret,
+                    audience: apiAudience
+                })
+            };
+            const response = await (0, axios_1.default)(config);
+            token = response.data.access_token;
+        }
+        else if (resimUsername !== '' && resimPassword !== '') {
+            config = {
+                method: 'POST',
+                url: tokenEndpoint,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: new URLSearchParams({
+                    grant_type: passwordAuthGrantType,
+                    realm: passwordAuthRealm,
+                    client_id: unpwClientId,
+                    audience: apiAudience,
+                    username: resimUsername,
+                    password: resimPassword
+                })
+            };
+            const response = await (0, axios_1.default)(config);
+            token = response.data.access_token;
+        }
+        else {
+            core.setFailed('credentials not found - set client ID and secret, or username and password');
+            token = 'ERROR';
+        }
+        if (token !== 'ERROR') {
+            await promises_1.default.writeFile(tokenPath, token);
+            await cache.saveCache([tokenPath], `resim-token-${(0, uuid_1.v4)()}`);
+        }
     }
     await promises_1.default.unlink(tokenPath);
     return token;
@@ -75597,6 +75628,9 @@ async function run() {
         }
         const token = await auth.getToken();
         debug('got auth');
+        if (token === 'ERROR') {
+            throw new Error('Please set client credentials or username and password');
+        }
         const config = new client_1.Configuration({
             basePath: apiEndpoint,
             accessToken: token
@@ -75642,7 +75676,9 @@ async function run() {
                 debug(pushRequestEvent.after);
                 // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
                 shortCommitSha = pushRequestEvent.after.slice(0, 8);
-                buildDescription = `Push to ${pushRequestEvent.ref.split('/').pop()} @ ${shortCommitSha}`;
+                buildDescription = `Push to ${pushRequestEvent.ref
+                    .split('/')
+                    .pop()} @ ${shortCommitSha}`;
             }
         }
         // register build
