@@ -9,7 +9,6 @@ jest.mock('fs/promises')
 jest.mock('axios')
 const mockedAxios = axios as jest.MockedFunction<typeof axios>
 
-// const getInputMock = jest.spyOn(core, 'getInput')
 const saveCacheMock = jest.spyOn(cache, 'saveCache')
 const restoreCacheMock = jest.spyOn(cache, 'restoreCache')
 
@@ -97,7 +96,6 @@ describe('auth', () => {
 
   it('restores an invalid token and gets a new one using username and password', async () => {
     jest.spyOn(core, 'getInput').mockImplementation(passwordInput)
-    // console.log(getInputMock.getMockImplementation())
 
     // Restore a cache
     restoreCacheMock.mockReturnValueOnce(
