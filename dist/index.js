@@ -64490,6 +64490,8 @@ async function getToken() {
     const auth0TenantUrl = core.getInput('auth0_tenant_url');
     const tokenEndpoint = `${auth0TenantUrl}oauth/token`;
     const apiEndpoint = core.getInput('api_endpoint');
+    const passwordAuthGrantType = 'http://auth0.com/oauth/grant-type/password-realm';
+    const passwordAuthRealm = 'cli-users';
     let token = '';
     let tokenValid = false;
     const cacheKey = await cache.restoreCache([tokenPath], '', ['resim-token-', 'resim-token']);
@@ -64532,8 +64534,8 @@ async function getToken() {
                 url: tokenEndpoint,
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 data: new URLSearchParams({
-                    grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
-                    realm: 'cli-users',
+                    grant_type: passwordAuthGrantType,
+                    realm: passwordAuthRealm,
                     client_id: unpwClientId,
                     audience: apiAudience,
                     username: resimUsername,

@@ -20,6 +20,9 @@ export async function getToken(): Promise<string> {
   const auth0TenantUrl: string = core.getInput('auth0_tenant_url')
   const tokenEndpoint = `${auth0TenantUrl}oauth/token`
   const apiEndpoint: string = core.getInput('api_endpoint')
+  const passwordAuthGrantType =
+    'http://auth0.com/oauth/grant-type/password-realm'
+  const passwordAuthRealm = 'cli-users'
 
   let token = ''
   let tokenValid = false
@@ -71,8 +74,8 @@ export async function getToken(): Promise<string> {
         url: tokenEndpoint,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         data: new URLSearchParams({
-          grant_type: 'http://auth0.com/oauth/grant-type/password-realm',
-          realm: 'cli-users',
+          grant_type: passwordAuthGrantType,
+          realm: passwordAuthRealm,
           client_id: unpwClientId,
           audience: apiAudience,
           username: resimUsername,
