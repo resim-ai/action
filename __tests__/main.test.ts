@@ -16,6 +16,7 @@ import * as builds from '../src/builds'
 const getInputMock = jest.spyOn(core, 'getInput')
 const getBooleanInputMock = jest.spyOn(core, 'getBooleanInput')
 const setFailedMock = jest.spyOn(core, 'setFailed')
+const setOutputMock = jest.spyOn(core, 'setOutput')
 
 const getProjectIDMock = jest.spyOn(projects, 'getProjectID')
 const findOrCreateBranchMock = jest.spyOn(projects, 'findOrCreateBranch')
@@ -218,6 +219,8 @@ describe('action', () => {
     expect(createBatchMock).toHaveBeenCalledTimes(1)
     expect(runMock).toHaveReturned()
     expect(getTokenMock).toHaveBeenCalled()
+    expect(setOutputMock).toHaveBeenCalledWith('project_id', projectID)
+    expect(setOutputMock).toHaveBeenCalledWith('batch_id', batchID)
   })
 
   it('runs a test suite, branch already exists', async () => {
@@ -289,5 +292,7 @@ describe('action', () => {
     expect(testSuiteBatchInputMock).toHaveBeenCalledTimes(1)
     expect(runMock).toHaveReturned()
     expect(getTokenMock).toHaveBeenCalled()
+    expect(setOutputMock).toHaveBeenCalledWith('project_id', projectID)
+    expect(setOutputMock).toHaveBeenCalledWith('batch_id', batchID)
   })
 })

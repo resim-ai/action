@@ -37,6 +37,11 @@ inputs:
     required: false
   metrics_build_id:
     required: false
+outputs:
+  project_id:
+    description: 'ID of the ReSim project selected'
+  batch_id:
+    description: 'ID of the batch spawned by the action'
 
 runs:
   using: 'node20'

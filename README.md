@@ -4,9 +4,11 @@ Interact with ReSim from GitHub Actions
 
 - [Usage](#usage)
   - [Prerequisites](#prerequisites)
-  - [Launch Batch with existing image](#launch-batch-with-existing-image)
+  - [Run Test Suite with existing image](#run-test-suite-with-existing-image)
+  - [Run Ad Hoc Test Batch with existing image](#run-ad-hoc-test-batch-with-existing-image)
   - [Full example](#full-example)
   - [Inputs](#inputs)
+  - [Outputs](#outputs)
 - [Development](#development)
   - [Build](#build)
   - [Regenerate the client](#regenerate-the-client)
@@ -138,6 +140,13 @@ jobs:
 | metrics_build_id | No       | If set, this metrics build will be run against the batch.                                                                |
 
  **\* If not using a test suite, at least one of `experiences` or `experience_tags` must be set.** 
+
+### Outputs
+
+| Name       | Description                           |
+| ---------- | ------------------------------------- |
+| project_id | ID of the project selected            |
+| batch_id   | ID of the batch spawned by the action |
 
 ## Development
 
