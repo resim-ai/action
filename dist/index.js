@@ -75762,6 +75762,9 @@ async function run() {
             debug(commentOptions);
             await octokit.rest.issues.createComment(commentOptions);
         }
+        // set outputs for downstream steps
+        core.setOutput('project_id', projectID);
+        core.setOutput('batch_id', newBatchID);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
