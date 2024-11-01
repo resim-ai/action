@@ -18,10 +18,9 @@ import { getSystemID } from './systems'
 import { getTestSuiteID } from './test_suites'
 
 import 'axios-debug-log'
-import Debug from 'debug'
 import { createBuild } from './builds'
 import { WebhookPayload } from '@actions/github/lib/interfaces'
-const debug = Debug('action')
+const debug = core.debug
 
 /**
  * The main function for the action.
@@ -140,7 +139,7 @@ export async function run(): Promise<void> {
       buildDescription,
       shortCommitSha
     )
-    debug(newBuild)
+    debug(JSON.stringify(newBuild))
 
     if (newBuild.buildID === undefined) {
       core.setFailed('Could not obtain build id')
@@ -249,7 +248,7 @@ export async function run(): Promise<void> {
         commentOptions.repo = contextPayload.repository.name
       }
 
-      debug(commentOptions)
+      debug(JSON.stringify(commentOptions))
       await octokit.rest.issues.createComment(commentOptions)
     }
 

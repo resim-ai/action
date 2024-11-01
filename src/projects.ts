@@ -8,8 +8,7 @@ import {
 } from './client'
 import type { AxiosResponse } from 'axios'
 import { isAxiosError } from 'axios'
-import Debug from 'debug'
-const debug = Debug('projects')
+import { debug } from '@actions/core'
 
 export async function getLatestProject(api: ProjectsApi): Promise<Project> {
   let projectsResponse: AxiosResponse<ListProjectsOutput>
