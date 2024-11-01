@@ -75586,9 +75586,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.arrayInputSplit = exports.run = void 0;
 const core = __importStar(__nccwpck_require__(2186));
@@ -75599,9 +75596,8 @@ const projects_1 = __nccwpck_require__(5827);
 const systems_1 = __nccwpck_require__(3941);
 const test_suites_1 = __nccwpck_require__(9403);
 __nccwpck_require__(9301);
-const debug_1 = __importDefault(__nccwpck_require__(8237));
 const builds_1 = __nccwpck_require__(8631);
-const debug = (0, debug_1.default)('action');
+const debug = core.debug;
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -75684,7 +75680,7 @@ async function run() {
         // register build
         const buildsApi = new client_1.BuildsApi(config);
         const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildDescription, shortCommitSha);
-        debug(newBuild);
+        debug(JSON.stringify(newBuild));
         if (newBuild.buildID === undefined) {
             core.setFailed('Could not obtain build id');
             return;
@@ -75759,7 +75755,7 @@ async function run() {
                 commentOptions.owner = contextPayload.repository.owner.login;
                 commentOptions.repo = contextPayload.repository.name;
             }
-            debug(commentOptions);
+            debug(JSON.stringify(commentOptions));
             await octokit.rest.issues.createComment(commentOptions);
         }
         // set outputs for downstream steps
@@ -75789,18 +75785,14 @@ exports.arrayInputSplit = arrayInputSplit;
 /***/ }),
 
 /***/ 5827:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.findOrCreateBranch = exports.getProjectID = exports.createBranch = exports.getBranchID = exports.listProjects = exports.getLatestProject = void 0;
 const axios_1 = __nccwpck_require__(8757);
-const debug_1 = __importDefault(__nccwpck_require__(8237));
-const debug = (0, debug_1.default)('projects');
+const core_1 = __nccwpck_require__(2186);
 async function getLatestProject(api) {
     let projectsResponse;
     try {
@@ -75878,10 +75870,10 @@ async function findOrCreateBranch(projectsApi, projectID, branchName) {
     let branchID = await getBranchID(projectsApi, projectID, branchName);
     if (branchID === '') {
         branchID = await createBranch(projectsApi, projectID, branchName);
-        debug('created branch');
+        (0, core_1.debug)('created branch');
     }
     else {
-        debug(`branch exists, ${branchID}`);
+        (0, core_1.debug)(`branch exists, ${branchID}`);
     }
     return branchID;
 }
