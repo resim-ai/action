@@ -1,3 +1,4 @@
+import { debug } from '@actions/core'
 import { Build, BuildsApi, CreateBuildForBranchInput } from './client'
 
 export async function createBuild(
@@ -15,6 +16,7 @@ export async function createBuild(
     description,
     version
   }
+  debug("Creating a new build:\n" + JSON.stringify(newBuildBody))
 
   const newBuildResponse = await api.createBuildForBranch(
     projectID,
