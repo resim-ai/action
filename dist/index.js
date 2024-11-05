@@ -64563,12 +64563,13 @@ exports.getToken = getToken;
 /***/ }),
 
 /***/ 8631:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createBuild = void 0;
+const core_1 = __nccwpck_require__(2186);
 async function createBuild(api, projectID, branchID, systemID, imageUri, description, version) {
     const newBuildBody = {
         systemID,
@@ -64576,6 +64577,7 @@ async function createBuild(api, projectID, branchID, systemID, imageUri, descrip
         description,
         version
     };
+    (0, core_1.debug)(`Creating a new build:\n ${JSON.stringify(newBuildBody)}`);
     const newBuildResponse = await api.createBuildForBranch(projectID, branchID, newBuildBody);
     const newBuild = newBuildResponse.data ?? {};
     return newBuild;
@@ -75598,6 +75600,7 @@ const test_suites_1 = __nccwpck_require__(9403);
 __nccwpck_require__(9301);
 const builds_1 = __nccwpck_require__(8631);
 const debug = core.debug;
+const SUPPORTED_EVENTS = ['pull_request', 'push', 'schedule'];
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -75625,12 +75628,17 @@ async function run() {
         const token = await auth.getToken();
         debug('got auth');
         if (token === 'ERROR') {
-            throw new Error('Please set client credentials or username and password');
+            core.setFailed('Please set client credentials or username and password');
+            return;
         }
         const config = new client_1.Configuration({
             basePath: apiEndpoint,
             accessToken: token
         });
+        if (!SUPPORTED_EVENTS.includes(github.context.eventName)) {
+            core.setFailed(`The event triggering this action must be one of [${SUPPORTED_EVENTS.join(', ')}]`);
+            return;
+        }
         const imageUri = core.getInput('image');
         debug(`imageUri is ${imageUri}`);
         const projectsApi = new client_1.ProjectsApi(config);
@@ -75676,6 +75684,14 @@ async function run() {
                     .split('/')
                     .pop()} @ ${shortCommitSha}`;
             }
+        }
+        else if (github.context.eventName === 'schedule') {
+            debug(github.context.sha);
+            // Set the shortCommitSha as the first commit and set the description as 'Scheduled run of <branch> @ sha'
+            shortCommitSha = github.context.sha.slice(0, 8);
+            buildDescription = `Scheduled run of ${github.context.ref
+                .split('/')
+                .pop()} @ ${shortCommitSha}`;
         }
         // register build
         const buildsApi = new client_1.BuildsApi(config);

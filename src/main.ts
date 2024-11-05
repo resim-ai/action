@@ -22,6 +22,7 @@ import { createBuild } from './builds'
 import { WebhookPayload } from '@actions/github/lib/interfaces'
 const debug = core.debug
 
+const SUPPORTED_EVENTS = ['pull_request', 'push', 'schedule']
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -61,13 +62,21 @@ export async function run(): Promise<void> {
     const token = await auth.getToken()
     debug('got auth')
     if (token === 'ERROR') {
-      throw new Error('Please set client credentials or username and password')
+      core.setFailed('Please set client credentials or username and password')
+      return
     }
 
     const config = new Configuration({
       basePath: apiEndpoint,
       accessToken: token
     })
+
+    if (!SUPPORTED_EVENTS.includes(github.context.eventName)) {
+      core.setFailed(
+        `The event triggering this action must be one of [${SUPPORTED_EVENTS.join(', ')}]`
+      )
+      return
+    }
 
     const imageUri = core.getInput('image')
     debug(`imageUri is ${imageUri}`)
@@ -126,6 +135,13 @@ export async function run(): Promise<void> {
           .split('/')
           .pop()} @ ${shortCommitSha}`
       }
+    } else if (github.context.eventName === 'schedule') {
+      debug(github.context.sha)
+      // Set the shortCommitSha as the first commit and set the description as 'Scheduled run of <branch> @ sha'
+      shortCommitSha = github.context.sha.slice(0, 8)
+      buildDescription = `Scheduled run of ${github.context.ref
+        .split('/')
+        .pop()} @ ${shortCommitSha}`
     }
 
     // register build
