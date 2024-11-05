@@ -16,7 +16,7 @@ export async function createBuild(
     description,
     version
   }
-  debug("Creating a new build:\n" + JSON.stringify(newBuildBody))
+  debug(`Creating a new build:\n ${JSON.stringify(newBuildBody)}`)
 
   const newBuildResponse = await api.createBuildForBranch(
     projectID,
