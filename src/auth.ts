@@ -33,7 +33,7 @@ export async function getToken(): Promise<string> {
     ['resim-token-', 'resim-token']
   )
 
-  if (cacheKey) {
+  if (cacheKey !== undefined && process.env['SKIP_TOKEN_CACHE'] !== 'true') {
     token = await fs.readFile('.resimtoken', 'utf8')
 
     const options: AxiosRequestConfig = {

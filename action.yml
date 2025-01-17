@@ -7,7 +7,7 @@ inputs:
   auth0_tenant_url:
     required: true
     default: 'https://resim.us.auth0.com/'
-  password_client_id:
+  password_auth_client_id:
     required: true
     default: '0Ip56H1LLAo6Dc6IfePaNzgpUxbJGyVI'
   resim_username:
