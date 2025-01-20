@@ -155,7 +155,7 @@ export async function run(): Promise<void> {
       buildDescription,
       shortCommitSha
     )
-    debug(JSON.stringify(newBuild))
+    debug(`build created: ${JSON.stringify(newBuild)}`)
 
     if (newBuild.buildID === undefined) {
       core.setFailed('Could not obtain build id')
@@ -190,7 +190,7 @@ export async function run(): Promise<void> {
         )
 
       const newBatch: Batch = newBatchResponse.data
-      debug('batch launched')
+      debug(`batch launched: ${JSON.stringify(newBatch)}`)
 
       newBatchID = newBatch.batchID
     } else {
@@ -219,12 +219,12 @@ export async function run(): Promise<void> {
         batchRequest.metricsBuildID = metricsBuildID
       }
 
-      debug('batchRequest exists')
+      debug(`built BatchInput: ${JSON.stringify(batchRequest)}`)
       const newBatchResponse: AxiosResponse<Batch> =
         await batchesApi.createBatch(projectID, batchRequest)
 
       const newBatch: Batch = newBatchResponse.data
-      debug('batch launched')
+      debug(`batch launched: ${JSON.stringify(newBatch)}`)
 
       newBatchID = newBatch.batchID
     }
@@ -273,7 +273,10 @@ export async function run(): Promise<void> {
     core.setOutput('batch_id', newBatchID)
   } catch (error) {
     // Fail the workflow run if an error occurs
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) {
+      debug(`Workflow failed: ${JSON.stringify(error)}`)
+      core.setFailed(error.message)
+    }
   }
 }
 
