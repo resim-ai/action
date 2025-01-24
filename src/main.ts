@@ -22,7 +22,12 @@ import { createBuild } from './builds'
 import { WebhookPayload } from '@actions/github/lib/interfaces'
 const debug = core.debug
 
-const SUPPORTED_EVENTS = ['pull_request', 'push', 'schedule']
+const SUPPORTED_EVENTS = [
+  'pull_request',
+  'push',
+  'schedule',
+  'workflow_dispatch'
+]
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -131,17 +136,18 @@ export async function run(): Promise<void> {
         debug(pushRequestEvent.after)
         // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
         shortCommitSha = pushRequestEvent.after.slice(0, 8)
-        buildDescription = `Push to ${pushRequestEvent.ref
-          .split('/')
-          .pop()} @ ${shortCommitSha}`
+        buildDescription = `Push to ${branchName} @ ${shortCommitSha}`
       }
     } else if (github.context.eventName === 'schedule') {
       debug(github.context.sha)
       // Set the shortCommitSha as the first commit and set the description as 'Scheduled run of <branch> @ sha'
       shortCommitSha = github.context.sha.slice(0, 8)
-      buildDescription = `Scheduled run of ${github.context.ref
-        .split('/')
-        .pop()} @ ${shortCommitSha}`
+      buildDescription = `Scheduled run of ${branchName} @ ${shortCommitSha}`
+    } else if (github.context.eventName === 'workflow_dispatch') {
+      // Set the shortCommitSha as the first commit and set the description as 'Manual run of <branch> @ sha'
+      debug(github.context.sha)
+      shortCommitSha = github.context.sha.slice(0, 8)
+      buildDescription = `Manual run of ${branchName} @ ${shortCommitSha}`
     }
 
     // register build
@@ -155,7 +161,7 @@ export async function run(): Promise<void> {
       buildDescription,
       shortCommitSha
     )
-    debug(JSON.stringify(newBuild))
+    debug(`build created: ${JSON.stringify(newBuild)}`)
 
     if (newBuild.buildID === undefined) {
       core.setFailed('Could not obtain build id')
@@ -190,7 +196,7 @@ export async function run(): Promise<void> {
         )
 
       const newBatch: Batch = newBatchResponse.data
-      debug('batch launched')
+      debug(`batch launched: ${JSON.stringify(newBatch)}`)
 
       newBatchID = newBatch.batchID
     } else {
@@ -219,12 +225,12 @@ export async function run(): Promise<void> {
         batchRequest.metricsBuildID = metricsBuildID
       }
 
-      debug('batchRequest exists')
+      debug(`built BatchInput: ${JSON.stringify(batchRequest)}`)
       const newBatchResponse: AxiosResponse<Batch> =
         await batchesApi.createBatch(projectID, batchRequest)
 
       const newBatch: Batch = newBatchResponse.data
-      debug('batch launched')
+      debug(`batch launched: ${JSON.stringify(newBatch)}`)
 
       newBatchID = newBatch.batchID
     }
@@ -273,7 +279,10 @@ export async function run(): Promise<void> {
     core.setOutput('batch_id', newBatchID)
   } catch (error) {
     // Fail the workflow run if an error occurs
-    if (error instanceof Error) core.setFailed(error.message)
+    if (error instanceof Error) {
+      debug(`Workflow failed: ${JSON.stringify(error)}`)
+      core.setFailed(error.message)
+    }
   }
 }
 

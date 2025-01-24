@@ -75600,7 +75600,12 @@ const test_suites_1 = __nccwpck_require__(9403);
 __nccwpck_require__(9301);
 const builds_1 = __nccwpck_require__(8631);
 const debug = core.debug;
-const SUPPORTED_EVENTS = ['pull_request', 'push', 'schedule'];
+const SUPPORTED_EVENTS = [
+    'pull_request',
+    'push',
+    'schedule',
+    'workflow_dispatch'
+];
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -75680,23 +75685,25 @@ async function run() {
                 debug(pushRequestEvent.after);
                 // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
                 shortCommitSha = pushRequestEvent.after.slice(0, 8);
-                buildDescription = `Push to ${pushRequestEvent.ref
-                    .split('/')
-                    .pop()} @ ${shortCommitSha}`;
+                buildDescription = `Push to ${branchName} @ ${shortCommitSha}`;
             }
         }
         else if (github.context.eventName === 'schedule') {
             debug(github.context.sha);
             // Set the shortCommitSha as the first commit and set the description as 'Scheduled run of <branch> @ sha'
             shortCommitSha = github.context.sha.slice(0, 8);
-            buildDescription = `Scheduled run of ${github.context.ref
-                .split('/')
-                .pop()} @ ${shortCommitSha}`;
+            buildDescription = `Scheduled run of ${branchName} @ ${shortCommitSha}`;
+        }
+        else if (github.context.eventName === 'workflow_dispatch') {
+            // Set the shortCommitSha as the first commit and set the description as 'Manual run of <branch> @ sha'
+            debug(github.context.sha);
+            shortCommitSha = github.context.sha.slice(0, 8);
+            buildDescription = `Manual run of ${branchName} @ ${shortCommitSha}`;
         }
         // register build
         const buildsApi = new client_1.BuildsApi(config);
         const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildDescription, shortCommitSha);
-        debug(JSON.stringify(newBuild));
+        debug(`build created: ${JSON.stringify(newBuild)}`);
         if (newBuild.buildID === undefined) {
             core.setFailed('Could not obtain build id');
             return;
@@ -75718,7 +75725,7 @@ async function run() {
             runSuiteRequest.associatedAccount = associatedAccount;
             const newBatchResponse = await batchesApi.createBatchForTestSuite(projectID, testSuiteID, runSuiteRequest);
             const newBatch = newBatchResponse.data;
-            debug('batch launched');
+            debug(`batch launched: ${JSON.stringify(newBatch)}`);
             newBatchID = newBatch.batchID;
         }
         else {
@@ -75740,10 +75747,10 @@ async function run() {
                 const metricsBuildID = core.getInput('metrics_build_id');
                 batchRequest.metricsBuildID = metricsBuildID;
             }
-            debug('batchRequest exists');
+            debug(`built BatchInput: ${JSON.stringify(batchRequest)}`);
             const newBatchResponse = await batchesApi.createBatch(projectID, batchRequest);
             const newBatch = newBatchResponse.data;
-            debug('batch launched');
+            debug(`batch launched: ${JSON.stringify(newBatch)}`);
             newBatchID = newBatch.batchID;
         }
         core.info(`Launched batch ${newBatchID}`);
@@ -75780,8 +75787,10 @@ async function run() {
     }
     catch (error) {
         // Fail the workflow run if an error occurs
-        if (error instanceof Error)
+        if (error instanceof Error) {
+            debug(`Workflow failed: ${JSON.stringify(error)}`);
             core.setFailed(error.message);
+        }
     }
 }
 exports.run = run;
