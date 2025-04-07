@@ -75756,6 +75756,7 @@ async function run() {
         core.info(`Launched batch ${newBatchID}`);
         if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
             core.info(`View results on ReSim: https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`);
+            core.summary.addLink('View results on ReSim', `https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`);
         }
         if (github.context.eventName === 'pull_request' &&
             core.getBooleanInput('comment_on_pr')) {

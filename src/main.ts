@@ -240,6 +240,10 @@ export async function run(): Promise<void> {
       core.info(
         `View results on ReSim: https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`
       )
+      core.summary.addLink(
+        'View results on ReSim',
+        `https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`
+      )
     }
 
     if (
