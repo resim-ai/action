@@ -75762,6 +75762,7 @@ async function run() {
         if (appUrl !== undefined) {
             core.info(`View results on ReSim: ${appUrl}/projects/${projectID}/batches/${newBatchID}`);
             core.summary.addLink('View results on ReSim', `${appUrl}/projects/${projectID}/batches/${newBatchID}`);
+            core.summary.write();
         }
         if (github.context.eventName === 'pull_request' &&
             core.getBooleanInput('comment_on_pr')) {

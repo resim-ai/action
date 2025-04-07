@@ -251,6 +251,7 @@ export async function run(): Promise<void> {
         'View results on ReSim',
         `${appUrl}/projects/${projectID}/batches/${newBatchID}`
       )
+      core.summary.write()
     }
 
     if (
