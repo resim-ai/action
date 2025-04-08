@@ -28,6 +28,12 @@ const SUPPORTED_EVENTS = [
   'schedule',
   'workflow_dispatch'
 ]
+
+const API_TO_APP_URL: Record<string, string> = {
+  'https://api.resim.ai/v1': 'https://app.resim.ai',
+  'https://api.resim.io/v1': 'https://app.resim.io'
+}
+
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -236,10 +242,16 @@ export async function run(): Promise<void> {
     }
 
     core.info(`Launched batch ${newBatchID}`)
-    if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
+    const appUrl = API_TO_APP_URL[core.getInput('api_endpoint')]
+    if (appUrl !== undefined) {
       core.info(
-        `View results on ReSim: https://app.resim.ai/projects/${projectID}/batches/${newBatchID}`
+        `View results on ReSim: ${appUrl}/projects/${projectID}/batches/${newBatchID}`
       )
+      core.summary.addLink(
+        'View results on ReSim',
+        `${appUrl}/projects/${projectID}/batches/${newBatchID}`
+      )
+      core.summary.write()
     }
 
     if (
@@ -257,8 +269,8 @@ export async function run(): Promise<void> {
         repo: ''
       }
 
-      if (core.getInput('api_endpoint') === 'https://api.resim.ai/v1') {
-        commentOptions.body = `[View results on ReSim](https://app.resim.ai/projects/${projectID}/batches/${newBatchID})`
+      if (appUrl !== undefined) {
+        commentOptions.body = `[View results on ReSim](${appUrl}/projects/${projectID}/batches/${newBatchID})`
       }
 
       if (contextPayload.pull_request !== undefined) {
