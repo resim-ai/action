@@ -163,7 +163,7 @@ describe('action', () => {
     const userID = uuid.v4()
     const buildID = uuid.v4()
 
-    const orgID = 'the-org-id'
+    const orgID = 'resim.ai'
     const imageUri = 'a.docker/image:tag'
     const version = '0.0.1'
     const associatedAccount: string = process.env.GITHUB_ACTOR ?? ''
@@ -252,7 +252,7 @@ describe('action', () => {
     const batchID = uuid.v4()
     const testSuiteID = uuid.v4()
     const userID = uuid.v4()
-    const orgID = 'the-org-id'
+    const orgID = 'resim.ai'
     const imageUri = 'a.docker/image:tag'
     const version = '0.0.1'
     const associatedAccount: string = process.env.GITHUB_ACTOR ?? ''

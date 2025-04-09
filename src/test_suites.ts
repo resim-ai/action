@@ -12,7 +12,7 @@ export async function listTestSuites(
     const response: AxiosResponse<ListTestSuiteOutput> =
       await api.listTestSuites(
         projectID,
-        [],
+        undefined,
         undefined,
         undefined,
         undefined,
