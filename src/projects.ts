@@ -1,14 +1,14 @@
-import {
-  Project,
-  ProjectsApi,
-  ListProjectsOutput,
-  Branch,
-  ListBranchesOutput,
-  CreateBranchInput
-} from './client'
+import { debug } from '@actions/core'
 import type { AxiosResponse } from 'axios'
 import { isAxiosError } from 'axios'
-import { debug } from '@actions/core'
+import {
+  Branch,
+  CreateBranchInput,
+  ListBranchesOutput,
+  ListProjectsOutput,
+  Project,
+  ProjectsApi
+} from './client'
 
 export async function getLatestProject(api: ProjectsApi): Promise<Project> {
   let projectsResponse: AxiosResponse<ListProjectsOutput>

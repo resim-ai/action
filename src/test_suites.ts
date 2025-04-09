@@ -1,16 +1,24 @@
-import { TestSuite, BatchesApi, ListTestSuiteOutput } from './client'
 import type { AxiosResponse } from 'axios'
+import { ListTestSuiteOutput, TestSuite, TestSuitesApi } from './client'
 
 export async function listTestSuites(
   projectID: string,
-  api: BatchesApi
+  api: TestSuitesApi
 ): Promise<TestSuite[]> {
   const testSuites: TestSuite[] = []
 
   let pageToken: string | undefined = undefined
   while (pageToken !== '') {
     const response: AxiosResponse<ListTestSuiteOutput> =
-      await api.listTestSuites(projectID, 100, pageToken)
+      await api.listTestSuites(
+        projectID,
+        [],
+        undefined,
+        undefined,
+        undefined,
+        100,
+        pageToken
+      )
     if (response.data.testSuites) {
       testSuites.push(...response.data.testSuites)
     }
@@ -21,11 +29,11 @@ export async function listTestSuites(
 }
 
 export async function getTestSuiteID(
-  batchesApi: BatchesApi,
+  testSuitesApi: TestSuitesApi,
   projectID: string,
   testSuiteName: string
 ): Promise<string> {
-  const suites = await listTestSuites(projectID, batchesApi)
+  const suites = await listTestSuites(projectID, testSuitesApi)
   const thisTestSuite = suites.find(ts => ts.name === testSuiteName)
   if (thisTestSuite?.testSuiteID !== undefined) {
     return thisTestSuite.testSuiteID

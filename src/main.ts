@@ -1,25 +1,26 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import type { AxiosResponse } from 'axios'
 import * as auth from './auth'
 import {
-  Configuration,
   Batch,
   BatchesApi,
   BatchInput,
+  BuildsApi,
+  Configuration,
   ProjectsApi,
   SystemsApi,
-  BuildsApi,
-  TestSuiteBatchInput
+  TestSuiteBatchInput,
+  TestSuitesApi
 } from './client'
-import type { AxiosResponse } from 'axios'
 
-import { getProjectID, findOrCreateBranch } from './projects'
+import { findOrCreateBranch, getProjectID } from './projects'
 import { getSystemID } from './systems'
 import { getTestSuiteID } from './test_suites'
 
+import { WebhookPayload } from '@actions/github/lib/interfaces'
 import 'axios-debug-log'
 import { createBuild } from './builds'
-import { WebhookPayload } from '@actions/github/lib/interfaces'
 const debug = core.debug
 
 const SUPPORTED_EVENTS = [
@@ -174,6 +175,7 @@ export async function run(): Promise<void> {
       return
     }
     const batchesApi = new BatchesApi(config)
+    const testSuitesApi = new TestSuitesApi(config)
     // A variable to be the new batch id depending on whether we do a test suite run
     // or a standard batch (a string or undefined):
     let newBatchID: string | undefined = undefined
@@ -188,7 +190,7 @@ export async function run(): Promise<void> {
 
       // Obtain the test suite ID
       const testSuiteID = await getTestSuiteID(
-        batchesApi,
+        testSuitesApi,
         projectID,
         testSuiteName
       )

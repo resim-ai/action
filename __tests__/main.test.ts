@@ -1,5 +1,5 @@
-import * as main from '../src/main'
 import * as auth from '../src/auth'
+import * as main from '../src/main'
 
 import * as core from '@actions/core'
 import * as github from '@actions/github'
@@ -157,11 +157,21 @@ describe('action', () => {
     getInputMock.mockImplementation(defaultInput)
     getBooleanInputMock.mockReturnValue(false)
 
-    const branchID = uuid.v4()
     const projectID = uuid.v4()
     const systemID = uuid.v4()
+    const branchID = uuid.v4()
+    const userID = uuid.v4()
     const buildID = uuid.v4()
-    const batchID = uuid.v4()
+
+    const orgID = 'the-org-id'
+    const imageUri = 'a.docker/image:tag'
+    const version = '0.0.1'
+    const associatedAccount: string = process.env.GITHUB_ACTOR ?? ''
+    const buildSpecification = 'buildSpecification'
+    const creationTimestamp = '2021-01-01T00:00:00.000Z'
+    const description = 'some build'
+    const longDescription = ''
+    const name = 'some build name'
 
     getTokenMock.mockImplementation(async (): Promise<string> => {
       return Promise.resolve('token')
@@ -174,7 +184,6 @@ describe('action', () => {
     process.env.GITHUB_HEAD_REF = 'pr-branch'
     process.env.GITHUB_EVENT_NAME = 'pull_request'
     process.env.GITHUB_ACTOR = 'github-user'
-    const associatedAccount: string = process.env.GITHUB_ACTOR
     findOrCreateBranchMock.mockResolvedValueOnce(branchID)
 
     Object.defineProperty(github, 'context', {
@@ -193,15 +202,24 @@ describe('action', () => {
     })
 
     const newBuild: Build = {
+      buildID,
+      projectID,
       branchID,
       systemID,
-      description: `#123 - Test PR`,
-      imageUri: 'a.docker/image:tag',
-      buildID,
-      version: '03403a4f'
+      imageUri,
+      description,
+      version,
+      associatedAccount,
+      buildSpecification,
+      creationTimestamp,
+      longDescription,
+      userID,
+      orgID,
+      name
     }
     createBuildMock.mockResolvedValueOnce(newBuild)
 
+    const batchID = uuid.v4()
     const newBatch: Batch = {
       associatedAccount,
       batchID
@@ -233,6 +251,16 @@ describe('action', () => {
     const buildID = uuid.v4()
     const batchID = uuid.v4()
     const testSuiteID = uuid.v4()
+    const userID = uuid.v4()
+    const orgID = 'the-org-id'
+    const imageUri = 'a.docker/image:tag'
+    const version = '0.0.1'
+    const associatedAccount: string = process.env.GITHUB_ACTOR ?? ''
+    const buildSpecification = 'buildSpecification'
+    const creationTimestamp = '2021-01-01T00:00:00.000Z'
+    const description = 'some build'
+    const longDescription = ''
+    const name = 'some build name'
 
     getTokenMock.mockImplementation(async (): Promise<string> => {
       return Promise.resolve('token')
@@ -246,7 +274,6 @@ describe('action', () => {
     process.env.GITHUB_HEAD_REF = 'pr-branch'
     process.env.GITHUB_EVENT_NAME = 'pull_request'
     process.env.GITHUB_ACTOR = 'github-user'
-    const associatedAccount: string = process.env.GITHUB_ACTOR
     findOrCreateBranchMock.mockResolvedValueOnce(branchID)
 
     Object.defineProperty(github, 'context', {
@@ -265,12 +292,20 @@ describe('action', () => {
     })
 
     const newBuild: Build = {
+      buildID,
+      projectID,
       branchID,
       systemID,
-      description: `#123 - Test PR`,
-      imageUri: 'a.docker/image:tag',
-      buildID,
-      version: '03403a4f'
+      imageUri,
+      description,
+      version,
+      associatedAccount,
+      buildSpecification,
+      creationTimestamp,
+      longDescription,
+      userID,
+      orgID,
+      name
     }
     createBuildMock.mockResolvedValueOnce(newBuild)
 

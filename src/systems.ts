@@ -1,5 +1,5 @@
-import { System, SystemsApi, ListSystemsOutput } from './client'
 import type { AxiosResponse } from 'axios'
+import { ListSystemsOutput, System, SystemsApi } from './client'
 
 export async function listSystems(
   projectID: string,
@@ -11,6 +11,7 @@ export async function listSystems(
   while (pageToken !== '') {
     const response: AxiosResponse<ListSystemsOutput> = await api.listSystems(
       projectID,
+      undefined,
       100,
       pageToken
     )
