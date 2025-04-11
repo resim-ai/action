@@ -1,5 +1,4 @@
 ---
-fail_fast: true
 default_language_version:
   python: python3
 repos:
@@ -9,6 +8,7 @@ repos:
         name: Format
         language: system
         entry: npm run format:write
+        require_serial: true
         types: [ts]
       - id: lint
         name: Lint
