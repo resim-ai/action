@@ -73,6 +73,7 @@ jobs:
           image: ${{ steps.image.outputs.image_id }}
           comment_on_pr: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          allowable_failure_percent: 5
 
       - name: Test Action - experiences
         id: test-action-exp
@@ -90,6 +91,7 @@ jobs:
           comment_on_pr: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           metrics_build_id: 9168415c-a6ea-4425-aead-11a7894d60c1
+          pool_labels: ""
 
       - name: Test Action - test suites
         id: test-action-suites

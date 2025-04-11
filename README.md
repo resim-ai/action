@@ -10,6 +10,7 @@ Interact with ReSim from GitHub Actions
   - [Inputs](#inputs)
   - [Outputs](#outputs)
 - [Development](#development)
+  - [pre-commit](#pre-commit)
   - [Build](#build)
   - [Regenerate the client](#regenerate-the-client)
   - [Test](#test)
@@ -129,20 +130,20 @@ jobs:
 
 ### Inputs
 
-| Name                      | Required | Description                                                                                                                                           |
-| ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| resim_username            | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                             |
-| resim_password            | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                             |
-| project                   | Yes      | Name of ReSim project in which to run.                                                                                                                |
-| system                    | Yes      | Name of ReSim system with which to run.                                                                                                               |
-| image                     | Yes      | URI of image that ReSim will pull and test.                                                                                                           |
-| test_suite                | *        | The name of a test suite to run (must not be used in conjunction with experiences, experience_tags, or metrics_build_id)                              |
-| experience_tags           | *        | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,planning`                                |
-| experiences               | *        | Comma-separated list of experience names to run against.                                                                                              |
-| comment_on_pr             | No       | If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.                                |
-| github_token              | No       | If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app.                              |
-| metrics_build_id          | No       | If set, this metrics build will be run against the batch.                                                                                             |
-| allowable_failure_percent | No       | If set, this percentage of tests can fail without the batch being marked as failed.                                                                   |
+| Name                      | Required | Description                                                                                                                                                          |
+| ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| resim_username            | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                                            |
+| resim_password            | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                                            |
+| project                   | Yes      | Name of ReSim project in which to run.                                                                                                                               |
+| system                    | Yes      | Name of ReSim system with which to run.                                                                                                                              |
+| image                     | Yes      | URI of image that ReSim will pull and test.                                                                                                                          |
+| test_suite                | *        | The name of a test suite to run (must not be used in conjunction with experiences, experience_tags, or metrics_build_id)                                             |
+| experience_tags           | *        | Comma-separated list of tags - the experiences in these tags will be used in the tests. For example: `vision,planning`                                               |
+| experiences               | *        | Comma-separated list of experience names to run against.                                                                                                             |
+| comment_on_pr             | No       | If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.                                               |
+| github_token              | No       | If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app.                                             |
+| metrics_build_id          | No       | If set, this metrics build will be run against the batch.                                                                                                            |
+| allowable_failure_percent | No       | If set, this percentage of tests can fail without the batch being marked as failed.                                                                                  |
 | pool_labels               | No       | Comma-separated list of [pool labels](https://docs.resim.ai/guides/agent/#configuration) for use with the ReSim Agent. Pool labels are interpreted as a logical AND. |
  **\* If not using a test suite, at least one of `experiences` or `experience_tags` must be set.** 
 
@@ -155,7 +156,7 @@ jobs:
 
 ## Development
 
-### Pre-commit
+### pre-commit
 
 We use pre-commit to make sure the codebase is linted, tested and compiled before pushing to GitHub.
 To install the pre-commit hooks, run `pre-commit install` from the root directory.
