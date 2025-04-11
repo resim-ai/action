@@ -5,8 +5,23 @@ default_language_version:
 repos:
   - repo: local
     hooks:
-      - id: all
-        name: Format, lint and test
+      - id: format
+        name: Format
         language: system
-        entry: npm run all
+        entry: npm run format:write
+        types: [ts]
+      - id: lint
+        name: Lint
+        language: system
+        entry: npm run lint
+        types: [ts]
+      - id: test
+        name: Test
+        language: system
+        entry: npm run test
+        pass_filenames: false
+      - id: package
+        name: Package
+        language: system
+        entry: npm run package
         pass_filenames: false
