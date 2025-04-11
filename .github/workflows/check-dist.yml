@@ -47,7 +47,7 @@ jobs:
 
       - name: Run pre-commit
         id: pre-commit
-        run: pre-commit run --all-files
+        run: SKIP=test pre-commit run --all-files
 
       # If index.js was different than expected, upload the expected version as
       # a workflow artifact.

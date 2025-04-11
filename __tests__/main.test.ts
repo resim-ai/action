@@ -119,6 +119,8 @@ const getTokenMock = jest.spyOn(auth, 'getToken')
 describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // manually specify for local testing, as it's set in CI
+    process.env.GITHUB_REF_NAME = 'main'
   })
 
   it('fails if neither experiences nor experience_tags is set', async () => {
