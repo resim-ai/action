@@ -29,8 +29,8 @@ export async function getToken(): Promise<string> {
 
   const cacheKey: string | undefined = await cache.restoreCache(
     [tokenPath],
-    '',
-    ['resim-token-', 'resim-token']
+    'resim-token-',
+    ['resim-token']
   )
 
   if (cacheKey !== undefined && process.env['SKIP_TOKEN_CACHE'] !== 'true') {

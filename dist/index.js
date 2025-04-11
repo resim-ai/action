@@ -73768,7 +73768,7 @@ async function getToken() {
     const passwordAuthRealm = 'cli-users';
     let token = '';
     let tokenValid = false;
-    const cacheKey = await cache.restoreCache([tokenPath], '', ['resim-token-', 'resim-token']);
+    const cacheKey = await cache.restoreCache([tokenPath], 'resim-token-', ['resim-token']);
     if (cacheKey !== undefined && process.env['SKIP_TOKEN_CACHE'] !== 'true') {
         token = await promises_1.default.readFile('.resimtoken', 'utf8');
         const options = {
