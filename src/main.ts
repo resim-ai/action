@@ -11,6 +11,7 @@ import {
   ProjectsApi,
   SystemsApi,
   TestSuiteBatchInput,
+  TriggeredVia,
   TestSuitesApi
 } from './client'
 
@@ -34,6 +35,12 @@ const API_TO_APP_URL: Record<string, string> = {
   'https://api.resim.ai/v1': 'https://app.resim.ai',
   'https://api.resim.io/v1': 'https://app.resim.io'
 }
+
+type CommonBatchInput =
+  | TestSuiteBatchInput
+  | (BatchInput & {
+      buildID: string // force buildId to be set
+    })
 
 /**
  * The main function for the action.
@@ -71,6 +78,30 @@ export async function run(): Promise<void> {
       return
     }
 
+    // Validate batch parameters
+    let allowableFailurePercent: number | undefined = parseInt(
+      core.getInput('allowable_failure_percent')
+    )
+    allowableFailurePercent = isNaN(allowableFailurePercent)
+      ? undefined
+      : allowableFailurePercent
+    if (
+      allowableFailurePercent !== undefined &&
+      (allowableFailurePercent < 0 || allowableFailurePercent > 100)
+    ) {
+      core.setFailed('allowable_failure_percent must be between 0 and 100')
+      return
+    }
+
+    const poolLabels: string[] | undefined =
+      core.getInput('pool_labels') !== ''
+        ? core.getInput('pool_labels').split(',')
+        : undefined
+    if (poolLabels?.includes('resim')) {
+      core.setFailed('resim is a reserved pool label')
+      return
+    }
+
     const token = await auth.getToken()
     debug('got auth')
     if (token === 'ERROR') {
@@ -104,7 +135,7 @@ export async function run(): Promise<void> {
     const systemID = await getSystemID(systemsApi, projectID, systemName)
     debug(`system ID is ${systemID}`)
 
-    let associatedAccount = ''
+    let associatedAccount = undefined
     if (process.env.GITHUB_ACTOR !== undefined) {
       associatedAccount = process.env.GITHUB_ACTOR
     }
@@ -174,6 +205,15 @@ export async function run(): Promise<void> {
       core.setFailed('Could not obtain build id')
       return
     }
+
+    const batchInput: CommonBatchInput = {
+      buildID: newBuild.buildID,
+      triggeredVia: TriggeredVia.Github,
+      associatedAccount,
+      allowableFailurePercent,
+      poolLabels
+    }
+
     const batchesApi = new BatchesApi(config)
     const testSuitesApi = new TestSuitesApi(config)
     // A variable to be the new batch id depending on whether we do a test suite run
@@ -183,10 +223,6 @@ export async function run(): Promise<void> {
     // If test suite is set
     if (core.getInput('test_suite') !== '') {
       const testSuiteName = core.getInput('test_suite')
-      // Create a test suite batch input
-      const runSuiteRequest: TestSuiteBatchInput = {
-        buildID: newBuild.buildID
-      }
 
       // Obtain the test suite ID
       const testSuiteID = await getTestSuiteID(
@@ -195,12 +231,12 @@ export async function run(): Promise<void> {
         testSuiteName
       )
       debug(`test suite ID is ${testSuiteID}`)
-      runSuiteRequest.associatedAccount = associatedAccount
+
       const newBatchResponse: AxiosResponse<Batch> =
         await batchesApi.createBatchForTestSuite(
           projectID,
           testSuiteID,
-          runSuiteRequest
+          batchInput
         )
 
       const newBatch: Batch = newBatchResponse.data
@@ -208,13 +244,7 @@ export async function run(): Promise<void> {
 
       newBatchID = newBatch.batchID
     } else {
-      const batchRequest: BatchInput = {
-        buildID: newBuild.buildID
-      }
-
-      if (associatedAccount !== '') {
-        batchRequest.associatedAccount = associatedAccount
-      }
+      const batchRequest: BatchInput = batchInput
 
       if (core.getInput('experience_tags') !== '') {
         const experienceTagNames = arrayInputSplit(

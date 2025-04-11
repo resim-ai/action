@@ -1,8 +1,9 @@
+import { TestSuite, ListTestSuiteOutput, TestSuitesApi } from './client'
 import type { AxiosResponse } from 'axios'
-import { ListTestSuiteOutput, TestSuite, TestSuitesApi } from './client'
 
 export async function listTestSuites(
   projectID: string,
+  testSuiteName: string,
   api: TestSuitesApi
 ): Promise<TestSuite[]> {
   const testSuites: TestSuite[] = []
@@ -14,7 +15,7 @@ export async function listTestSuites(
         projectID,
         undefined,
         undefined,
-        undefined,
+        testSuiteName,
         undefined,
         100,
         pageToken
@@ -33,7 +34,7 @@ export async function getTestSuiteID(
   projectID: string,
   testSuiteName: string
 ): Promise<string> {
-  const suites = await listTestSuites(projectID, testSuitesApi)
+  const suites = await listTestSuites(projectID, testSuiteName, testSuitesApi)
   const thisTestSuite = suites.find(ts => ts.name === testSuiteName)
   if (thisTestSuite?.testSuiteID !== undefined) {
     return thisTestSuite.testSuiteID

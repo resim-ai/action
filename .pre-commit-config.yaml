@@ -1,0 +1,12 @@
+---
+fail_fast: true
+default_language_version:
+  python: python3
+repos:
+  - repo: local
+    hooks:
+      - id: all
+        name: Format, lint and test
+        language: system
+        entry: npm run all
+        pass_filenames: false
