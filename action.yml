@@ -11,31 +11,52 @@ inputs:
     required: true
     default: '0Ip56H1LLAo6Dc6IfePaNzgpUxbJGyVI'
   resim_username:
+    description: Provided by ReSim, used to authenticate. Should be passed in as a secret.
     required: false
   resim_password:
+    description: Provided by ReSim, used to authenticate. Should be passed in as a secret.
     required: false
   client_id:
+    description: Provided by ReSim, used to authenticate. Should be passed in as a secret.
     required: false
+    deprecationMessage: "Contact ReSim to obtain a username and password"
   client_secret:
+    description: Provided by ReSim, used to authenticate. Should be passed in as a secret.
     required: false
+    deprecationMessage: "Contact ReSim to obtain a username and password"
   project:
+    description: Name of ReSim project in which to run.
     required: true
   system:
+    description: Name of ReSim system with which to run.
     required: true
   image:
+    description: URI of image that ReSim will pull and test.
     required: true
   test_suite:
+    description: The name of a test suite to run (must not be used in conjunction with experiences, experience_tags, or metrics_build_id).
     required: false
   experience_tags:
+    description: Comma-separated list of tags - the experiences in these tags will be used in the tests. For example - `vision,planning`
     required: false
   experiences:
+    description: Comma-separated list of experience names to run against.
     required: false
   comment_on_pr:
+    description: If `true` and `github_token` is also set, the action will comment on PRs with a link to view results in the ReSim app.
     required: false
     default: false
   github_token:
+    description: If provided, and `comment_on_pr` is `true`, the action will comment on PRs with a link to view results in the ReSim app.
     required: false
   metrics_build_id:
+    description: If set, this metrics build will be run against the batch.
+    required: false
+  allowable_failure_percent:
+    description: If set, this percentage of tests can fail without the batch being marked as failed.
+    required: false
+  pool_labels:
+    description: Comma-separated list of [pool labels](https://docs.resim.ai/guides/agent/#configuration) for use with the ReSim Agent. Pool labels are interpreted as a logical AND.
     required: false
 outputs:
   project_id:

@@ -3,6 +3,7 @@ import { ListSystemsOutput, System, SystemsApi } from './client'
 
 export async function listSystems(
   projectID: string,
+  systemName: string,
   api: SystemsApi
 ): Promise<System[]> {
   const systems: System[] = []
@@ -11,7 +12,7 @@ export async function listSystems(
   while (pageToken !== '') {
     const response: AxiosResponse<ListSystemsOutput> = await api.listSystems(
       projectID,
-      undefined,
+      systemName,
       100,
       pageToken
     )
@@ -29,7 +30,7 @@ export async function getSystemID(
   projectID: string,
   systemName: string
 ): Promise<string> {
-  const systems = await listSystems(projectID, systemsApi)
+  const systems = await listSystems(projectID, systemName, systemsApi)
   const thisSystem = systems.find(s => s.name === systemName)
   if (thisSystem?.systemID !== undefined) {
     return thisSystem.systemID

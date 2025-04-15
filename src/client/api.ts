@@ -12,23 +12,26 @@
  * Do not edit the class manually.
  */
 
-import type { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios'
-import globalAxios from 'axios'
 import type { Configuration } from './configuration'
+import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios'
+import globalAxios from 'axios'
 // Some imports not used depending on template conditions
 // @ts-ignore
-import type { RequestArgs } from './base'
 import {
   DUMMY_BASE_URL,
   assertParamExists,
-  createRequestFunction,
-  serializeDataIfNeeded,
+  setApiKeyToObject,
+  setBasicAuthToObject,
+  setBearerAuthToObject,
   setOAuthToObject,
   setSearchParams,
-  toPathString
+  serializeDataIfNeeded,
+  toPathString,
+  createRequestFunction
 } from './common'
+import type { RequestArgs } from './base'
 // @ts-ignore
-import { BASE_PATH, BaseAPI, COLLECTION_FORMATS, RequiredError } from './base'
+import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base'
 
 /**
  *
@@ -118,12 +121,6 @@ export interface Batch {
   batchID?: string
   /**
    *
-   * @type {string}
-   * @memberof Batch
-   */
-  batchMetricsSetName?: string | null
-  /**
-   *
    * @type {MetricStatus}
    * @memberof Batch
    */
@@ -178,12 +175,6 @@ export interface Batch {
   friendlyName?: string
   /**
    *
-   * @type {string}
-   * @memberof Batch
-   */
-  jobMetricsSetName?: string | null
-  /**
-   *
    * @type {JobMetricsStatusCounts}
    * @memberof Batch
    */
@@ -212,6 +203,12 @@ export interface Batch {
    * @memberof Batch
    */
   metricsBuildID?: string
+  /**
+   *
+   * @type {string}
+   * @memberof Batch
+   */
+  metricsSetName?: string | null
   /**
    *
    * @type {string}
@@ -309,12 +306,6 @@ export interface BatchInput {
    * @type {string}
    * @memberof BatchInput
    */
-  batchMetricsSetName?: string | null
-  /**
-   *
-   * @type {string}
-   * @memberof BatchInput
-   */
   batchName?: string
   /**
    *
@@ -363,13 +354,13 @@ export interface BatchInput {
    * @type {string}
    * @memberof BatchInput
    */
-  jobMetricsSetName?: string | null
+  metricsBuildID?: string
   /**
    *
    * @type {string}
    * @memberof BatchInput
    */
-  metricsBuildID?: string
+  metricsSetName?: string | null
   /**
    *
    * @type {{ [key: string]: string; }}
@@ -1346,12 +1337,6 @@ export interface CreateTestSuiteInput {
    * @type {string}
    * @memberof CreateTestSuiteInput
    */
-  batchMetricsSetName?: string | null
-  /**
-   *
-   * @type {string}
-   * @memberof CreateTestSuiteInput
-   */
   description: string
   /**
    *
@@ -1376,13 +1361,13 @@ export interface CreateTestSuiteInput {
    * @type {string}
    * @memberof CreateTestSuiteInput
    */
-  jobMetricsSetName?: string | null
+  metricsBuildID?: string
   /**
    *
    * @type {string}
    * @memberof CreateTestSuiteInput
    */
-  metricsBuildID?: string
+  metricsSetName?: string | null
   /**
    *
    * @type {string}
@@ -4111,12 +4096,6 @@ export interface ReviseTestSuiteInput {
    * @type {string}
    * @memberof ReviseTestSuiteInput
    */
-  batchMetricsSetName?: string | null
-  /**
-   *
-   * @type {string}
-   * @memberof ReviseTestSuiteInput
-   */
   description?: string
   /**
    *
@@ -4141,13 +4120,13 @@ export interface ReviseTestSuiteInput {
    * @type {string}
    * @memberof ReviseTestSuiteInput
    */
-  jobMetricsSetName?: string | null
+  metricsBuildID?: string
   /**
    *
    * @type {string}
    * @memberof ReviseTestSuiteInput
    */
-  metricsBuildID?: string
+  metricsSetName?: string | null
   /**
    *
    * @type {string}
@@ -4361,12 +4340,6 @@ export interface TestSuite {
    * @type {string}
    * @memberof TestSuite
    */
-  batchMetricsSetName?: string | null
-  /**
-   *
-   * @type {string}
-   * @memberof TestSuite
-   */
   creationTimestamp: string
   /**
    *
@@ -4385,13 +4358,13 @@ export interface TestSuite {
    * @type {string}
    * @memberof TestSuite
    */
-  jobMetricsSetName?: string | null
+  metricsBuildID?: string
   /**
    *
    * @type {string}
    * @memberof TestSuite
    */
-  metricsBuildID?: string
+  metricsSetName?: string | null
   /**
    *
    * @type {string}

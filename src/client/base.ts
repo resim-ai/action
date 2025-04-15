@@ -15,7 +15,7 @@
 import type { Configuration } from './configuration'
 // Some imports not used depending on template conditions
 // @ts-ignore
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios'
 import globalAxios from 'axios'
 
 export const BASE_PATH = 'https://api.resim.ai/v1'.replace(/\/+$/, '')
