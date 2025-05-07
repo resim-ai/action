@@ -145,6 +145,7 @@ jobs:
 | metrics_build_id          | No       | If set, this metrics build will be run against the batch.                                                                                                            |
 | allowable_failure_percent | No       | If set, this percentage of tests can fail without the batch being marked as failed.                                                                                  |
 | pool_labels               | No       | Comma-separated list of [pool labels](https://docs.resim.ai/guides/agent/#configuration) for use with the ReSim Agent. Pool labels are interpreted as a logical AND. |
+| parameters                | No       | Comma-separated list of parameter name-value pairs to pass to the batch. For example: `speed=0.5, avoidance_enabled=true` |
  **\* If not using a test suite, at least one of `experiences` or `experience_tags` must be set.** 
 
 ### Outputs
