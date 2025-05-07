@@ -505,4 +505,115 @@ describe('action', () => {
     )
     expect(getTokenMock).not.toHaveBeenCalled()
   })
+
+  it('handles parameter parsing with error tolerance', async () => {
+    const customInput = (name: string): string => {
+      switch (name) {
+        case 'api_endpoint':
+          return 'https://api.resim.io/v1/'
+        case 'project':
+          return 'a-project'
+        case 'experience_tags':
+          return 'tag1'
+        case 'parameters':
+          return 'foo=bar, , baz=, =qux, noequals, ='
+        default:
+          return ''
+      }
+    }
+
+    getInputMock.mockImplementation(customInput)
+    getBooleanInputMock.mockReturnValue(false)
+
+    const projectID = uuid.v4()
+    const systemID = uuid.v4()
+    const branchID = uuid.v4()
+    const userID = uuid.v4()
+    const buildID = uuid.v4()
+
+    const orgID = 'resim.ai'
+    const imageUri = 'a.docker/image:tag'
+    const version = '0.0.1'
+    const associatedAccount: string = process.env.GITHUB_ACTOR ?? ''
+    const buildSpecification = 'buildSpecification'
+    const creationTimestamp = '2021-01-01T00:00:00.000Z'
+    const description = 'some build'
+    const longDescription = ''
+    const name = 'some build name'
+
+    getTokenMock.mockImplementation(async (): Promise<string> => {
+      return Promise.resolve('token')
+    })
+
+    getProjectIDMock.mockResolvedValueOnce(projectID)
+    getSystemIDMock.mockResolvedValueOnce(systemID)
+
+    process.env.GITHUB_HEAD_REF = 'pr-branch'
+    process.env.GITHUB_EVENT_NAME = 'pull_request'
+    process.env.GITHUB_ACTOR = 'github-user'
+    findOrCreateBranchMock.mockResolvedValueOnce(branchID)
+
+    Object.defineProperty(github, 'context', {
+      value: {
+        eventName: 'pull_request',
+        payload: {
+          pull_request: {
+            head: {
+              sha: '03403a4f2db7fc85c79c4da80bd3ea719eb8dce5'
+            },
+            number: 123,
+            title: 'Test PR'
+          }
+        }
+      }
+    })
+
+    const newBuild: Build = {
+      buildID,
+      projectID,
+      branchID,
+      systemID,
+      imageUri,
+      description,
+      version,
+      associatedAccount,
+      buildSpecification,
+      creationTimestamp,
+      longDescription,
+      userID,
+      orgID,
+      name
+    }
+    createBuildMock.mockResolvedValueOnce(newBuild)
+
+    const batchID = uuid.v4()
+    const newBatch: Batch = {
+      associatedAccount,
+      batchID
+    }
+
+    const createBatchMock = jest
+      .spyOn(BatchesApi.prototype, 'createBatch')
+      .mockResolvedValueOnce({ data: newBatch } as AxiosResponse)
+
+    await main.run()
+
+    expect(getProjectIDMock).toHaveBeenCalledTimes(1)
+    expect(getSystemIDMock).toHaveBeenCalledTimes(1)
+    expect(createBranchMock).not.toHaveBeenCalled()
+    expect(createBatchMock).toHaveBeenCalledTimes(1)
+    expect(createBatchMock).toHaveBeenCalledWith(
+      projectID,
+      expect.objectContaining({
+        parameters: {
+          foo: 'bar',
+          baz: ''
+        }
+      })
+    )
+    expect(runMock).toHaveReturned()
+    expect(getTokenMock).toHaveBeenCalled()
+    expect(setOutputMock).toHaveBeenCalledWith('project_id', projectID)
+    expect(setOutputMock).toHaveBeenCalledWith('batch_id', batchID)
+  })
 })

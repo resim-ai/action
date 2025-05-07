@@ -102,6 +102,30 @@ export async function run(): Promise<void> {
       return
     }
 
+    // parse parameters to kv pairs
+    const parameters: Record<string, string> = {}
+    if (core.getInput('parameters') !== '') {
+      const parameterPairs = core.getInput('parameters').split(',')
+      for (let pair of parameterPairs) {
+        pair = pair.trim()
+        if (!pair) continue // skip empty
+        if (!pair.includes('=')) {
+          debug(`Ignoring parameter entry without '=': '${pair}'`)
+          continue
+        }
+        const [key, value, ...rest] = pair.split('=')
+        if (rest.length > 0) {
+          debug(`Ignoring parameter entry with extra '=': '${pair}'`)
+          continue
+        }
+        if (!key) {
+          debug(`Ignoring parameter entry with empty key: '${pair}'`)
+          continue
+        }
+        parameters[key] = value
+      }
+    }
+
     const token = await auth.getToken()
     debug('got auth')
     if (token === 'ERROR') {
@@ -211,7 +235,8 @@ export async function run(): Promise<void> {
       triggeredVia: TriggeredVia.Github,
       associatedAccount,
       allowableFailurePercent,
-      poolLabels
+      poolLabels,
+      parameters
     }
 
     const batchesApi = new BatchesApi(config)

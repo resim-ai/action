@@ -58,6 +58,9 @@ inputs:
   pool_labels:
     description: Comma-separated list of [pool labels](https://docs.resim.ai/guides/agent/#configuration) for use with the ReSim Agent. Pool labels are interpreted as a logical AND.
     required: false
+  parameters:
+    description: Comma-separated list of parameter name-value pairs to pass to the batch. For example - `speed=0.5, avoidance_enabled=true`
+    required: false
 outputs:
   project_id:
     description: 'ID of the ReSim project selected'
