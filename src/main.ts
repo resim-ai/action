@@ -183,14 +183,14 @@ export async function run(): Promise<void> {
       branchName
     )
 
-    let buildDescription = ''
+    let buildName = ''
     let shortCommitSha = ''
     if (github.context.eventName === 'pull_request') {
       if (github.context.payload.pull_request !== undefined) {
         const pullRequestEvent = github.context.payload.pull_request
         debug(pullRequestEvent.head)
         shortCommitSha = pullRequestEvent.head.sha.slice(0, 8)
-        buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`
+        buildName = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`
       }
     } else if (github.context.eventName === 'push') {
       if (github.context.payload !== undefined) {
@@ -198,18 +198,18 @@ export async function run(): Promise<void> {
         debug(pushRequestEvent.after)
         // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
         shortCommitSha = pushRequestEvent.after.slice(0, 8)
-        buildDescription = `Push to ${branchName} @ ${shortCommitSha}`
+        buildName = `Push to ${branchName} @ ${shortCommitSha}`
       }
     } else if (github.context.eventName === 'schedule') {
       debug(github.context.sha)
       // Set the shortCommitSha as the first commit and set the description as 'Scheduled run of <branch> @ sha'
       shortCommitSha = github.context.sha.slice(0, 8)
-      buildDescription = `Scheduled run of ${branchName} @ ${shortCommitSha}`
+      buildName = `Scheduled run of ${branchName} @ ${shortCommitSha}`
     } else if (github.context.eventName === 'workflow_dispatch') {
       // Set the shortCommitSha as the first commit and set the description as 'Manual run of <branch> @ sha'
       debug(github.context.sha)
       shortCommitSha = github.context.sha.slice(0, 8)
-      buildDescription = `Manual run of ${branchName} @ ${shortCommitSha}`
+      buildName = `Manual run of ${branchName} @ ${shortCommitSha}`
     }
 
     // register build
@@ -220,7 +220,7 @@ export async function run(): Promise<void> {
       branchID,
       systemID,
       imageUri,
-      buildDescription,
+      buildName,
       shortCommitSha
     )
     debug(`build created: ${JSON.stringify(newBuild)}`)

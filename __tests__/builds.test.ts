@@ -27,7 +27,6 @@ describe('builds', () => {
     const buildSpecification = 'buildSpecification'
     const creationTimestamp = '2021-01-01T00:00:00.000Z'
     const description = 'some build'
-    const longDescription = ''
     const name = 'some build name'
 
     const newBuildResponse: Build = {
@@ -41,7 +40,6 @@ describe('builds', () => {
       associatedAccount,
       buildSpecification,
       creationTimestamp,
-      longDescription,
       userID,
       orgID,
       name
