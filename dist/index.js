@@ -73843,11 +73843,11 @@ async function getToken() {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createBuild = createBuild;
 const core_1 = __nccwpck_require__(7484);
-async function createBuild(api, projectID, branchID, systemID, imageUri, description, version) {
+async function createBuild(api, projectID, branchID, systemID, imageUri, name, version) {
     const newBuildBody = {
         systemID,
         imageUri,
-        description,
+        name,
         version
     };
     (0, core_1.debug)(`Creating a new build:\n ${JSON.stringify(newBuildBody)}`);
@@ -74062,10 +74062,10 @@ exports.ParameterSweepStatus = {
  * @enum {string}
  */
 exports.ReportStatus = {
-    Submitted: 'SUBMITTED',
-    Running: 'RUNNING',
-    Error: 'ERROR',
-    Succeeded: 'SUCCEEDED'
+    ReportStatusSUBMITTED: 'SUBMITTED',
+    ReportStatusRUNNING: 'RUNNING',
+    ReportStatusERROR: 'ERROR',
+    ReportStatusSUCCEEDED: 'SUCCEEDED'
 };
 /**
  *
@@ -74535,6 +74535,55 @@ const BatchesApiAxiosParamCreator = function (configuration) {
                 .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
                 .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
                 .replace(`{${'logID'}}`, encodeURIComponent(String(logID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'GET',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
+         * Returns a list of suggested batches to A/B compare against
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBatchSuggestions: async (projectID, batchID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('getBatchSuggestions', 'projectID', projectID);
+            // verify required parameter 'batchID' is not null or undefined
+            (0, common_1.assertParamExists)('getBatchSuggestions', 'batchID', batchID);
+            const localVarPath = `/projects/{projectID}/batches/{batchID}/suggestions`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
             let baseOptions;
@@ -75450,16 +75499,82 @@ const BatchesApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
-         * Lists the events for a given job. Does not return associated data.
+         * Lists the event tags for a given job.
          * @param {string} projectID
          * @param {string} batchID
          * @param {string} jobID
+         * @param {string} [name] Filter event tags by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listEventsForJob: async (projectID, batchID, jobID, pageSize, pageToken, options = {}) => {
+        listEventTagsForJob: async (projectID, batchID, jobID, name, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listEventTagsForJob', 'projectID', projectID);
+            // verify required parameter 'batchID' is not null or undefined
+            (0, common_1.assertParamExists)('listEventTagsForJob', 'batchID', batchID);
+            // verify required parameter 'jobID' is not null or undefined
+            (0, common_1.assertParamExists)('listEventTagsForJob', 'jobID', jobID);
+            const localVarPath = `/projects/{projectID}/batches/{batchID}/jobs/{jobID}/eventTags`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
+                .replace(`{${'jobID'}}`, encodeURIComponent(String(jobID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'GET',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
+         * Lists the events for a given job. Does not return associated data.
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {string} jobID
+         * @param {Array<string>} [eventTags] Tags on which to filter the events
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEventsForJob: async (projectID, batchID, jobID, eventTags, pageSize, pageToken, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listEventsForJob', 'projectID', projectID);
             // verify required parameter 'batchID' is not null or undefined
@@ -75492,6 +75607,9 @@ const BatchesApiAxiosParamCreator = function (configuration) {
             // authentication OAuth required
             // oauth required
             await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            if (eventTags) {
+                localVarQueryParameter['eventTags'] = eventTags;
+            }
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
             }
@@ -75516,12 +75634,13 @@ const BatchesApiAxiosParamCreator = function (configuration) {
          * @param {string} batchID
          * @param {string} jobID
          * @param {Array<LogType>} [type]
+         * @param {string} [name] Filter logs by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listJobLogsForJob: async (projectID, batchID, jobID, type, pageSize, pageToken, options = {}) => {
+        listJobLogsForJob: async (projectID, batchID, jobID, type, name, pageSize, pageToken, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listJobLogsForJob', 'projectID', projectID);
             // verify required parameter 'batchID' is not null or undefined
@@ -75556,6 +75675,9 @@ const BatchesApiAxiosParamCreator = function (configuration) {
             await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
             if (type) {
                 localVarQueryParameter['type'] = type;
+            }
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
             }
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
@@ -75978,6 +76100,58 @@ const BatchesApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
+         * Rerun a batch
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {RerunBatchInput} [rerunBatchInput]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        rerunBatch: async (projectID, batchID, rerunBatchInput, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('rerunBatch', 'projectID', projectID);
+            // verify required parameter 'batchID' is not null or undefined
+            (0, common_1.assertParamExists)('rerunBatch', 'batchID', batchID);
+            const localVarPath = `/projects/{projectID}/batches/{batchID}/rerun`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'POST',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(rerunBatchInput, localVarRequestOptions, configuration);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
          * Updates the batch.
          * @param {string} projectID
          * @param {string} batchID
@@ -76267,6 +76441,17 @@ const BatchesApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
+         * Returns a list of suggested batches to A/B compare against
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getBatchSuggestions(projectID, batchID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getBatchSuggestions(projectID, batchID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Retrieve a single event. Does not return associated data.
          * @param {string} projectID
          * @param {string} batchID
@@ -76469,17 +76654,33 @@ const BatchesApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
-         * Lists the events for a given job. Does not return associated data.
+         * Lists the event tags for a given job.
          * @param {string} projectID
          * @param {string} batchID
          * @param {string} jobID
+         * @param {string} [name] Filter event tags by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options);
+        async listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Lists the events for a given job. Does not return associated data.
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {string} jobID
+         * @param {Array<string>} [eventTags] Tags on which to filter the events
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -76488,13 +76689,14 @@ const BatchesApiFp = function (configuration) {
          * @param {string} batchID
          * @param {string} jobID
          * @param {Array<LogType>} [type]
+         * @param {string} [name] Filter logs by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listJobLogsForJob(projectID, batchID, jobID, type, pageSize, pageToken, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listJobLogsForJob(projectID, batchID, jobID, type, pageSize, pageToken, options);
+        async listJobLogsForJob(projectID, batchID, jobID, type, name, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listJobLogsForJob(projectID, batchID, jobID, type, name, pageSize, pageToken, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -76588,6 +76790,18 @@ const BatchesApiFp = function (configuration) {
          */
         async listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Rerun a batch
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {RerunBatchInput} [rerunBatchInput]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async rerunBatch(projectID, batchID, rerunBatchInput, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.rerunBatch(projectID, batchID, rerunBatchInput, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -76757,6 +76971,18 @@ const BatchesApiFactory = function (configuration, basePath, axios) {
         getBatchLog(projectID, batchID, logID, options) {
             return localVarFp
                 .getBatchLog(projectID, batchID, logID, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Returns a list of suggested batches to A/B compare against
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getBatchSuggestions(projectID, batchID, options) {
+            return localVarFp
+                .getBatchSuggestions(projectID, batchID, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -76977,18 +77203,35 @@ const BatchesApiFactory = function (configuration, basePath, axios) {
                 .then(request => request(axios, basePath));
         },
         /**
-         * Lists the events for a given job. Does not return associated data.
+         * Lists the event tags for a given job.
          * @param {string} projectID
          * @param {string} batchID
          * @param {string} jobID
+         * @param {string} [name] Filter event tags by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options) {
+        listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options) {
             return localVarFp
-                .listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options)
+                .listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Lists the events for a given job. Does not return associated data.
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {string} jobID
+         * @param {Array<string>} [eventTags] Tags on which to filter the events
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options) {
+            return localVarFp
+                .listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -76997,14 +77240,15 @@ const BatchesApiFactory = function (configuration, basePath, axios) {
          * @param {string} batchID
          * @param {string} jobID
          * @param {Array<LogType>} [type]
+         * @param {string} [name] Filter logs by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listJobLogsForJob(projectID, batchID, jobID, type, pageSize, pageToken, options) {
+        listJobLogsForJob(projectID, batchID, jobID, type, name, pageSize, pageToken, options) {
             return localVarFp
-                .listJobLogsForJob(projectID, batchID, jobID, type, pageSize, pageToken, options)
+                .listJobLogsForJob(projectID, batchID, jobID, type, name, pageSize, pageToken, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -77104,6 +77348,19 @@ const BatchesApiFactory = function (configuration, basePath, axios) {
         listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options) {
             return localVarFp
                 .listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Rerun a batch
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {RerunBatchInput} [rerunBatchInput]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        rerunBatch(projectID, batchID, rerunBatchInput, options) {
+            return localVarFp
+                .rerunBatch(projectID, batchID, rerunBatchInput, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -77285,6 +77542,19 @@ class BatchesApi extends base_1.BaseAPI {
     getBatchLog(projectID, batchID, logID, options) {
         return (0, exports.BatchesApiFp)(this.configuration)
             .getBatchLog(projectID, batchID, logID, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Returns a list of suggested batches to A/B compare against
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    getBatchSuggestions(projectID, batchID, options) {
+        return (0, exports.BatchesApiFp)(this.configuration)
+            .getBatchSuggestions(projectID, batchID, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -77520,19 +77790,37 @@ class BatchesApi extends base_1.BaseAPI {
             .then(request => request(this.axios, this.basePath));
     }
     /**
-     * Lists the events for a given job. Does not return associated data.
+     * Lists the event tags for a given job.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BatchesApi
      */
-    listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options) {
+    listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options) {
         return (0, exports.BatchesApiFp)(this.configuration)
-            .listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options)
+            .listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Lists the events for a given job. Does not return associated data.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options) {
+        return (0, exports.BatchesApiFp)(this.configuration)
+            .listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -77541,15 +77829,16 @@ class BatchesApi extends base_1.BaseAPI {
      * @param {string} batchID
      * @param {string} jobID
      * @param {Array<LogType>} [type]
+     * @param {string} [name] Filter logs by name
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BatchesApi
      */
-    listJobLogsForJob(projectID, batchID, jobID, type, pageSize, pageToken, options) {
+    listJobLogsForJob(projectID, batchID, jobID, type, name, pageSize, pageToken, options) {
         return (0, exports.BatchesApiFp)(this.configuration)
-            .listJobLogsForJob(projectID, batchID, jobID, type, pageSize, pageToken, options)
+            .listJobLogsForJob(projectID, batchID, jobID, type, name, pageSize, pageToken, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -77655,6 +77944,20 @@ class BatchesApi extends base_1.BaseAPI {
     listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options) {
         return (0, exports.BatchesApiFp)(this.configuration)
             .listMetricsForMetricIDs(projectID, batchID, jobID, metricID, pageSize, pageToken, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Rerun a batch
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {RerunBatchInput} [rerunBatchInput]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BatchesApi
+     */
+    rerunBatch(projectID, batchID, rerunBatchInput, options) {
+        return (0, exports.BatchesApiFp)(this.configuration)
+            .rerunBatch(projectID, batchID, rerunBatchInput, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -79191,15 +79494,16 @@ const ExperienceTagsApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
-         * Returns a list of all experiences with the given experience tag.
+         * Returns a list of experiences with the given experience tag.
          * @param {string} projectID
          * @param {string} experienceTagID
+         * @param {boolean} [archived] Filter by archived status.
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiencesWithExperienceTag: async (projectID, experienceTagID, pageSize, pageToken, options = {}) => {
+        listExperiencesWithExperienceTag: async (projectID, experienceTagID, archived, pageSize, pageToken, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listExperiencesWithExperienceTag', 'projectID', projectID);
             // verify required parameter 'experienceTagID' is not null or undefined
@@ -79229,6 +79533,9 @@ const ExperienceTagsApiAxiosParamCreator = function (configuration) {
             // authentication OAuth required
             // oauth required
             await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experienceTags:read'], configuration);
+            if (archived !== undefined) {
+                localVarQueryParameter['archived'] = archived;
+            }
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
             }
@@ -79433,16 +79740,17 @@ const ExperienceTagsApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
-         * Returns a list of all experiences with the given experience tag.
+         * Returns a list of experiences with the given experience tag.
          * @param {string} projectID
          * @param {string} experienceTagID
+         * @param {boolean} [archived] Filter by archived status.
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listExperiencesWithExperienceTag(projectID, experienceTagID, pageSize, pageToken, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiencesWithExperienceTag(projectID, experienceTagID, pageSize, pageToken, options);
+        async listExperiencesWithExperienceTag(projectID, experienceTagID, archived, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiencesWithExperienceTag(projectID, experienceTagID, archived, pageSize, pageToken, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -79556,17 +79864,18 @@ const ExperienceTagsApiFactory = function (configuration, basePath, axios) {
                 .then(request => request(axios, basePath));
         },
         /**
-         * Returns a list of all experiences with the given experience tag.
+         * Returns a list of experiences with the given experience tag.
          * @param {string} projectID
          * @param {string} experienceTagID
+         * @param {boolean} [archived] Filter by archived status.
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiencesWithExperienceTag(projectID, experienceTagID, pageSize, pageToken, options) {
+        listExperiencesWithExperienceTag(projectID, experienceTagID, archived, pageSize, pageToken, options) {
             return localVarFp
-                .listExperiencesWithExperienceTag(projectID, experienceTagID, pageSize, pageToken, options)
+                .listExperiencesWithExperienceTag(projectID, experienceTagID, archived, pageSize, pageToken, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -79688,18 +79997,19 @@ class ExperienceTagsApi extends base_1.BaseAPI {
             .then(request => request(this.axios, this.basePath));
     }
     /**
-     * Returns a list of all experiences with the given experience tag.
+     * Returns a list of experiences with the given experience tag.
      * @param {string} projectID
      * @param {string} experienceTagID
+     * @param {boolean} [archived] Filter by archived status.
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ExperienceTagsApi
      */
-    listExperiencesWithExperienceTag(projectID, experienceTagID, pageSize, pageToken, options) {
+    listExperiencesWithExperienceTag(projectID, experienceTagID, archived, pageSize, pageToken, options) {
         return (0, exports.ExperienceTagsApiFp)(this.configuration)
-            .listExperiencesWithExperienceTag(projectID, experienceTagID, pageSize, pageToken, options)
+            .listExperiencesWithExperienceTag(projectID, experienceTagID, archived, pageSize, pageToken, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -79746,6 +80056,55 @@ exports.ListExperienceTagsOrderByEnum = {
  */
 const ExperiencesApiAxiosParamCreator = function (configuration) {
     return {
+        /**
+         * Archives an experience.
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        archiveExperience: async (projectID, experienceID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('archiveExperience', 'projectID', projectID);
+            // verify required parameter 'experienceID' is not null or undefined
+            (0, common_1.assertParamExists)('archiveExperience', 'experienceID', experienceID);
+            const localVarPath = `/projects/{projectID}/experiences/{experienceID}`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'experienceID'}}`, encodeURIComponent(String(experienceID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'DELETE',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
         /**
          * Adds an experience.
          * @param {string} projectID
@@ -79840,55 +80199,6 @@ const ExperiencesApiAxiosParamCreator = function (configuration) {
                 ...options.headers
             };
             localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(debugExperienceInput, localVarRequestOptions, configuration);
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions
-            };
-        },
-        /**
-         * Deletes an experience.
-         * @param {string} projectID
-         * @param {string} experienceID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteExperience: async (projectID, experienceID, options = {}) => {
-            // verify required parameter 'projectID' is not null or undefined
-            (0, common_1.assertParamExists)('deleteExperience', 'projectID', projectID);
-            // verify required parameter 'experienceID' is not null or undefined
-            (0, common_1.assertParamExists)('deleteExperience', 'experienceID', experienceID);
-            const localVarPath = `/projects/{projectID}/experiences/{experienceID}`
-                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
-                .replace(`{${'experienceID'}}`, encodeURIComponent(String(experienceID)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = {
-                method: 'DELETE',
-                ...baseOptions,
-                ...options
-            };
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
-            // authentication OAuth required
-            // oauth required
-            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {
-                ...localVarHeaderParameter,
-                ...headersFromBaseOptions,
-                ...options.headers
-            };
             return {
                 url: (0, common_1.toPathString)(localVarUrlObj),
                 options: localVarRequestOptions
@@ -80062,14 +80372,15 @@ const ExperiencesApiAxiosParamCreator = function (configuration) {
          * @param {string} projectID
          * @param {string} [name] Filter experiences by name
          * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-         * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+         * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+         * @param {boolean} [archived]
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {string} [orderBy]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiences: async (projectID, name, text, search, pageSize, pageToken, orderBy, options = {}) => {
+        listExperiences: async (projectID, name, text, search, archived, pageSize, pageToken, orderBy, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listExperiences', 'projectID', projectID);
             const localVarPath = `/projects/{projectID}/experiences`.replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)));
@@ -80104,6 +80415,9 @@ const ExperiencesApiAxiosParamCreator = function (configuration) {
             if (search !== undefined) {
                 localVarQueryParameter['search'] = search;
             }
+            if (archived !== undefined) {
+                localVarQueryParameter['archived'] = archived;
+            }
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
             }
@@ -80126,7 +80440,100 @@ const ExperiencesApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
-         * Updates the experience.
+         * Returns the list of service profiles.
+         * @param {string} projectID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listServiceProfiles: async (projectID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listServiceProfiles', 'projectID', projectID);
+            const localVarPath = `/projects/{projectID}/profiles`.replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'GET',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:read'], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
+         * Restores an experience.
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        restoreExperience: async (projectID, experienceID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('restoreExperience', 'projectID', projectID);
+            // verify required parameter 'experienceID' is not null or undefined
+            (0, common_1.assertParamExists)('restoreExperience', 'experienceID', experienceID);
+            const localVarPath = `/projects/{projectID}/experiences/{experienceID}/restore`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'experienceID'}}`, encodeURIComponent(String(experienceID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'POST',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['experiences:write'], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
+         * Updates the experience. When updating environment variables, the entire array is replaced.
          * @param {string} projectID
          * @param {string} experienceID
          * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -80232,6 +80639,17 @@ const ExperiencesApiFp = function (configuration) {
     const localVarAxiosParamCreator = (0, exports.ExperiencesApiAxiosParamCreator)(configuration);
     return {
         /**
+         * Archives an experience.
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async archiveExperience(projectID, experienceID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.archiveExperience(projectID, experienceID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Adds an experience.
          * @param {string} projectID
          * @param {CreateExperienceInput} [createExperienceInput]
@@ -80252,17 +80670,6 @@ const ExperiencesApiFp = function (configuration) {
          */
         async debugExperience(projectID, experienceID, debugExperienceInput, options) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.debugExperience(projectID, experienceID, debugExperienceInput, options);
-            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-        },
-        /**
-         * Deletes an experience.
-         * @param {string} projectID
-         * @param {string} experienceID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteExperience(projectID, experienceID, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteExperience(projectID, experienceID, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -80307,19 +80714,41 @@ const ExperiencesApiFp = function (configuration) {
          * @param {string} projectID
          * @param {string} [name] Filter experiences by name
          * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-         * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+         * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+         * @param {boolean} [archived]
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {string} [orderBy]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listExperiences(projectID, name, text, search, pageSize, pageToken, orderBy, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiences(projectID, name, text, search, pageSize, pageToken, orderBy, options);
+        async listExperiences(projectID, name, text, search, archived, pageSize, pageToken, orderBy, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiences(projectID, name, text, search, archived, pageSize, pageToken, orderBy, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
-         * Updates the experience.
+         * Returns the list of service profiles.
+         * @param {string} projectID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listServiceProfiles(projectID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listServiceProfiles(projectID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Restores an experience.
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async restoreExperience(projectID, experienceID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.restoreExperience(projectID, experienceID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Updates the experience. When updating environment variables, the entire array is replaced.
          * @param {string} projectID
          * @param {string} experienceID
          * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -80351,6 +80780,18 @@ const ExperiencesApiFactory = function (configuration, basePath, axios) {
     const localVarFp = (0, exports.ExperiencesApiFp)(configuration);
     return {
         /**
+         * Archives an experience.
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        archiveExperience(projectID, experienceID, options) {
+            return localVarFp
+                .archiveExperience(projectID, experienceID, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
          * Adds an experience.
          * @param {string} projectID
          * @param {CreateExperienceInput} [createExperienceInput]
@@ -80373,18 +80814,6 @@ const ExperiencesApiFactory = function (configuration, basePath, axios) {
         debugExperience(projectID, experienceID, debugExperienceInput, options) {
             return localVarFp
                 .debugExperience(projectID, experienceID, debugExperienceInput, options)
-                .then(request => request(axios, basePath));
-        },
-        /**
-         * Deletes an experience.
-         * @param {string} projectID
-         * @param {string} experienceID
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteExperience(projectID, experienceID, options) {
-            return localVarFp
-                .deleteExperience(projectID, experienceID, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -80432,20 +80861,44 @@ const ExperiencesApiFactory = function (configuration, basePath, axios) {
          * @param {string} projectID
          * @param {string} [name] Filter experiences by name
          * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-         * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+         * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+         * @param {boolean} [archived]
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {string} [orderBy]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiences(projectID, name, text, search, pageSize, pageToken, orderBy, options) {
+        listExperiences(projectID, name, text, search, archived, pageSize, pageToken, orderBy, options) {
             return localVarFp
-                .listExperiences(projectID, name, text, search, pageSize, pageToken, orderBy, options)
+                .listExperiences(projectID, name, text, search, archived, pageSize, pageToken, orderBy, options)
                 .then(request => request(axios, basePath));
         },
         /**
-         * Updates the experience.
+         * Returns the list of service profiles.
+         * @param {string} projectID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listServiceProfiles(projectID, options) {
+            return localVarFp
+                .listServiceProfiles(projectID, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Restores an experience.
+         * @param {string} projectID
+         * @param {string} experienceID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        restoreExperience(projectID, experienceID, options) {
+            return localVarFp
+                .restoreExperience(projectID, experienceID, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Updates the experience. When updating environment variables, the entire array is replaced.
          * @param {string} projectID
          * @param {string} experienceID
          * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -80479,6 +80932,19 @@ exports.ExperiencesApiFactory = ExperiencesApiFactory;
  */
 class ExperiencesApi extends base_1.BaseAPI {
     /**
+     * Archives an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExperiencesApi
+     */
+    archiveExperience(projectID, experienceID, options) {
+        return (0, exports.ExperiencesApiFp)(this.configuration)
+            .archiveExperience(projectID, experienceID, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
      * Adds an experience.
      * @param {string} projectID
      * @param {CreateExperienceInput} [createExperienceInput]
@@ -80503,19 +80969,6 @@ class ExperiencesApi extends base_1.BaseAPI {
     debugExperience(projectID, experienceID, debugExperienceInput, options) {
         return (0, exports.ExperiencesApiFp)(this.configuration)
             .debugExperience(projectID, experienceID, debugExperienceInput, options)
-            .then(request => request(this.axios, this.basePath));
-    }
-    /**
-     * Deletes an experience.
-     * @param {string} projectID
-     * @param {string} experienceID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ExperiencesApi
-     */
-    deleteExperience(projectID, experienceID, options) {
-        return (0, exports.ExperiencesApiFp)(this.configuration)
-            .deleteExperience(projectID, experienceID, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -80566,7 +81019,8 @@ class ExperiencesApi extends base_1.BaseAPI {
      * @param {string} projectID
      * @param {string} [name] Filter experiences by name
      * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+     * @param {boolean} [archived]
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {string} [orderBy]
@@ -80574,13 +81028,38 @@ class ExperiencesApi extends base_1.BaseAPI {
      * @throws {RequiredError}
      * @memberof ExperiencesApi
      */
-    listExperiences(projectID, name, text, search, pageSize, pageToken, orderBy, options) {
+    listExperiences(projectID, name, text, search, archived, pageSize, pageToken, orderBy, options) {
         return (0, exports.ExperiencesApiFp)(this.configuration)
-            .listExperiences(projectID, name, text, search, pageSize, pageToken, orderBy, options)
+            .listExperiences(projectID, name, text, search, archived, pageSize, pageToken, orderBy, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
-     * Updates the experience.
+     * Returns the list of service profiles.
+     * @param {string} projectID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExperiencesApi
+     */
+    listServiceProfiles(projectID, options) {
+        return (0, exports.ExperiencesApiFp)(this.configuration)
+            .listServiceProfiles(projectID, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Restores an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ExperiencesApi
+     */
+    restoreExperience(projectID, experienceID, options) {
+        return (0, exports.ExperiencesApiFp)(this.configuration)
+            .restoreExperience(projectID, experienceID, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Updates the experience. When updating environment variables, the entire array is replaced.
      * @param {string} projectID
      * @param {string} experienceID
      * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -81068,16 +81547,82 @@ const MetricsApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
-         * Lists the events for a given job. Does not return associated data.
+         * Lists the event tags for a given job.
          * @param {string} projectID
          * @param {string} batchID
          * @param {string} jobID
+         * @param {string} [name] Filter event tags by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listEventsForJob: async (projectID, batchID, jobID, pageSize, pageToken, options = {}) => {
+        listEventTagsForJob: async (projectID, batchID, jobID, name, pageSize, pageToken, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('listEventTagsForJob', 'projectID', projectID);
+            // verify required parameter 'batchID' is not null or undefined
+            (0, common_1.assertParamExists)('listEventTagsForJob', 'batchID', batchID);
+            // verify required parameter 'jobID' is not null or undefined
+            (0, common_1.assertParamExists)('listEventTagsForJob', 'jobID', jobID);
+            const localVarPath = `/projects/{projectID}/batches/{batchID}/jobs/{jobID}/eventTags`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
+                .replace(`{${'jobID'}}`, encodeURIComponent(String(jobID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'GET',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+            if (pageSize !== undefined) {
+                localVarQueryParameter['pageSize'] = pageSize;
+            }
+            if (pageToken !== undefined) {
+                localVarQueryParameter['pageToken'] = pageToken;
+            }
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
+         * Lists the events for a given job. Does not return associated data.
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {string} jobID
+         * @param {Array<string>} [eventTags] Tags on which to filter the events
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEventsForJob: async (projectID, batchID, jobID, eventTags, pageSize, pageToken, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listEventsForJob', 'projectID', projectID);
             // verify required parameter 'batchID' is not null or undefined
@@ -81110,6 +81655,9 @@ const MetricsApiAxiosParamCreator = function (configuration) {
             // authentication OAuth required
             // oauth required
             await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:read'], configuration);
+            if (eventTags) {
+                localVarQueryParameter['eventTags'] = eventTags;
+            }
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
             }
@@ -82085,17 +82633,33 @@ const MetricsApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
-         * Lists the events for a given job. Does not return associated data.
+         * Lists the event tags for a given job.
          * @param {string} projectID
          * @param {string} batchID
          * @param {string} jobID
+         * @param {string} [name] Filter event tags by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options);
+        async listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Lists the events for a given job. Does not return associated data.
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {string} jobID
+         * @param {Array<string>} [eventTags] Tags on which to filter the events
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -82395,18 +82959,35 @@ const MetricsApiFactory = function (configuration, basePath, axios) {
                 .then(request => request(axios, basePath));
         },
         /**
-         * Lists the events for a given job. Does not return associated data.
+         * Lists the event tags for a given job.
          * @param {string} projectID
          * @param {string} batchID
          * @param {string} jobID
+         * @param {string} [name] Filter event tags by name
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options) {
+        listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options) {
             return localVarFp
-                .listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options)
+                .listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Lists the events for a given job. Does not return associated data.
+         * @param {string} projectID
+         * @param {string} batchID
+         * @param {string} jobID
+         * @param {Array<string>} [eventTags] Tags on which to filter the events
+         * @param {number} [pageSize]
+         * @param {string} [pageToken]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options) {
+            return localVarFp
+                .listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -82726,19 +83307,37 @@ class MetricsApi extends base_1.BaseAPI {
             .then(request => request(this.axios, this.basePath));
     }
     /**
-     * Lists the events for a given job. Does not return associated data.
+     * Lists the event tags for a given job.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetricsApi
      */
-    listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options) {
+    listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options) {
         return (0, exports.MetricsApiFp)(this.configuration)
-            .listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options)
+            .listEventTagsForJob(projectID, batchID, jobID, name, pageSize, pageToken, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Lists the events for a given job. Does not return associated data.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetricsApi
+     */
+    listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options) {
+        return (0, exports.MetricsApiFp)(this.configuration)
+            .listEventsForJob(projectID, batchID, jobID, eventTags, pageSize, pageToken, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -83853,7 +84452,7 @@ exports.ParameterSweepsApi = ParameterSweepsApi;
 const ProjectsApiAxiosParamCreator = function (configuration) {
     return {
         /**
-         * Archived a project.
+         * Archives a project.
          * @param {string} projectID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -84304,7 +84903,7 @@ const ProjectsApiFp = function (configuration) {
     const localVarAxiosParamCreator = (0, exports.ProjectsApiAxiosParamCreator)(configuration);
     return {
         /**
-         * Archived a project.
+         * Archives a project.
          * @param {string} projectID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -84415,7 +85014,7 @@ const ProjectsApiFactory = function (configuration, basePath, axios) {
     const localVarFp = (0, exports.ProjectsApiFp)(configuration);
     return {
         /**
-         * Archived a project.
+         * Archives a project.
          * @param {string} projectID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -84535,7 +85134,7 @@ exports.ProjectsApiFactory = ProjectsApiFactory;
  */
 class ProjectsApi extends base_1.BaseAPI {
     /**
-     * Archived a project.
+     * Archives a project.
      * @param {string} projectID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -86171,12 +86770,13 @@ const SystemsApiAxiosParamCreator = function (configuration) {
          * Returns a list of all experiences applicable to the system.
          * @param {string} projectID
          * @param {string} systemID
+         * @param {boolean} [archived] Filter experiences by archived status
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiencesForSystem: async (projectID, systemID, pageSize, pageToken, options = {}) => {
+        listExperiencesForSystem: async (projectID, systemID, archived, pageSize, pageToken, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listExperiencesForSystem', 'projectID', projectID);
             // verify required parameter 'systemID' is not null or undefined
@@ -86206,6 +86806,9 @@ const SystemsApiAxiosParamCreator = function (configuration) {
             // authentication OAuth required
             // oauth required
             await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['systems:read'], configuration);
+            if (archived !== undefined) {
+                localVarQueryParameter['archived'] = archived;
+            }
             if (pageSize !== undefined) {
                 localVarQueryParameter['pageSize'] = pageSize;
             }
@@ -86571,13 +87174,14 @@ const SystemsApiFp = function (configuration) {
          * Returns a list of all experiences applicable to the system.
          * @param {string} projectID
          * @param {string} systemID
+         * @param {boolean} [archived] Filter experiences by archived status
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options);
+        async listExperiencesForSystem(projectID, systemID, archived, pageSize, pageToken, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listExperiencesForSystem(projectID, systemID, archived, pageSize, pageToken, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -86729,14 +87333,15 @@ const SystemsApiFactory = function (configuration, basePath, axios) {
          * Returns a list of all experiences applicable to the system.
          * @param {string} projectID
          * @param {string} systemID
+         * @param {boolean} [archived] Filter experiences by archived status
          * @param {number} [pageSize]
          * @param {string} [pageToken]
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options) {
+        listExperiencesForSystem(projectID, systemID, archived, pageSize, pageToken, options) {
             return localVarFp
-                .listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options)
+                .listExperiencesForSystem(projectID, systemID, archived, pageSize, pageToken, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -86899,15 +87504,16 @@ class SystemsApi extends base_1.BaseAPI {
      * Returns a list of all experiences applicable to the system.
      * @param {string} projectID
      * @param {string} systemID
+     * @param {boolean} [archived] Filter experiences by archived status
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SystemsApi
      */
-    listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options) {
+    listExperiencesForSystem(projectID, systemID, archived, pageSize, pageToken, options) {
         return (0, exports.SystemsApiFp)(this.configuration)
-            .listExperiencesForSystem(projectID, systemID, pageSize, pageToken, options)
+            .listExperiencesForSystem(projectID, systemID, archived, pageSize, pageToken, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -87346,6 +87952,55 @@ const TestSuitesApiAxiosParamCreator = function (configuration) {
             };
         },
         /**
+         * Archives a test suite.
+         * @param {string} projectID
+         * @param {string} testSuiteID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        archiveTestSuite: async (projectID, testSuiteID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('archiveTestSuite', 'projectID', projectID);
+            // verify required parameter 'testSuiteID' is not null or undefined
+            (0, common_1.assertParamExists)('archiveTestSuite', 'testSuiteID', testSuiteID);
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'testSuiteID'}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'DELETE',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
          * Adds a test suite for a project.
          * @param {string} projectID
          * @param {CreateTestSuiteInput} [createTestSuiteInput]
@@ -87609,6 +88264,7 @@ const TestSuitesApiAxiosParamCreator = function (configuration) {
          * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
          * @param {string} [systemID] Only return test suites that contain the given system id
          * @param {string} [name] Filter test suites by name
+         * @param {boolean} [archived]
          * @param {string} [text] Filter test suites by a text string on name and description
          * @param {number} [pageSize]
          * @param {string} [pageToken]
@@ -87616,7 +88272,7 @@ const TestSuitesApiAxiosParamCreator = function (configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTestSuites: async (projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options = {}) => {
+        listTestSuites: async (projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options = {}) => {
             // verify required parameter 'projectID' is not null or undefined
             (0, common_1.assertParamExists)('listTestSuites', 'projectID', projectID);
             const localVarPath = `/projects/{projectID}/suites`.replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)));
@@ -87650,6 +88306,9 @@ const TestSuitesApiAxiosParamCreator = function (configuration) {
             }
             if (name !== undefined) {
                 localVarQueryParameter['name'] = name;
+            }
+            if (archived !== undefined) {
+                localVarQueryParameter['archived'] = archived;
             }
             if (text !== undefined) {
                 localVarQueryParameter['text'] = text;
@@ -87722,6 +88381,55 @@ const TestSuitesApiAxiosParamCreator = function (configuration) {
                 ...options.headers
             };
             localVarRequestOptions.data = (0, common_1.serializeDataIfNeeded)(selectExperiencesInput, localVarRequestOptions, configuration);
+            return {
+                url: (0, common_1.toPathString)(localVarUrlObj),
+                options: localVarRequestOptions
+            };
+        },
+        /**
+         * Restores a test suite.
+         * @param {string} projectID
+         * @param {string} testSuiteID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        restoreTestSuite: async (projectID, testSuiteID, options = {}) => {
+            // verify required parameter 'projectID' is not null or undefined
+            (0, common_1.assertParamExists)('restoreTestSuite', 'projectID', projectID);
+            // verify required parameter 'testSuiteID' is not null or undefined
+            (0, common_1.assertParamExists)('restoreTestSuite', 'testSuiteID', testSuiteID);
+            const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/restore`
+                .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+                .replace(`{${'testSuiteID'}}`, encodeURIComponent(String(testSuiteID)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = {
+                method: 'POST',
+                ...baseOptions,
+                ...options
+            };
+            const localVarHeaderParameter = {};
+            const localVarQueryParameter = {};
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            // authentication OAuth required
+            // oauth required
+            await (0, common_1.setOAuthToObject)(localVarHeaderParameter, 'OAuth', ['batches:write'], configuration);
+            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {
+                ...localVarHeaderParameter,
+                ...headersFromBaseOptions,
+                ...options.headers
+            };
             return {
                 url: (0, common_1.toPathString)(localVarUrlObj),
                 options: localVarRequestOptions
@@ -87813,6 +88521,17 @@ const TestSuitesApiFp = function (configuration) {
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
+         * Archives a test suite.
+         * @param {string} projectID
+         * @param {string} testSuiteID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async archiveTestSuite(projectID, testSuiteID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.archiveTestSuite(projectID, testSuiteID, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
          * Adds a test suite for a project.
          * @param {string} projectID
          * @param {CreateTestSuiteInput} [createTestSuiteInput]
@@ -87877,6 +88596,7 @@ const TestSuitesApiFp = function (configuration) {
          * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
          * @param {string} [systemID] Only return test suites that contain the given system id
          * @param {string} [name] Filter test suites by name
+         * @param {boolean} [archived]
          * @param {string} [text] Filter test suites by a text string on name and description
          * @param {number} [pageSize]
          * @param {string} [pageToken]
@@ -87884,8 +88604,8 @@ const TestSuitesApiFp = function (configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listTestSuites(projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options) {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listTestSuites(projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options);
+        async listTestSuites(projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listTestSuites(projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -87898,6 +88618,17 @@ const TestSuitesApiFp = function (configuration) {
          */
         async removeExperiencesFromTestSuite(projectID, testSuiteID, selectExperiencesInput, options) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.removeExperiencesFromTestSuite(projectID, testSuiteID, selectExperiencesInput, options);
+            return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+        },
+        /**
+         * Restores a test suite.
+         * @param {string} projectID
+         * @param {string} testSuiteID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async restoreTestSuite(projectID, testSuiteID, options) {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.restoreTestSuite(projectID, testSuiteID, options);
             return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
         },
         /**
@@ -87945,6 +88676,18 @@ const TestSuitesApiFactory = function (configuration, basePath, axios) {
         addTestSuitesToExperiences(projectID, addSuitesToExperiencesInput, options) {
             return localVarFp
                 .addTestSuitesToExperiences(projectID, addSuitesToExperiencesInput, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Archives a test suite.
+         * @param {string} projectID
+         * @param {string} testSuiteID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        archiveTestSuite(projectID, testSuiteID, options) {
+            return localVarFp
+                .archiveTestSuite(projectID, testSuiteID, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -88017,6 +88760,7 @@ const TestSuitesApiFactory = function (configuration, basePath, axios) {
          * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
          * @param {string} [systemID] Only return test suites that contain the given system id
          * @param {string} [name] Filter test suites by name
+         * @param {boolean} [archived]
          * @param {string} [text] Filter test suites by a text string on name and description
          * @param {number} [pageSize]
          * @param {string} [pageToken]
@@ -88024,9 +88768,9 @@ const TestSuitesApiFactory = function (configuration, basePath, axios) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listTestSuites(projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options) {
+        listTestSuites(projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options) {
             return localVarFp
-                .listTestSuites(projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options)
+                .listTestSuites(projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -88040,6 +88784,18 @@ const TestSuitesApiFactory = function (configuration, basePath, axios) {
         removeExperiencesFromTestSuite(projectID, testSuiteID, selectExperiencesInput, options) {
             return localVarFp
                 .removeExperiencesFromTestSuite(projectID, testSuiteID, selectExperiencesInput, options)
+                .then(request => request(axios, basePath));
+        },
+        /**
+         * Restores a test suite.
+         * @param {string} projectID
+         * @param {string} testSuiteID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        restoreTestSuite(projectID, testSuiteID, options) {
+            return localVarFp
+                .restoreTestSuite(projectID, testSuiteID, options)
                 .then(request => request(axios, basePath));
         },
         /**
@@ -88090,6 +88846,19 @@ class TestSuitesApi extends base_1.BaseAPI {
     addTestSuitesToExperiences(projectID, addSuitesToExperiencesInput, options) {
         return (0, exports.TestSuitesApiFp)(this.configuration)
             .addTestSuitesToExperiences(projectID, addSuitesToExperiencesInput, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Archives a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSuitesApi
+     */
+    archiveTestSuite(projectID, testSuiteID, options) {
+        return (0, exports.TestSuitesApiFp)(this.configuration)
+            .archiveTestSuite(projectID, testSuiteID, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -88167,6 +88936,7 @@ class TestSuitesApi extends base_1.BaseAPI {
      * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
      * @param {string} [systemID] Only return test suites that contain the given system id
      * @param {string} [name] Filter test suites by name
+     * @param {boolean} [archived]
      * @param {string} [text] Filter test suites by a text string on name and description
      * @param {number} [pageSize]
      * @param {string} [pageToken]
@@ -88175,9 +88945,9 @@ class TestSuitesApi extends base_1.BaseAPI {
      * @throws {RequiredError}
      * @memberof TestSuitesApi
      */
-    listTestSuites(projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options) {
+    listTestSuites(projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options) {
         return (0, exports.TestSuitesApiFp)(this.configuration)
-            .listTestSuites(projectID, experienceIDs, systemID, name, text, pageSize, pageToken, orderBy, options)
+            .listTestSuites(projectID, experienceIDs, systemID, name, archived, text, pageSize, pageToken, orderBy, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -88192,6 +88962,19 @@ class TestSuitesApi extends base_1.BaseAPI {
     removeExperiencesFromTestSuite(projectID, testSuiteID, selectExperiencesInput, options) {
         return (0, exports.TestSuitesApiFp)(this.configuration)
             .removeExperiencesFromTestSuite(projectID, testSuiteID, selectExperiencesInput, options)
+            .then(request => request(this.axios, this.basePath));
+    }
+    /**
+     * Restores a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TestSuitesApi
+     */
+    restoreTestSuite(projectID, testSuiteID, options) {
+        return (0, exports.TestSuitesApiFp)(this.configuration)
+            .restoreTestSuite(projectID, testSuiteID, options)
             .then(request => request(this.axios, this.basePath));
     }
     /**
@@ -89122,14 +89905,14 @@ async function run() {
         }
         debug(`branchName is ${branchName}`);
         const branchID = await (0, projects_1.findOrCreateBranch)(projectsApi, projectID, branchName);
-        let buildDescription = '';
+        let buildName = '';
         let shortCommitSha = '';
         if (github.context.eventName === 'pull_request') {
             if (github.context.payload.pull_request !== undefined) {
                 const pullRequestEvent = github.context.payload.pull_request;
                 debug(pullRequestEvent.head);
                 shortCommitSha = pullRequestEvent.head.sha.slice(0, 8);
-                buildDescription = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`;
+                buildName = `#${pullRequestEvent.number} - ${pullRequestEvent.title}`;
             }
         }
         else if (github.context.eventName === 'push') {
@@ -89138,24 +89921,24 @@ async function run() {
                 debug(pushRequestEvent.after);
                 // Set the shortCommitSha as the first commit and set the description as 'Push to <branch> @ sha'
                 shortCommitSha = pushRequestEvent.after.slice(0, 8);
-                buildDescription = `Push to ${branchName} @ ${shortCommitSha}`;
+                buildName = `Push to ${branchName} @ ${shortCommitSha}`;
             }
         }
         else if (github.context.eventName === 'schedule') {
             debug(github.context.sha);
             // Set the shortCommitSha as the first commit and set the description as 'Scheduled run of <branch> @ sha'
             shortCommitSha = github.context.sha.slice(0, 8);
-            buildDescription = `Scheduled run of ${branchName} @ ${shortCommitSha}`;
+            buildName = `Scheduled run of ${branchName} @ ${shortCommitSha}`;
         }
         else if (github.context.eventName === 'workflow_dispatch') {
             // Set the shortCommitSha as the first commit and set the description as 'Manual run of <branch> @ sha'
             debug(github.context.sha);
             shortCommitSha = github.context.sha.slice(0, 8);
-            buildDescription = `Manual run of ${branchName} @ ${shortCommitSha}`;
+            buildName = `Manual run of ${branchName} @ ${shortCommitSha}`;
         }
         // register build
         const buildsApi = new client_1.BuildsApi(config);
-        const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildDescription, shortCommitSha);
+        const newBuild = await (0, builds_1.createBuild)(buildsApi, projectID, branchID, systemID, imageUri, buildName, shortCommitSha);
         debug(`build created: ${JSON.stringify(newBuild)}`);
         if (newBuild.buildID === undefined) {
             core.setFailed('Could not obtain build id');
@@ -89403,7 +90186,7 @@ async function listTestSuites(projectID, testSuiteName, api) {
     const testSuites = [];
     let pageToken = undefined;
     while (pageToken !== '') {
-        const response = await api.listTestSuites(projectID, undefined, undefined, testSuiteName, undefined, 100, pageToken);
+        const response = await api.listTestSuites(projectID, undefined, undefined, testSuiteName, false, undefined, 100, pageToken);
         if (response.data.testSuites) {
             testSuites.push(...response.data.testSuites);
         }

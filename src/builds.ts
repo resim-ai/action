@@ -7,13 +7,13 @@ export async function createBuild(
   branchID: string,
   systemID: string,
   imageUri: string,
-  description: string,
+  name: string,
   version: string
 ): Promise<Build> {
   const newBuildBody: CreateBuildForBranchInput = {
     systemID,
     imageUri,
-    description,
+    name,
     version
   }
   debug(`Creating a new build:\n ${JSON.stringify(newBuildBody)}`)

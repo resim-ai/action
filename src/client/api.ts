@@ -109,6 +109,12 @@ export interface Batch {
   adhocTestSuite?: boolean
   /**
    *
+   * @type {number}
+   * @memberof Batch
+   */
+  allowable_failure_percent?: number
+  /**
+   *
    * @type {string}
    * @memberof Batch
    */
@@ -736,6 +742,37 @@ export interface BatchStatusHistoryType {
 /**
  *
  * @export
+ * @interface BatchSuggestionsOutput
+ */
+export interface BatchSuggestionsOutput {
+  /**
+   *
+   * @type {Batch}
+   * @memberof BatchSuggestionsOutput
+   */
+  lastPassingOnBranch: Batch | null
+  /**
+   *
+   * @type {Batch}
+   * @memberof BatchSuggestionsOutput
+   */
+  lastPassingOnMain: Batch | null
+  /**
+   *
+   * @type {Batch}
+   * @memberof BatchSuggestionsOutput
+   */
+  latestOnBranch: Batch | null
+  /**
+   *
+   * @type {Batch}
+   * @memberof BatchSuggestionsOutput
+   */
+  latestOnMain: Batch | null
+}
+/**
+ *
+ * @export
  * @enum {string}
  */
 
@@ -847,7 +884,7 @@ export interface Build {
    */
   creationTimestamp: string
   /**
-   * [DEPRECATED] This field was previously used to set the build\'s name. If both \'description\' and \'name\' are provided, \'name\' will take precedence. In a future version, this field will be repurposed to store the build\'s description.
+   * The description of the build. May be a SHA or commit message.
    * @type {string}
    * @memberof Build
    * @deprecated
@@ -860,14 +897,7 @@ export interface Build {
    */
   imageUri: string
   /**
-   * [DEPRECATED] This field is temporarily being used to set the build\'s description. In a future version, the `description` field will be used instead.
-   * @type {string}
-   * @memberof Build
-   * @deprecated
-   */
-  longDescription: string
-  /**
-   * The name of the build. This replaces the previous usage of \'description\'.
+   * The name of the build.
    * @type {string}
    * @memberof Build
    */
@@ -1058,7 +1088,7 @@ export interface CreateBuildForBranchInput {
    */
   buildSpecification?: string
   /**
-   * [DEPRECATED] This field was previously used to set the build\'s name. If both \'description\' and \'name\' are provided, \'name\' will take precedence. In a future version, this field will be repurposed to store the build\'s description.
+   * The description of the build. May be a SHA or commit message.
    * @type {string}
    * @memberof CreateBuildForBranchInput
    * @deprecated
@@ -1071,14 +1101,7 @@ export interface CreateBuildForBranchInput {
    */
   imageUri?: string
   /**
-   * [DEPRECATED] This field is temporarily being used to set the build\'s description. In a future version, the `description` field will be used instead.
-   * @type {string}
-   * @memberof CreateBuildForBranchInput
-   * @deprecated
-   */
-  longDescription?: string
-  /**
-   * The name of the build. This replaces the previous usage of \'description\'.
+   * The name of the build.
    * @type {string}
    * @memberof CreateBuildForBranchInput
    */
@@ -1121,7 +1144,7 @@ export interface CreateBuildForSystemInput {
    */
   buildSpecification?: string
   /**
-   * [DEPRECATED] This field was previously used to set the build\'s name. If both \'description\' and \'name\' are provided, \'name\' will take precedence. In a future version, this field will be repurposed to store the build\'s description.
+   * The description of the build. May be a SHA or commit message.
    * @type {string}
    * @memberof CreateBuildForSystemInput
    * @deprecated
@@ -1134,14 +1157,7 @@ export interface CreateBuildForSystemInput {
    */
   imageUri?: string
   /**
-   * [DEPRECATED] This field is temporarily being used to set the build\'s description. In a future version, the `description` field will be used instead.
-   * @type {string}
-   * @memberof CreateBuildForSystemInput
-   * @deprecated
-   */
-  longDescription?: string
-  /**
-   * The name of the build. This replaces the previous usage of \'description\'.
+   * The name of the build.
    * @type {string}
    * @memberof CreateBuildForSystemInput
    */
@@ -1179,16 +1195,47 @@ export interface CreateExperienceInput {
   description: string
   /**
    *
-   * @type {string}
+   * @type {Array<EnvironmentVariable>}
    * @memberof CreateExperienceInput
    */
-  location: string
+  environmentVariables?: Array<EnvironmentVariable>
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof CreateExperienceInput
+   */
+  experienceTagIDs?: Array<string>
+  /**
+   * [DEPRECATED] This field was previously used to define an experience\'s location. Experiences can now be defined with multiple locations, using the locations field. This field will be removed in a later release.
+   * @type {string}
+   * @memberof CreateExperienceInput
+   * @deprecated
+   */
+  location?: string
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof CreateExperienceInput
+   */
+  locations?: Array<string>
   /**
    *
    * @type {string}
    * @memberof CreateExperienceInput
    */
   name: string
+  /**
+   *
+   * @type {string}
+   * @memberof CreateExperienceInput
+   */
+  profile?: string
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof CreateExperienceInput
+   */
+  systemIDs?: Array<string>
 }
 /**
  *
@@ -1489,6 +1536,25 @@ export interface DebugExperienceOutput {
 /**
  *
  * @export
+ * @interface EnvironmentVariable
+ */
+export interface EnvironmentVariable {
+  /**
+   *
+   * @type {string}
+   * @memberof EnvironmentVariable
+   */
+  name: string
+  /**
+   *
+   * @type {string}
+   * @memberof EnvironmentVariable
+   */
+  value: string
+}
+/**
+ *
+ * @export
  * @interface Event
  */
 export interface Event {
@@ -1604,6 +1670,12 @@ export type ExecutionStep = (typeof ExecutionStep)[keyof typeof ExecutionStep]
 export interface Experience {
   /**
    *
+   * @type {boolean}
+   * @memberof Experience
+   */
+  archived: boolean
+  /**
+   *
    * @type {number}
    * @memberof Experience
    */
@@ -1622,16 +1694,29 @@ export interface Experience {
   description: string
   /**
    *
-   * @type {string}
+   * @type {Array<EnvironmentVariable>}
    * @memberof Experience
    */
-  experienceID: string
+  environmentVariables: Array<EnvironmentVariable>
   /**
    *
    * @type {string}
    * @memberof Experience
    */
+  experienceID: string
+  /**
+   * [DEPRECATED] This field was previously used to report an experience\'s location. Experiences can now be defined with multiple locations, this field will display the first location; this field will be removed in a future version.
+   * @type {string}
+   * @memberof Experience
+   * @deprecated
+   */
   location: string
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Experience
+   */
+  locations: Array<string>
   /**
    *
    * @type {string}
@@ -1644,6 +1729,12 @@ export interface Experience {
    * @memberof Experience
    */
   orgID: string
+  /**
+   *
+   * @type {string}
+   * @memberof Experience
+   */
+  profile: string
   /**
    *
    * @type {string}
@@ -1881,6 +1972,12 @@ export interface Job {
   executionErrors?: Array<ExecutionError> | null
   /**
    *
+   * @type {Array<EnvironmentVariable>}
+   * @memberof Job
+   */
+  experienceEnvironmentVariables?: Array<EnvironmentVariable>
+  /**
+   *
    * @type {string}
    * @memberof Job
    */
@@ -1891,6 +1988,12 @@ export interface Job {
    * @memberof Job
    */
   experienceName?: string
+  /**
+   *
+   * @type {string}
+   * @memberof Job
+   */
+  experienceProfile?: string
   /**
    *
    * @type {string}
@@ -2590,6 +2693,25 @@ export interface ListExperiencesOutput {
 /**
  *
  * @export
+ * @interface ListJobEventTagsOutput
+ */
+export interface ListJobEventTagsOutput {
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof ListJobEventTagsOutput
+   */
+  eventTags?: Array<string>
+  /**
+   *
+   * @type {string}
+   * @memberof ListJobEventTagsOutput
+   */
+  nextPageToken?: string
+}
+/**
+ *
+ * @export
  * @interface ListJobEventsOutput
  */
 export interface ListJobEventsOutput {
@@ -2624,6 +2746,12 @@ export interface ListJobLogsOutput {
    * @memberof ListJobLogsOutput
    */
   nextPageToken?: string
+  /**
+   *
+   * @type {number}
+   * @memberof ListJobLogsOutput
+   */
+  total?: number
 }
 /**
  *
@@ -3601,6 +3729,12 @@ export interface ParameterSweepInput {
   metricsBuildID?: string
   /**
    *
+   * @type {string}
+   * @memberof ParameterSweepInput
+   */
+  metricsSetName?: string | null
+  /**
+   *
    * @type {Array<SweepParameter>}
    * @memberof ParameterSweepInput
    */
@@ -3774,6 +3908,12 @@ export interface Report {
   metricsBuildID: string
   /**
    *
+   * @type {string}
+   * @memberof Report
+   */
+  metricsSetName: string | null
+  /**
+   *
    * @type {MetricStatus}
    * @memberof Report
    */
@@ -3888,6 +4028,12 @@ export interface ReportInput {
    * @memberof ReportInput
    */
   metricsBuildID: string
+  /**
+   *
+   * @type {string}
+   * @memberof ReportInput
+   */
+  metricsSetName?: string | null
   /**
    *
    * @type {string}
@@ -4045,10 +4191,10 @@ export interface ReportMetricsDataToReportMetric {
  */
 
 export const ReportStatus = {
-  Submitted: 'SUBMITTED',
-  Running: 'RUNNING',
-  Error: 'ERROR',
-  Succeeded: 'SUCCEEDED'
+  ReportStatusSUBMITTED: 'SUBMITTED',
+  ReportStatusRUNNING: 'RUNNING',
+  ReportStatusERROR: 'ERROR',
+  ReportStatusSUCCEEDED: 'SUCCEEDED'
 } as const
 
 export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]
@@ -4073,6 +4219,44 @@ export interface ReportStatusHistoryType {
   updatedAt?: string
 }
 
+/**
+ *
+ * @export
+ * @interface RerunBatchInput
+ */
+export interface RerunBatchInput {
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof RerunBatchInput
+   */
+  jobIDs?: Array<string>
+}
+/**
+ *
+ * @export
+ * @interface RerunBatchOutput
+ */
+export interface RerunBatchOutput {
+  /**
+   *
+   * @type {string}
+   * @memberof RerunBatchOutput
+   */
+  batchID?: string
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof RerunBatchOutput
+   */
+  jobIDs?: Array<string>
+  /**
+   *
+   * @type {number}
+   * @memberof RerunBatchOutput
+   */
+  runCounter?: number
+}
 /**
  *
  * @export
@@ -4335,6 +4519,12 @@ export interface System {
  * @interface TestSuite
  */
 export interface TestSuite {
+  /**
+   *
+   * @type {boolean}
+   * @memberof TestSuite
+   */
+  archived: boolean
   /**
    *
    * @type {string}
@@ -4725,21 +4915,14 @@ export interface UpdateBuildFields {
    */
   branchID?: string
   /**
-   * [DEPRECATED] This field was previously used to set the build\'s name. If both \'description\' and \'name\' are provided, \'name\' will take precedence. In a future version, this field will be repurposed to store the build\'s description.
+   * The description of the build. May be a SHA or commit message.
    * @type {string}
    * @memberof UpdateBuildFields
    * @deprecated
    */
   description?: string
   /**
-   * [DEPRECATED] This field is temporarily being used to set the build\'s description. In a future version, the `description` field will be used instead.
-   * @type {string}
-   * @memberof UpdateBuildFields
-   * @deprecated
-   */
-  longDescription?: string
-  /**
-   * The name of the build. This replaces the previous usage of \'description\'.
+   * The name of the build.
    * @type {string}
    * @memberof UpdateBuildFields
    */
@@ -4797,16 +4980,47 @@ export interface UpdateExperienceFields {
   description?: string
   /**
    *
-   * @type {string}
+   * @type {Array<EnvironmentVariable>}
    * @memberof UpdateExperienceFields
    */
+  environmentVariables?: Array<EnvironmentVariable>
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof UpdateExperienceFields
+   */
+  experienceTagIDs?: Array<string>
+  /**
+   * [DEPRECATED] This field was previously used to define an experience\'s location. Experiences can now be defined with multiple locations, using the locations field. This field will be removed in a future version.
+   * @type {string}
+   * @memberof UpdateExperienceFields
+   * @deprecated
+   */
   location?: string
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof UpdateExperienceFields
+   */
+  locations?: Array<string>
   /**
    *
    * @type {string}
    * @memberof UpdateExperienceFields
    */
   name?: string
+  /**
+   *
+   * @type {string}
+   * @memberof UpdateExperienceFields
+   */
+  profile?: string
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof UpdateExperienceFields
+   */
+  systemIDs?: Array<string>
 }
 /**
  *
@@ -5839,6 +6053,81 @@ export const BatchesApiAxiosParamCreator = function (
           .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
           .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
           .replace(`{${'logID'}}`, encodeURIComponent(String(logID)))
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
+     * Returns a list of suggested batches to A/B compare against
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getBatchSuggestions: async (
+      projectID: string,
+      batchID: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('getBatchSuggestions', 'projectID', projectID)
+      // verify required parameter 'batchID' is not null or undefined
+      assertParamExists('getBatchSuggestions', 'batchID', batchID)
+      const localVarPath = `/projects/{projectID}/batches/{batchID}/suggestions`
+        .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+        .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -7296,10 +7585,110 @@ export const BatchesApiAxiosParamCreator = function (
       }
     },
     /**
+     * Lists the event tags for a given job.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listEventTagsForJob: async (
+      projectID: string,
+      batchID: string,
+      jobID: string,
+      name?: string,
+      pageSize?: number,
+      pageToken?: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('listEventTagsForJob', 'projectID', projectID)
+      // verify required parameter 'batchID' is not null or undefined
+      assertParamExists('listEventTagsForJob', 'batchID', batchID)
+      // verify required parameter 'jobID' is not null or undefined
+      assertParamExists('listEventTagsForJob', 'jobID', jobID)
+      const localVarPath =
+        `/projects/{projectID}/batches/{batchID}/jobs/{jobID}/eventTags`
+          .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+          .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
+          .replace(`{${'jobID'}}`, encodeURIComponent(String(jobID)))
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      if (name !== undefined) {
+        localVarQueryParameter['name'] = name
+      }
+
+      if (pageSize !== undefined) {
+        localVarQueryParameter['pageSize'] = pageSize
+      }
+
+      if (pageToken !== undefined) {
+        localVarQueryParameter['pageToken'] = pageToken
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
      * Lists the events for a given job. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -7309,6 +7698,7 @@ export const BatchesApiAxiosParamCreator = function (
       projectID: string,
       batchID: string,
       jobID: string,
+      eventTags?: Array<string>,
       pageSize?: number,
       pageToken?: string,
       options: AxiosRequestConfig = {}
@@ -7366,6 +7756,10 @@ export const BatchesApiAxiosParamCreator = function (
         configuration
       )
 
+      if (eventTags) {
+        localVarQueryParameter['eventTags'] = eventTags
+      }
+
       if (pageSize !== undefined) {
         localVarQueryParameter['pageSize'] = pageSize
       }
@@ -7394,6 +7788,7 @@ export const BatchesApiAxiosParamCreator = function (
      * @param {string} batchID
      * @param {string} jobID
      * @param {Array<LogType>} [type]
+     * @param {string} [name] Filter logs by name
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -7404,6 +7799,7 @@ export const BatchesApiAxiosParamCreator = function (
       batchID: string,
       jobID: string,
       type?: Array<LogType>,
+      name?: string,
       pageSize?: number,
       pageToken?: string,
       options: AxiosRequestConfig = {}
@@ -7463,6 +7859,10 @@ export const BatchesApiAxiosParamCreator = function (
 
       if (type) {
         localVarQueryParameter['type'] = type
+      }
+
+      if (name !== undefined) {
+        localVarQueryParameter['name'] = name
       }
 
       if (pageSize !== undefined) {
@@ -8112,6 +8512,90 @@ export const BatchesApiAxiosParamCreator = function (
       }
     },
     /**
+     * Rerun a batch
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {RerunBatchInput} [rerunBatchInput]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    rerunBatch: async (
+      projectID: string,
+      batchID: string,
+      rerunBatchInput?: RerunBatchInput,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('rerunBatch', 'projectID', projectID)
+      // verify required parameter 'batchID' is not null or undefined
+      assertParamExists('rerunBatch', 'batchID', batchID)
+      const localVarPath = `/projects/{projectID}/batches/{batchID}/rerun`
+        .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+        .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        rerunBatchInput,
+        localVarRequestOptions,
+        configuration
+      )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
      * Updates the batch.
      * @param {string} projectID
      * @param {string} batchID
@@ -8666,6 +9150,36 @@ export const BatchesApiFp = function (configuration?: Configuration) {
       )
     },
     /**
+     * Returns a list of suggested batches to A/B compare against
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getBatchSuggestions(
+      projectID: string,
+      batchID: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<BatchSuggestionsOutput>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getBatchSuggestions(
+          projectID,
+          batchID,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
      * Retrieve a single event. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
@@ -9210,10 +9724,53 @@ export const BatchesApiFp = function (configuration?: Configuration) {
       )
     },
     /**
+     * Lists the event tags for a given job.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async listEventTagsForJob(
+      projectID: string,
+      batchID: string,
+      jobID: string,
+      name?: string,
+      pageSize?: number,
+      pageToken?: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ListJobEventTagsOutput>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.listEventTagsForJob(
+          projectID,
+          batchID,
+          jobID,
+          name,
+          pageSize,
+          pageToken,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
      * Lists the events for a given job. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -9223,6 +9780,7 @@ export const BatchesApiFp = function (configuration?: Configuration) {
       projectID: string,
       batchID: string,
       jobID: string,
+      eventTags?: Array<string>,
       pageSize?: number,
       pageToken?: string,
       options?: AxiosRequestConfig
@@ -9237,6 +9795,7 @@ export const BatchesApiFp = function (configuration?: Configuration) {
           projectID,
           batchID,
           jobID,
+          eventTags,
           pageSize,
           pageToken,
           options
@@ -9254,6 +9813,7 @@ export const BatchesApiFp = function (configuration?: Configuration) {
      * @param {string} batchID
      * @param {string} jobID
      * @param {Array<LogType>} [type]
+     * @param {string} [name] Filter logs by name
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -9264,6 +9824,7 @@ export const BatchesApiFp = function (configuration?: Configuration) {
       batchID: string,
       jobID: string,
       type?: Array<LogType>,
+      name?: string,
       pageSize?: number,
       pageToken?: string,
       options?: AxiosRequestConfig
@@ -9279,6 +9840,7 @@ export const BatchesApiFp = function (configuration?: Configuration) {
           batchID,
           jobID,
           type,
+          name,
           pageSize,
           pageToken,
           options
@@ -9540,6 +10102,38 @@ export const BatchesApiFp = function (configuration?: Configuration) {
           pageToken,
           options
         )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * Rerun a batch
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {RerunBatchInput} [rerunBatchInput]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async rerunBatch(
+      projectID: string,
+      batchID: string,
+      rerunBatchInput?: RerunBatchInput,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<RerunBatchOutput>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.rerunBatch(
+        projectID,
+        batchID,
+        rerunBatchInput,
+        options
+      )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -9843,6 +10437,22 @@ export const BatchesApiFactory = function (
     ): AxiosPromise<BatchLog> {
       return localVarFp
         .getBatchLog(projectID, batchID, logID, options)
+        .then(request => request(axios, basePath))
+    },
+    /**
+     * Returns a list of suggested batches to A/B compare against
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getBatchSuggestions(
+      projectID: string,
+      batchID: string,
+      options?: any
+    ): AxiosPromise<BatchSuggestionsOutput> {
+      return localVarFp
+        .getBatchSuggestions(projectID, batchID, options)
         .then(request => request(axios, basePath))
     },
     /**
@@ -10204,10 +10814,43 @@ export const BatchesApiFactory = function (
         .then(request => request(axios, basePath))
     },
     /**
+     * Lists the event tags for a given job.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listEventTagsForJob(
+      projectID: string,
+      batchID: string,
+      jobID: string,
+      name?: string,
+      pageSize?: number,
+      pageToken?: string,
+      options?: any
+    ): AxiosPromise<ListJobEventTagsOutput> {
+      return localVarFp
+        .listEventTagsForJob(
+          projectID,
+          batchID,
+          jobID,
+          name,
+          pageSize,
+          pageToken,
+          options
+        )
+        .then(request => request(axios, basePath))
+    },
+    /**
      * Lists the events for a given job. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -10217,6 +10860,7 @@ export const BatchesApiFactory = function (
       projectID: string,
       batchID: string,
       jobID: string,
+      eventTags?: Array<string>,
       pageSize?: number,
       pageToken?: string,
       options?: any
@@ -10226,6 +10870,7 @@ export const BatchesApiFactory = function (
           projectID,
           batchID,
           jobID,
+          eventTags,
           pageSize,
           pageToken,
           options
@@ -10238,6 +10883,7 @@ export const BatchesApiFactory = function (
      * @param {string} batchID
      * @param {string} jobID
      * @param {Array<LogType>} [type]
+     * @param {string} [name] Filter logs by name
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -10248,6 +10894,7 @@ export const BatchesApiFactory = function (
       batchID: string,
       jobID: string,
       type?: Array<LogType>,
+      name?: string,
       pageSize?: number,
       pageToken?: string,
       options?: any
@@ -10258,6 +10905,7 @@ export const BatchesApiFactory = function (
           batchID,
           jobID,
           type,
+          name,
           pageSize,
           pageToken,
           options
@@ -10463,6 +11111,24 @@ export const BatchesApiFactory = function (
           pageToken,
           options
         )
+        .then(request => request(axios, basePath))
+    },
+    /**
+     * Rerun a batch
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {RerunBatchInput} [rerunBatchInput]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    rerunBatch(
+      projectID: string,
+      batchID: string,
+      rerunBatchInput?: RerunBatchInput,
+      options?: any
+    ): AxiosPromise<RerunBatchOutput> {
+      return localVarFp
+        .rerunBatch(projectID, batchID, rerunBatchInput, options)
         .then(request => request(axios, basePath))
     },
     /**
@@ -10745,6 +11411,24 @@ export class BatchesApi extends BaseAPI {
   ) {
     return BatchesApiFp(this.configuration)
       .getBatchLog(projectID, batchID, logID, options)
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Returns a list of suggested batches to A/B compare against
+   * @param {string} projectID
+   * @param {string} batchID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof BatchesApi
+   */
+  public getBatchSuggestions(
+    projectID: string,
+    batchID: string,
+    options?: AxiosRequestConfig
+  ) {
+    return BatchesApiFp(this.configuration)
+      .getBatchSuggestions(projectID, batchID, options)
       .then(request => request(this.axios, this.basePath))
   }
 
@@ -11137,10 +11821,45 @@ export class BatchesApi extends BaseAPI {
   }
 
   /**
+   * Lists the event tags for a given job.
+   * @param {string} projectID
+   * @param {string} batchID
+   * @param {string} jobID
+   * @param {string} [name] Filter event tags by name
+   * @param {number} [pageSize]
+   * @param {string} [pageToken]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof BatchesApi
+   */
+  public listEventTagsForJob(
+    projectID: string,
+    batchID: string,
+    jobID: string,
+    name?: string,
+    pageSize?: number,
+    pageToken?: string,
+    options?: AxiosRequestConfig
+  ) {
+    return BatchesApiFp(this.configuration)
+      .listEventTagsForJob(
+        projectID,
+        batchID,
+        jobID,
+        name,
+        pageSize,
+        pageToken,
+        options
+      )
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
    * Lists the events for a given job. Does not return associated data.
    * @param {string} projectID
    * @param {string} batchID
    * @param {string} jobID
+   * @param {Array<string>} [eventTags] Tags on which to filter the events
    * @param {number} [pageSize]
    * @param {string} [pageToken]
    * @param {*} [options] Override http request option.
@@ -11151,12 +11870,21 @@ export class BatchesApi extends BaseAPI {
     projectID: string,
     batchID: string,
     jobID: string,
+    eventTags?: Array<string>,
     pageSize?: number,
     pageToken?: string,
     options?: AxiosRequestConfig
   ) {
     return BatchesApiFp(this.configuration)
-      .listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options)
+      .listEventsForJob(
+        projectID,
+        batchID,
+        jobID,
+        eventTags,
+        pageSize,
+        pageToken,
+        options
+      )
       .then(request => request(this.axios, this.basePath))
   }
 
@@ -11166,6 +11894,7 @@ export class BatchesApi extends BaseAPI {
    * @param {string} batchID
    * @param {string} jobID
    * @param {Array<LogType>} [type]
+   * @param {string} [name] Filter logs by name
    * @param {number} [pageSize]
    * @param {string} [pageToken]
    * @param {*} [options] Override http request option.
@@ -11177,6 +11906,7 @@ export class BatchesApi extends BaseAPI {
     batchID: string,
     jobID: string,
     type?: Array<LogType>,
+    name?: string,
     pageSize?: number,
     pageToken?: string,
     options?: AxiosRequestConfig
@@ -11187,6 +11917,7 @@ export class BatchesApi extends BaseAPI {
         batchID,
         jobID,
         type,
+        name,
         pageSize,
         pageToken,
         options
@@ -11404,6 +12135,26 @@ export class BatchesApi extends BaseAPI {
         pageToken,
         options
       )
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Rerun a batch
+   * @param {string} projectID
+   * @param {string} batchID
+   * @param {RerunBatchInput} [rerunBatchInput]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof BatchesApi
+   */
+  public rerunBatch(
+    projectID: string,
+    batchID: string,
+    rerunBatchInput?: RerunBatchInput,
+    options?: AxiosRequestConfig
+  ) {
+    return BatchesApiFp(this.configuration)
+      .rerunBatch(projectID, batchID, rerunBatchInput, options)
       .then(request => request(this.axios, this.basePath))
   }
 
@@ -13939,9 +14690,10 @@ export const ExperienceTagsApiAxiosParamCreator = function (
       }
     },
     /**
-     * Returns a list of all experiences with the given experience tag.
+     * Returns a list of experiences with the given experience tag.
      * @param {string} projectID
      * @param {string} experienceTagID
+     * @param {boolean} [archived] Filter by archived status.
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -13950,6 +14702,7 @@ export const ExperienceTagsApiAxiosParamCreator = function (
     listExperiencesWithExperienceTag: async (
       projectID: string,
       experienceTagID: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       options: AxiosRequestConfig = {}
@@ -14014,6 +14767,10 @@ export const ExperienceTagsApiAxiosParamCreator = function (
         ['experienceTags:read'],
         configuration
       )
+
+      if (archived !== undefined) {
+        localVarQueryParameter['archived'] = archived
+      }
 
       if (pageSize !== undefined) {
         localVarQueryParameter['pageSize'] = pageSize
@@ -14417,9 +15174,10 @@ export const ExperienceTagsApiFp = function (configuration?: Configuration) {
       )
     },
     /**
-     * Returns a list of all experiences with the given experience tag.
+     * Returns a list of experiences with the given experience tag.
      * @param {string} projectID
      * @param {string} experienceTagID
+     * @param {boolean} [archived] Filter by archived status.
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -14428,6 +15186,7 @@ export const ExperienceTagsApiFp = function (configuration?: Configuration) {
     async listExperiencesWithExperienceTag(
       projectID: string,
       experienceTagID: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       options?: AxiosRequestConfig
@@ -14441,6 +15200,7 @@ export const ExperienceTagsApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.listExperiencesWithExperienceTag(
           projectID,
           experienceTagID,
+          archived,
           pageSize,
           pageToken,
           options
@@ -14643,9 +15403,10 @@ export const ExperienceTagsApiFactory = function (
         .then(request => request(axios, basePath))
     },
     /**
-     * Returns a list of all experiences with the given experience tag.
+     * Returns a list of experiences with the given experience tag.
      * @param {string} projectID
      * @param {string} experienceTagID
+     * @param {boolean} [archived] Filter by archived status.
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -14654,6 +15415,7 @@ export const ExperienceTagsApiFactory = function (
     listExperiencesWithExperienceTag(
       projectID: string,
       experienceTagID: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       options?: any
@@ -14662,6 +15424,7 @@ export const ExperienceTagsApiFactory = function (
         .listExperiencesWithExperienceTag(
           projectID,
           experienceTagID,
+          archived,
           pageSize,
           pageToken,
           options
@@ -14853,9 +15616,10 @@ export class ExperienceTagsApi extends BaseAPI {
   }
 
   /**
-   * Returns a list of all experiences with the given experience tag.
+   * Returns a list of experiences with the given experience tag.
    * @param {string} projectID
    * @param {string} experienceTagID
+   * @param {boolean} [archived] Filter by archived status.
    * @param {number} [pageSize]
    * @param {string} [pageToken]
    * @param {*} [options] Override http request option.
@@ -14865,6 +15629,7 @@ export class ExperienceTagsApi extends BaseAPI {
   public listExperiencesWithExperienceTag(
     projectID: string,
     experienceTagID: string,
+    archived?: boolean,
     pageSize?: number,
     pageToken?: string,
     options?: AxiosRequestConfig
@@ -14873,6 +15638,7 @@ export class ExperienceTagsApi extends BaseAPI {
       .listExperiencesWithExperienceTag(
         projectID,
         experienceTagID,
+        archived,
         pageSize,
         pageToken,
         options
@@ -14950,6 +15716,84 @@ export const ExperiencesApiAxiosParamCreator = function (
   configuration?: Configuration
 ) {
   return {
+    /**
+     * Archives an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    archiveExperience: async (
+      projectID: string,
+      experienceID: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('archiveExperience', 'projectID', projectID)
+      // verify required parameter 'experienceID' is not null or undefined
+      assertParamExists('archiveExperience', 'experienceID', experienceID)
+      const localVarPath = `/projects/{projectID}/experiences/{experienceID}`
+        .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+        .replace(
+          `{${'experienceID'}}`,
+          encodeURIComponent(String(experienceID))
+        )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:write'],
+        configuration
+      )
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
     /**
      * Adds an experience.
      * @param {string} projectID
@@ -15113,84 +15957,6 @@ export const ExperiencesApiAxiosParamCreator = function (
         localVarRequestOptions,
         configuration
       )
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions
-      }
-    },
-    /**
-     * Deletes an experience.
-     * @param {string} projectID
-     * @param {string} experienceID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteExperience: async (
-      projectID: string,
-      experienceID: string,
-      options: AxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectID' is not null or undefined
-      assertParamExists('deleteExperience', 'projectID', projectID)
-      // verify required parameter 'experienceID' is not null or undefined
-      assertParamExists('deleteExperience', 'experienceID', experienceID)
-      const localVarPath = `/projects/{projectID}/experiences/{experienceID}`
-        .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
-        .replace(
-          `{${'experienceID'}}`,
-          encodeURIComponent(String(experienceID))
-        )
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = {
-        method: 'DELETE',
-        ...baseOptions,
-        ...options
-      }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication OAuth required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        'OAuth',
-        ['experiences:write'],
-        configuration
-      )
-
-      // authentication OAuth required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        'OAuth',
-        ['experiences:write'],
-        configuration
-      )
-
-      // authentication OAuth required
-      // oauth required
-      await setOAuthToObject(
-        localVarHeaderParameter,
-        'OAuth',
-        ['experiences:write'],
-        configuration
-      )
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers
-      }
 
       return {
         url: toPathString(localVarUrlObj),
@@ -15470,7 +16236,8 @@ export const ExperiencesApiAxiosParamCreator = function (
      * @param {string} projectID
      * @param {string} [name] Filter experiences by name
      * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+     * @param {boolean} [archived]
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {string} [orderBy]
@@ -15482,6 +16249,7 @@ export const ExperiencesApiAxiosParamCreator = function (
       name?: string,
       text?: string,
       search?: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       orderBy?: string,
@@ -15547,6 +16315,10 @@ export const ExperiencesApiAxiosParamCreator = function (
         localVarQueryParameter['search'] = search
       }
 
+      if (archived !== undefined) {
+        localVarQueryParameter['archived'] = archived
+      }
+
       if (pageSize !== undefined) {
         localVarQueryParameter['pageSize'] = pageSize
       }
@@ -15574,7 +16346,158 @@ export const ExperiencesApiAxiosParamCreator = function (
       }
     },
     /**
-     * Updates the experience.
+     * Returns the list of service profiles.
+     * @param {string} projectID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listServiceProfiles: async (
+      projectID: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('listServiceProfiles', 'projectID', projectID)
+      const localVarPath = `/projects/{projectID}/profiles`.replace(
+        `{${'projectID'}}`,
+        encodeURIComponent(String(projectID))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:read'],
+        configuration
+      )
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
+     * Restores an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    restoreExperience: async (
+      projectID: string,
+      experienceID: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('restoreExperience', 'projectID', projectID)
+      // verify required parameter 'experienceID' is not null or undefined
+      assertParamExists('restoreExperience', 'experienceID', experienceID)
+      const localVarPath =
+        `/projects/{projectID}/experiences/{experienceID}/restore`
+          .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+          .replace(
+            `{${'experienceID'}}`,
+            encodeURIComponent(String(experienceID))
+          )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['experiences:write'],
+        configuration
+      )
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
+     * Updates the experience. When updating environment variables, the entire array is replaced.
      * @param {string} projectID
      * @param {string} experienceID
      * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -15746,6 +16669,33 @@ export const ExperiencesApiFp = function (configuration?: Configuration) {
     ExperiencesApiAxiosParamCreator(configuration)
   return {
     /**
+     * Archives an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async archiveExperience(
+      projectID: string,
+      experienceID: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.archiveExperience(
+          projectID,
+          experienceID,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
      * Adds an experience.
      * @param {string} projectID
      * @param {CreateExperienceInput} [createExperienceInput]
@@ -15797,33 +16747,6 @@ export const ExperiencesApiFp = function (configuration?: Configuration) {
         debugExperienceInput,
         options
       )
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      )
-    },
-    /**
-     * Deletes an experience.
-     * @param {string} projectID
-     * @param {string} experienceID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async deleteExperience(
-      projectID: string,
-      experienceID: string,
-      options?: AxiosRequestConfig
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.deleteExperience(
-          projectID,
-          experienceID,
-          options
-        )
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -15934,7 +16857,8 @@ export const ExperiencesApiFp = function (configuration?: Configuration) {
      * @param {string} projectID
      * @param {string} [name] Filter experiences by name
      * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+     * @param {boolean} [archived]
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {string} [orderBy]
@@ -15946,6 +16870,7 @@ export const ExperiencesApiFp = function (configuration?: Configuration) {
       name?: string,
       text?: string,
       search?: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       orderBy?: string,
@@ -15961,6 +16886,7 @@ export const ExperiencesApiFp = function (configuration?: Configuration) {
         name,
         text,
         search,
+        archived,
         pageSize,
         pageToken,
         orderBy,
@@ -15974,7 +16900,55 @@ export const ExperiencesApiFp = function (configuration?: Configuration) {
       )
     },
     /**
-     * Updates the experience.
+     * Returns the list of service profiles.
+     * @param {string} projectID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async listServiceProfiles(
+      projectID: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.listServiceProfiles(projectID, options)
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * Restores an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async restoreExperience(
+      projectID: string,
+      experienceID: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.restoreExperience(
+          projectID,
+          experienceID,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * Updates the experience. When updating environment variables, the entire array is replaced.
      * @param {string} projectID
      * @param {string} experienceID
      * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -16045,6 +17019,22 @@ export const ExperiencesApiFactory = function (
   const localVarFp = ExperiencesApiFp(configuration)
   return {
     /**
+     * Archives an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    archiveExperience(
+      projectID: string,
+      experienceID: string,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .archiveExperience(projectID, experienceID, options)
+        .then(request => request(axios, basePath))
+    },
+    /**
      * Adds an experience.
      * @param {string} projectID
      * @param {CreateExperienceInput} [createExperienceInput]
@@ -16076,22 +17066,6 @@ export const ExperiencesApiFactory = function (
     ): AxiosPromise<DebugExperienceOutput> {
       return localVarFp
         .debugExperience(projectID, experienceID, debugExperienceInput, options)
-        .then(request => request(axios, basePath))
-    },
-    /**
-     * Deletes an experience.
-     * @param {string} projectID
-     * @param {string} experienceID
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    deleteExperience(
-      projectID: string,
-      experienceID: string,
-      options?: any
-    ): AxiosPromise<void> {
-      return localVarFp
-        .deleteExperience(projectID, experienceID, options)
         .then(request => request(axios, basePath))
     },
     /**
@@ -16167,7 +17141,8 @@ export const ExperiencesApiFactory = function (
      * @param {string} projectID
      * @param {string} [name] Filter experiences by name
      * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+     * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+     * @param {boolean} [archived]
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {string} [orderBy]
@@ -16179,6 +17154,7 @@ export const ExperiencesApiFactory = function (
       name?: string,
       text?: string,
       search?: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       orderBy?: string,
@@ -16190,6 +17166,7 @@ export const ExperiencesApiFactory = function (
           name,
           text,
           search,
+          archived,
           pageSize,
           pageToken,
           orderBy,
@@ -16198,7 +17175,37 @@ export const ExperiencesApiFactory = function (
         .then(request => request(axios, basePath))
     },
     /**
-     * Updates the experience.
+     * Returns the list of service profiles.
+     * @param {string} projectID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listServiceProfiles(
+      projectID: string,
+      options?: any
+    ): AxiosPromise<Array<string>> {
+      return localVarFp
+        .listServiceProfiles(projectID, options)
+        .then(request => request(axios, basePath))
+    },
+    /**
+     * Restores an experience.
+     * @param {string} projectID
+     * @param {string} experienceID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    restoreExperience(
+      projectID: string,
+      experienceID: string,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .restoreExperience(projectID, experienceID, options)
+        .then(request => request(axios, basePath))
+    },
+    /**
+     * Updates the experience. When updating environment variables, the entire array is replaced.
      * @param {string} projectID
      * @param {string} experienceID
      * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -16245,6 +17252,24 @@ export const ExperiencesApiFactory = function (
  */
 export class ExperiencesApi extends BaseAPI {
   /**
+   * Archives an experience.
+   * @param {string} projectID
+   * @param {string} experienceID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ExperiencesApi
+   */
+  public archiveExperience(
+    projectID: string,
+    experienceID: string,
+    options?: AxiosRequestConfig
+  ) {
+    return ExperiencesApiFp(this.configuration)
+      .archiveExperience(projectID, experienceID, options)
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
    * Adds an experience.
    * @param {string} projectID
    * @param {CreateExperienceInput} [createExperienceInput]
@@ -16279,24 +17304,6 @@ export class ExperiencesApi extends BaseAPI {
   ) {
     return ExperiencesApiFp(this.configuration)
       .debugExperience(projectID, experienceID, debugExperienceInput, options)
-      .then(request => request(this.axios, this.basePath))
-  }
-
-  /**
-   * Deletes an experience.
-   * @param {string} projectID
-   * @param {string} experienceID
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ExperiencesApi
-   */
-  public deleteExperience(
-    projectID: string,
-    experienceID: string,
-    options?: AxiosRequestConfig
-  ) {
-    return ExperiencesApiFp(this.configuration)
-      .deleteExperience(projectID, experienceID, options)
       .then(request => request(this.axios, this.basePath))
   }
 
@@ -16379,7 +17386,8 @@ export class ExperiencesApi extends BaseAPI {
    * @param {string} projectID
    * @param {string} [name] Filter experiences by name
    * @param {string} [text] Filter experiences by a text string on experience name, experience description, or experience tag name
-   * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id and system_id
+   * @param {string} [search] A search query. Supports searching by tag_id, test_suite_id, archived, profile, and system_id
+   * @param {boolean} [archived]
    * @param {number} [pageSize]
    * @param {string} [pageToken]
    * @param {string} [orderBy]
@@ -16392,6 +17400,7 @@ export class ExperiencesApi extends BaseAPI {
     name?: string,
     text?: string,
     search?: string,
+    archived?: boolean,
     pageSize?: number,
     pageToken?: string,
     orderBy?: string,
@@ -16403,6 +17412,7 @@ export class ExperiencesApi extends BaseAPI {
         name,
         text,
         search,
+        archived,
         pageSize,
         pageToken,
         orderBy,
@@ -16412,7 +17422,38 @@ export class ExperiencesApi extends BaseAPI {
   }
 
   /**
-   * Updates the experience.
+   * Returns the list of service profiles.
+   * @param {string} projectID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ExperiencesApi
+   */
+  public listServiceProfiles(projectID: string, options?: AxiosRequestConfig) {
+    return ExperiencesApiFp(this.configuration)
+      .listServiceProfiles(projectID, options)
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Restores an experience.
+   * @param {string} projectID
+   * @param {string} experienceID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ExperiencesApi
+   */
+  public restoreExperience(
+    projectID: string,
+    experienceID: string,
+    options?: AxiosRequestConfig
+  ) {
+    return ExperiencesApiFp(this.configuration)
+      .restoreExperience(projectID, experienceID, options)
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Updates the experience. When updating environment variables, the entire array is replaced.
    * @param {string} projectID
    * @param {string} experienceID
    * @param {UpdateExperienceInput} [updateExperienceInput]
@@ -17150,10 +18191,110 @@ export const MetricsApiAxiosParamCreator = function (
       }
     },
     /**
+     * Lists the event tags for a given job.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listEventTagsForJob: async (
+      projectID: string,
+      batchID: string,
+      jobID: string,
+      name?: string,
+      pageSize?: number,
+      pageToken?: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('listEventTagsForJob', 'projectID', projectID)
+      // verify required parameter 'batchID' is not null or undefined
+      assertParamExists('listEventTagsForJob', 'batchID', batchID)
+      // verify required parameter 'jobID' is not null or undefined
+      assertParamExists('listEventTagsForJob', 'jobID', jobID)
+      const localVarPath =
+        `/projects/{projectID}/batches/{batchID}/jobs/{jobID}/eventTags`
+          .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+          .replace(`{${'batchID'}}`, encodeURIComponent(String(batchID)))
+          .replace(`{${'jobID'}}`, encodeURIComponent(String(jobID)))
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'GET',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:read'],
+        configuration
+      )
+
+      if (name !== undefined) {
+        localVarQueryParameter['name'] = name
+      }
+
+      if (pageSize !== undefined) {
+        localVarQueryParameter['pageSize'] = pageSize
+      }
+
+      if (pageToken !== undefined) {
+        localVarQueryParameter['pageToken'] = pageToken
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
      * Lists the events for a given job. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -17163,6 +18304,7 @@ export const MetricsApiAxiosParamCreator = function (
       projectID: string,
       batchID: string,
       jobID: string,
+      eventTags?: Array<string>,
       pageSize?: number,
       pageToken?: string,
       options: AxiosRequestConfig = {}
@@ -17219,6 +18361,10 @@ export const MetricsApiAxiosParamCreator = function (
         ['batches:read'],
         configuration
       )
+
+      if (eventTags) {
+        localVarQueryParameter['eventTags'] = eventTags
+      }
 
       if (pageSize !== undefined) {
         localVarQueryParameter['pageSize'] = pageSize
@@ -18843,10 +19989,53 @@ export const MetricsApiFp = function (configuration?: Configuration) {
       )
     },
     /**
+     * Lists the event tags for a given job.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async listEventTagsForJob(
+      projectID: string,
+      batchID: string,
+      jobID: string,
+      name?: string,
+      pageSize?: number,
+      pageToken?: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<ListJobEventTagsOutput>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.listEventTagsForJob(
+          projectID,
+          batchID,
+          jobID,
+          name,
+          pageSize,
+          pageToken,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
      * Lists the events for a given job. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -18856,6 +20045,7 @@ export const MetricsApiFp = function (configuration?: Configuration) {
       projectID: string,
       batchID: string,
       jobID: string,
+      eventTags?: Array<string>,
       pageSize?: number,
       pageToken?: string,
       options?: AxiosRequestConfig
@@ -18870,6 +20060,7 @@ export const MetricsApiFp = function (configuration?: Configuration) {
           projectID,
           batchID,
           jobID,
+          eventTags,
           pageSize,
           pageToken,
           options
@@ -19594,10 +20785,43 @@ export const MetricsApiFactory = function (
         .then(request => request(axios, basePath))
     },
     /**
+     * Lists the event tags for a given job.
+     * @param {string} projectID
+     * @param {string} batchID
+     * @param {string} jobID
+     * @param {string} [name] Filter event tags by name
+     * @param {number} [pageSize]
+     * @param {string} [pageToken]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    listEventTagsForJob(
+      projectID: string,
+      batchID: string,
+      jobID: string,
+      name?: string,
+      pageSize?: number,
+      pageToken?: string,
+      options?: any
+    ): AxiosPromise<ListJobEventTagsOutput> {
+      return localVarFp
+        .listEventTagsForJob(
+          projectID,
+          batchID,
+          jobID,
+          name,
+          pageSize,
+          pageToken,
+          options
+        )
+        .then(request => request(axios, basePath))
+    },
+    /**
      * Lists the events for a given job. Does not return associated data.
      * @param {string} projectID
      * @param {string} batchID
      * @param {string} jobID
+     * @param {Array<string>} [eventTags] Tags on which to filter the events
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -19607,6 +20831,7 @@ export const MetricsApiFactory = function (
       projectID: string,
       batchID: string,
       jobID: string,
+      eventTags?: Array<string>,
       pageSize?: number,
       pageToken?: string,
       options?: any
@@ -19616,6 +20841,7 @@ export const MetricsApiFactory = function (
           projectID,
           batchID,
           jobID,
+          eventTags,
           pageSize,
           pageToken,
           options
@@ -20201,10 +21427,45 @@ export class MetricsApi extends BaseAPI {
   }
 
   /**
+   * Lists the event tags for a given job.
+   * @param {string} projectID
+   * @param {string} batchID
+   * @param {string} jobID
+   * @param {string} [name] Filter event tags by name
+   * @param {number} [pageSize]
+   * @param {string} [pageToken]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MetricsApi
+   */
+  public listEventTagsForJob(
+    projectID: string,
+    batchID: string,
+    jobID: string,
+    name?: string,
+    pageSize?: number,
+    pageToken?: string,
+    options?: AxiosRequestConfig
+  ) {
+    return MetricsApiFp(this.configuration)
+      .listEventTagsForJob(
+        projectID,
+        batchID,
+        jobID,
+        name,
+        pageSize,
+        pageToken,
+        options
+      )
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
    * Lists the events for a given job. Does not return associated data.
    * @param {string} projectID
    * @param {string} batchID
    * @param {string} jobID
+   * @param {Array<string>} [eventTags] Tags on which to filter the events
    * @param {number} [pageSize]
    * @param {string} [pageToken]
    * @param {*} [options] Override http request option.
@@ -20215,12 +21476,21 @@ export class MetricsApi extends BaseAPI {
     projectID: string,
     batchID: string,
     jobID: string,
+    eventTags?: Array<string>,
     pageSize?: number,
     pageToken?: string,
     options?: AxiosRequestConfig
   ) {
     return MetricsApiFp(this.configuration)
-      .listEventsForJob(projectID, batchID, jobID, pageSize, pageToken, options)
+      .listEventsForJob(
+        projectID,
+        batchID,
+        jobID,
+        eventTags,
+        pageSize,
+        pageToken,
+        options
+      )
       .then(request => request(this.axios, this.basePath))
   }
 
@@ -22116,7 +23386,7 @@ export const ProjectsApiAxiosParamCreator = function (
 ) {
   return {
     /**
-     * Archived a project.
+     * Archives a project.
      * @param {string} projectID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -22841,7 +24111,7 @@ export const ProjectsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ProjectsApiAxiosParamCreator(configuration)
   return {
     /**
-     * Archived a project.
+     * Archives a project.
      * @param {string} projectID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -23105,7 +24375,7 @@ export const ProjectsApiFactory = function (
   const localVarFp = ProjectsApiFp(configuration)
   return {
     /**
-     * Archived a project.
+     * Archives a project.
      * @param {string} projectID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -23265,7 +24535,7 @@ export const ProjectsApiFactory = function (
  */
 export class ProjectsApi extends BaseAPI {
   /**
-   * Archived a project.
+   * Archives a project.
    * @param {string} projectID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -26035,6 +27305,7 @@ export const SystemsApiAxiosParamCreator = function (
      * Returns a list of all experiences applicable to the system.
      * @param {string} projectID
      * @param {string} systemID
+     * @param {boolean} [archived] Filter experiences by archived status
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -26043,6 +27314,7 @@ export const SystemsApiAxiosParamCreator = function (
     listExperiencesForSystem: async (
       projectID: string,
       systemID: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       options: AxiosRequestConfig = {}
@@ -26096,6 +27368,10 @@ export const SystemsApiAxiosParamCreator = function (
         ['systems:read'],
         configuration
       )
+
+      if (archived !== undefined) {
+        localVarQueryParameter['archived'] = archived
+      }
 
       if (pageSize !== undefined) {
         localVarQueryParameter['pageSize'] = pageSize
@@ -26736,6 +28012,7 @@ export const SystemsApiFp = function (configuration?: Configuration) {
      * Returns a list of all experiences applicable to the system.
      * @param {string} projectID
      * @param {string} systemID
+     * @param {boolean} [archived] Filter experiences by archived status
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -26744,6 +28021,7 @@ export const SystemsApiFp = function (configuration?: Configuration) {
     async listExperiencesForSystem(
       projectID: string,
       systemID: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       options?: AxiosRequestConfig
@@ -26757,6 +28035,7 @@ export const SystemsApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.listExperiencesForSystem(
           projectID,
           systemID,
+          archived,
           pageSize,
           pageToken,
           options
@@ -27044,6 +28323,7 @@ export const SystemsApiFactory = function (
      * Returns a list of all experiences applicable to the system.
      * @param {string} projectID
      * @param {string} systemID
+     * @param {boolean} [archived] Filter experiences by archived status
      * @param {number} [pageSize]
      * @param {string} [pageToken]
      * @param {*} [options] Override http request option.
@@ -27052,6 +28332,7 @@ export const SystemsApiFactory = function (
     listExperiencesForSystem(
       projectID: string,
       systemID: string,
+      archived?: boolean,
       pageSize?: number,
       pageToken?: string,
       options?: any
@@ -27060,6 +28341,7 @@ export const SystemsApiFactory = function (
         .listExperiencesForSystem(
           projectID,
           systemID,
+          archived,
           pageSize,
           pageToken,
           options
@@ -27297,6 +28579,7 @@ export class SystemsApi extends BaseAPI {
    * Returns a list of all experiences applicable to the system.
    * @param {string} projectID
    * @param {string} systemID
+   * @param {boolean} [archived] Filter experiences by archived status
    * @param {number} [pageSize]
    * @param {string} [pageToken]
    * @param {*} [options] Override http request option.
@@ -27306,6 +28589,7 @@ export class SystemsApi extends BaseAPI {
   public listExperiencesForSystem(
     projectID: string,
     systemID: string,
+    archived?: boolean,
     pageSize?: number,
     pageToken?: string,
     options?: AxiosRequestConfig
@@ -27314,6 +28598,7 @@ export class SystemsApi extends BaseAPI {
       .listExperiencesForSystem(
         projectID,
         systemID,
+        archived,
         pageSize,
         pageToken,
         options
@@ -28053,6 +29338,81 @@ export const TestSuitesApiAxiosParamCreator = function (
       }
     },
     /**
+     * Archives a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    archiveTestSuite: async (
+      projectID: string,
+      testSuiteID: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('archiveTestSuite', 'projectID', projectID)
+      // verify required parameter 'testSuiteID' is not null or undefined
+      assertParamExists('archiveTestSuite', 'testSuiteID', testSuiteID)
+      const localVarPath = `/projects/{projectID}/suites/{testSuiteID}`
+        .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+        .replace(`{${'testSuiteID'}}`, encodeURIComponent(String(testSuiteID)))
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'DELETE',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
      * Adds a test suite for a project.
      * @param {string} projectID
      * @param {CreateTestSuiteInput} [createTestSuiteInput]
@@ -28473,6 +29833,7 @@ export const TestSuitesApiAxiosParamCreator = function (
      * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
      * @param {string} [systemID] Only return test suites that contain the given system id
      * @param {string} [name] Filter test suites by name
+     * @param {boolean} [archived]
      * @param {string} [text] Filter test suites by a text string on name and description
      * @param {number} [pageSize]
      * @param {string} [pageToken]
@@ -28485,6 +29846,7 @@ export const TestSuitesApiAxiosParamCreator = function (
       experienceIDs?: Array<string>,
       systemID?: string,
       name?: string,
+      archived?: boolean,
       text?: string,
       pageSize?: number,
       pageToken?: string,
@@ -28551,6 +29913,10 @@ export const TestSuitesApiAxiosParamCreator = function (
 
       if (name !== undefined) {
         localVarQueryParameter['name'] = name
+      }
+
+      if (archived !== undefined) {
+        localVarQueryParameter['archived'] = archived
       }
 
       if (text !== undefined) {
@@ -28673,6 +30039,81 @@ export const TestSuitesApiAxiosParamCreator = function (
         localVarRequestOptions,
         configuration
       )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions
+      }
+    },
+    /**
+     * Restores a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    restoreTestSuite: async (
+      projectID: string,
+      testSuiteID: string,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectID' is not null or undefined
+      assertParamExists('restoreTestSuite', 'projectID', projectID)
+      // verify required parameter 'testSuiteID' is not null or undefined
+      assertParamExists('restoreTestSuite', 'testSuiteID', testSuiteID)
+      const localVarPath = `/projects/{projectID}/suites/{testSuiteID}/restore`
+        .replace(`{${'projectID'}}`, encodeURIComponent(String(projectID)))
+        .replace(`{${'testSuiteID'}}`, encodeURIComponent(String(testSuiteID)))
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = {
+        method: 'POST',
+        ...baseOptions,
+        ...options
+      }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      // authentication OAuth required
+      // oauth required
+      await setOAuthToObject(
+        localVarHeaderParameter,
+        'OAuth',
+        ['batches:write'],
+        configuration
+      )
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers
+      }
 
       return {
         url: toPathString(localVarUrlObj),
@@ -28822,6 +30263,33 @@ export const TestSuitesApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.addTestSuitesToExperiences(
           projectID,
           addSuitesToExperiencesInput,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * Archives a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async archiveTestSuite(
+      projectID: string,
+      testSuiteID: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.archiveTestSuite(
+          projectID,
+          testSuiteID,
           options
         )
       return createRequestFunction(
@@ -28988,6 +30456,7 @@ export const TestSuitesApiFp = function (configuration?: Configuration) {
      * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
      * @param {string} [systemID] Only return test suites that contain the given system id
      * @param {string} [name] Filter test suites by name
+     * @param {boolean} [archived]
      * @param {string} [text] Filter test suites by a text string on name and description
      * @param {number} [pageSize]
      * @param {string} [pageToken]
@@ -29000,6 +30469,7 @@ export const TestSuitesApiFp = function (configuration?: Configuration) {
       experienceIDs?: Array<string>,
       systemID?: string,
       name?: string,
+      archived?: boolean,
       text?: string,
       pageSize?: number,
       pageToken?: string,
@@ -29016,6 +30486,7 @@ export const TestSuitesApiFp = function (configuration?: Configuration) {
         experienceIDs,
         systemID,
         name,
+        archived,
         text,
         pageSize,
         pageToken,
@@ -29050,6 +30521,33 @@ export const TestSuitesApiFp = function (configuration?: Configuration) {
           projectID,
           testSuiteID,
           selectExperiencesInput,
+          options
+        )
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      )
+    },
+    /**
+     * Restores a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async restoreTestSuite(
+      projectID: string,
+      testSuiteID: string,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.restoreTestSuite(
+          projectID,
+          testSuiteID,
           options
         )
       return createRequestFunction(
@@ -29143,6 +30641,22 @@ export const TestSuitesApiFactory = function (
           addSuitesToExperiencesInput,
           options
         )
+        .then(request => request(axios, basePath))
+    },
+    /**
+     * Archives a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    archiveTestSuite(
+      projectID: string,
+      testSuiteID: string,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .archiveTestSuite(projectID, testSuiteID, options)
         .then(request => request(axios, basePath))
     },
     /**
@@ -29245,6 +30759,7 @@ export const TestSuitesApiFactory = function (
      * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
      * @param {string} [systemID] Only return test suites that contain the given system id
      * @param {string} [name] Filter test suites by name
+     * @param {boolean} [archived]
      * @param {string} [text] Filter test suites by a text string on name and description
      * @param {number} [pageSize]
      * @param {string} [pageToken]
@@ -29257,6 +30772,7 @@ export const TestSuitesApiFactory = function (
       experienceIDs?: Array<string>,
       systemID?: string,
       name?: string,
+      archived?: boolean,
       text?: string,
       pageSize?: number,
       pageToken?: string,
@@ -29269,6 +30785,7 @@ export const TestSuitesApiFactory = function (
           experienceIDs,
           systemID,
           name,
+          archived,
           text,
           pageSize,
           pageToken,
@@ -29298,6 +30815,22 @@ export const TestSuitesApiFactory = function (
           selectExperiencesInput,
           options
         )
+        .then(request => request(axios, basePath))
+    },
+    /**
+     * Restores a test suite.
+     * @param {string} projectID
+     * @param {string} testSuiteID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    restoreTestSuite(
+      projectID: string,
+      testSuiteID: string,
+      options?: any
+    ): AxiosPromise<void> {
+      return localVarFp
+        .restoreTestSuite(projectID, testSuiteID, options)
         .then(request => request(axios, basePath))
     },
     /**
@@ -29372,6 +30905,24 @@ export class TestSuitesApi extends BaseAPI {
         addSuitesToExperiencesInput,
         options
       )
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Archives a test suite.
+   * @param {string} projectID
+   * @param {string} testSuiteID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TestSuitesApi
+   */
+  public archiveTestSuite(
+    projectID: string,
+    testSuiteID: string,
+    options?: AxiosRequestConfig
+  ) {
+    return TestSuitesApiFp(this.configuration)
+      .archiveTestSuite(projectID, testSuiteID, options)
       .then(request => request(this.axios, this.basePath))
   }
 
@@ -29485,6 +31036,7 @@ export class TestSuitesApi extends BaseAPI {
    * @param {Array<string>} [experienceIDs] Only return test suites that contain the given experience id(s)
    * @param {string} [systemID] Only return test suites that contain the given system id
    * @param {string} [name] Filter test suites by name
+   * @param {boolean} [archived]
    * @param {string} [text] Filter test suites by a text string on name and description
    * @param {number} [pageSize]
    * @param {string} [pageToken]
@@ -29498,6 +31050,7 @@ export class TestSuitesApi extends BaseAPI {
     experienceIDs?: Array<string>,
     systemID?: string,
     name?: string,
+    archived?: boolean,
     text?: string,
     pageSize?: number,
     pageToken?: string,
@@ -29510,6 +31063,7 @@ export class TestSuitesApi extends BaseAPI {
         experienceIDs,
         systemID,
         name,
+        archived,
         text,
         pageSize,
         pageToken,
@@ -29541,6 +31095,24 @@ export class TestSuitesApi extends BaseAPI {
         selectExperiencesInput,
         options
       )
+      .then(request => request(this.axios, this.basePath))
+  }
+
+  /**
+   * Restores a test suite.
+   * @param {string} projectID
+   * @param {string} testSuiteID
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TestSuitesApi
+   */
+  public restoreTestSuite(
+    projectID: string,
+    testSuiteID: string,
+    options?: AxiosRequestConfig
+  ) {
+    return TestSuitesApiFp(this.configuration)
+      .restoreTestSuite(projectID, testSuiteID, options)
       .then(request => request(this.axios, this.basePath))
   }
 
