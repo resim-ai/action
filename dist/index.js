@@ -73752,9 +73752,14 @@ const promises_1 = __importDefault(__nccwpck_require__(1943));
 const uuid_1 = __nccwpck_require__(2048);
 const tokenPath = '.resimtoken';
 /**
- * Get auth token from cache or Auth0
+ * Get the API key, or an auth token from cache or Auth0
  */
 async function getToken() {
+    const apiKey = core.getInput('api_key');
+    if (apiKey !== '') {
+        core.setSecret(apiKey);
+        return apiKey;
+    }
     const apiAudience = 'https://api.resim.ai';
     const clientID = core.getInput('client_id');
     const clientSecret = core.getInput('client_secret');
@@ -73820,7 +73825,7 @@ async function getToken() {
             token = response.data.access_token;
         }
         else {
-            core.setFailed('credentials not found - set client ID and secret, or username and password');
+            core.setFailed('credentials not found - set an API key, client ID and secret, or username and password');
             token = 'ERROR';
         }
         if (token !== 'ERROR') {

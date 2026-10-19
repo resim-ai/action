@@ -44,6 +44,23 @@ const passwordInput = (name: string): string => {
   }
 }
 
+const apiKeyInput = (name: string): string => {
+  switch (name) {
+    case 'api_endpoint':
+      return 'https://api.resim.io/v1/'
+    case 'auth0_tenant_url':
+      return 'https://resim-dev.us.auth0.com/'
+    case 'api_key':
+      return 'sfk_example'
+    case 'client_id':
+      return 'ID'
+    case 'client_secret':
+      return 'secret'
+    default:
+      return ''
+  }
+}
+
 const noAuthInput = (name: string): string => {
   switch (name) {
     case 'api_endpoint':
@@ -195,5 +212,19 @@ describe('auth', () => {
     expect(mockedAxios).toHaveBeenCalledTimes(1)
     expect(fs.unlink).toHaveBeenCalledWith('.resimtoken')
     expect(saveCacheMock).not.toHaveBeenCalled()
+  })
+
+  it('uses an API key as the token without Auth0 or the token cache', async () => {
+    jest.spyOn(core, 'getInput').mockImplementation(apiKeyInput)
+    fs.writeFile = jest.fn()
+    fs.unlink = jest.fn()
+
+    const token = await auth.getToken()
+
+    expect(token).toBe('sfk_example')
+    expect(mockedAxios).not.toHaveBeenCalled()
+    expect(restoreCacheMock).not.toHaveBeenCalled()
+    expect(saveCacheMock).not.toHaveBeenCalled()
+    expect(fs.writeFile).not.toHaveBeenCalled()
   })
 })
