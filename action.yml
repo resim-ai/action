@@ -10,6 +10,9 @@ inputs:
   password_auth_client_id:
     required: true
     default: '0Ip56H1LLAo6Dc6IfePaNzgpUxbJGyVI'
+  api_key:
+    description: A SignalFlag API key, created by an org admin in the web app or the CLI. Should be passed in as a secret.
+    required: false
   resim_username:
     description: Provided by ReSim, used to authenticate. Should be passed in as a secret.
     required: false

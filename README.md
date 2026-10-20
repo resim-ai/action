@@ -20,7 +20,7 @@ Interact with ReSim from GitHub Actions
 ### Prerequisites
 
 - ReSim authentication configured as secrets in the repository
-  - This can be either as a username and password, or as a client ID and secret (deprecated)
+  - An API key (recommended), created by an org admin in the SignalFlag web app or CLI. A username and password, or a client ID and secret (deprecated), still work.
 - ECR registry URL (e.g. `123456789.dkr.ecr.us-east-1.amazonaws.com`) as a variable
 - AWS access key and secret access key with permission to push to the ECR repository.
 - Experiences configured and tagged in ReSim
@@ -35,8 +35,7 @@ If you want to run a test suite in ReSim from a separate workflow, or just want 
       - name: Launch Batch in ReSim
         uses: resim-ai/action@v1
         with:          
-          resim_username: ${{ secrets.RESIM_USERNAME }}
-          resim_password: ${{ secrets.RESIM_PASSWORD }}
+          api_key: ${{ secrets.SIGNALFLAG_API_KEY }}
           test_suite: my-test-suite
           system: my-system
           image: ${{ steps.build_image.outputs.tags }}
@@ -54,8 +53,7 @@ If you do not want to use a test suite, but simply use a fixed set of experience
       - name: Launch Batch in ReSim
         uses: resim-ai/action@v1
         with:          
-          resim_username: ${{ secrets.RESIM_USERNAME }}
-          resim_password: ${{ secrets.RESIM_PASSWORD }}
+          api_key: ${{ secrets.SIGNALFLAG_API_KEY }}
           system: my-system
           image: ${{ steps.build_image.outputs.tags }}
           experiences: my-experience, my-second-experience
@@ -117,8 +115,7 @@ jobs:
       - name: Launch Batch in ReSim
         uses: resim-ai/action@v1
         with:          
-          resim_username: ${{ secrets.RESIM_USERNAME }}
-          resim_password: ${{ secrets.RESIM_PASSWORD }}
+          api_key: ${{ secrets.SIGNALFLAG_API_KEY }}
           project: your-resim-project
           system: your-resim-system
           image: ${{ steps.docker_meta.outputs.tags }}
@@ -132,8 +129,9 @@ jobs:
 
 | Name                      | Required | Description                                                                                                                                                          |
 | ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| resim_username            | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                                            |
-| resim_password            | Yes      | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                                            |
+| api_key                   | **       | A SignalFlag API key with read & write access. Should be passed in as a secret. See [API Keys](https://docs.signalflag.ai/setup/api-keys/).                         |
+| resim_username            | **       | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                                            |
+| resim_password            | **       | Provided by ReSim, used to authenticate. Should be passed in as a secret.                                                                                            |
 | project                   | Yes      | Name of ReSim project in which to run.                                                                                                                               |
 | system                    | Yes      | Name of ReSim system with which to run.                                                                                                                              |
 | image                     | Yes      | URI of image that ReSim will pull and test.                                                                                                                          |
@@ -146,7 +144,9 @@ jobs:
 | allowable_failure_percent | No       | If set, this percentage of tests can fail without the batch being marked as failed.                                                                                  |
 | pool_labels               | No       | Comma-separated list of [pool labels](https://docs.resim.ai/guides/agent/#configuration) for use with the ReSim Agent. Pool labels are interpreted as a logical AND. |
 | parameters                | No       | Comma-separated list of parameter name-value pairs to pass to the batch. For example: `speed=0.5, avoidance_enabled=true` |
- **\* If not using a test suite, at least one of `experiences` or `experience_tags` must be set.** 
+ **\* If not using a test suite, at least one of `experiences` or `experience_tags` must be set.**
+
+ **\*\* Set `api_key`, or `resim_username` and `resim_password`. A `client_id` and `client_secret` also still work.** 
 
 ### Outputs
 
